@@ -3,7 +3,7 @@ import lzma
 import pickle
 from typing import TYPE_CHECKING
 import exceptions
-from render_functions import render_bar, render_names_at_mouse_location
+import render_functions
 from message_log import MessageLog
 
 from tcod.context import Context # type: ignore
@@ -15,11 +15,12 @@ from game_map import GameMap
 
 if TYPE_CHECKING:
     from entity import Entity
-    from game_map import GameMap
+    from game_map import GameMap, GameWorld
 
 
 class Engine:
     game_map: GameMap
+    game_world: GameWorld
 
     def __init__(self, player: Entity):
         self.player = player
@@ -48,8 +49,9 @@ class Engine:
     def render(self, console: Console) -> None:
         self.game_map.render(console)
         self.message_log.render(console=console, x=21, y=45, width=40, height=5)
-        render_bar(console=console,current_value=self.player.fighter.hp,maximum_value=self.player.fighter.max_hp,total_width=20)
-        render_names_at_mouse_location(console=console, x=21, y=44, engine=self)
+        render_functions.render_bar(console=console,current_value=self.player.fighter.hp,maximum_value=self.player.fighter.max_hp,total_width=20)
+        render_functions.render_names_at_mouse_location(console=console, x=21, y=44, engine=self)
+        render_functions.render_dungeon_level(console=console,dungeon_level=self.game_world.current_floor,location=(0, 47),)
 
     def save_as(self, filename: str) -> None:
         """Save this Engine instance as a compressed file."""

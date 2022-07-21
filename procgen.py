@@ -62,11 +62,11 @@ def place_entities(
         if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
             item_chance = random.random()
 
-            if item_chance < 0.5:
+            if item_chance < 0.3:
                 entity_factories.health_potion.spawn(dungeon, x, y)
-            elif item_chance < 0.7:
+            elif item_chance < 0.5:
                 entity_factories.confusion_scroll.spawn(dungeon, x, y)
-            elif item_chance < 0.9:
+            elif item_chance < 0.7:
                 entity_factories.fireball_scroll.spawn(dungeon, x, y)
             else:
                 entity_factories.lightning_scroll.spawn(dungeon, x, y)
@@ -116,6 +116,8 @@ def generate_dungeon(
     dungeon = GameMap(engine, map_width, map_height, entities=[player])
 
     rooms: List[RectangularRoom] = []
+    
+    center_of_last_room = (0, 0)
 
     for r in range(max_rooms):
         room_width = random.randint(room_min_size, room_max_size)
@@ -142,9 +144,12 @@ def generate_dungeon(
             # Dig out a tunnel between this room and the previous one.
             for x, y in tunnel_between(rooms[-1].center, new_room.center):
                 dungeon.tiles[x, y] = tile_types.floor
+            
+            center_of_last_room = new_room.center
                 
         place_entities(new_room, dungeon, max_monsters_per_room, max_items_per_room)
-        
+        dungeon.tiles[center_of_last_room] = tile_types.down_stairs
+        dungeon.downstairs_location = center_of_last_room
         # Finally, append the new room to the list.
         rooms.append(new_room)
 
