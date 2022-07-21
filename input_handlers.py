@@ -155,14 +155,13 @@ class AskUserEventHandler(EventHandler):
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         """By default any key exits this input handler."""
-        if event.sym in {  # Ignore modifier keys.
+        if event.sym in { 
             tcod.event.K_LSHIFT,
             tcod.event.K_RSHIFT,
             tcod.event.K_LCTRL,
             tcod.event.K_RCTRL,
             tcod.event.K_LALT,
-            tcod.event.K_RALT,
-        }:
+            tcod.event.K_RALT,}:  # Ignore modifier keys.
             return None
         return self.on_exit()
     
