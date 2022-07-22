@@ -76,23 +76,21 @@ class ConfusedEnemy(BaseAI):
     """
 
     def __init__(
-        self, entity: Actor, previous_ai: Optional[BaseAI], turns_remaining: int
+        self, entity: Actor, 
+        previous_ai: Optional[BaseAI], 
+        turns_remaining: int
     ):
         super().__init__(entity)
 
         self.previous_ai = previous_ai
         self.turns_remaining = turns_remaining
 
-    def perform(self) -> None:
-        # Revert the AI back to the original state if the effect has run its course.
+    def perform(self) -> None:        # Revert the AI back to the original state if the effect has run its course.
         if self.turns_remaining <= 0:
-            self.engine.message_log.add_message(
-                f"The {self.entity.name} is no longer confused."
-            )
+            self.engine.message_log.add_message(f"The {self.entity.name} is no longer confused.")
             self.entity.ai = self.previous_ai
         else:
-            # Pick a random direction
-            direction_x, direction_y = random.choice(
+            direction_x, direction_y = random.choice( # Pick a random direction
                 [
                     (-1, -1),  # Northwest
                     (0, -1),  # North
@@ -104,9 +102,7 @@ class ConfusedEnemy(BaseAI):
                     (1, 1),  # Southeast
                 ]
             )
-
             self.turns_remaining -= 1
-
             # The actor will either try to move or attack in the chosen random direction.
             # Its possible the actor will just bump into the wall, wasting a turn.
             return BumpAction(self.entity, direction_x, direction_y,).perform()

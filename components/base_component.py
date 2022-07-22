@@ -15,7 +15,6 @@ class BaseComponent:
     def gamemap(self) -> GameMap:
         return self.parent.gamemap
 
-
     @property
     def engine(self) -> Engine:
         return self.gamemap.engine

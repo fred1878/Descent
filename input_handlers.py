@@ -31,15 +31,6 @@ MOVE_KEYS = {
     tcod.event.K_KP_7: (-1, -1),
     tcod.event.K_KP_8: (0, -1),
     tcod.event.K_KP_9: (1, -1),
-    # Vi keys.
-    tcod.event.K_h: (-1, 0),
-    tcod.event.K_j: (0, 1),
-    tcod.event.K_k: (0, -1),
-    tcod.event.K_l: (1, 0),
-    tcod.event.K_y: (-1, -1),
-    tcod.event.K_u: (1, -1),
-    tcod.event.K_b: (-1, 1),
-    tcod.event.K_n: (1, 1),
 }
 
 WAIT_KEYS = {
@@ -498,7 +489,7 @@ class MainGameEventHandler(EventHandler):
             raise SystemExit()
         elif key == tcod.event.K_v:
             return HistoryViewer(self.engine)
-        elif key == tcod.event.K_g:
+        elif key == tcod.event.K_COMMA:
             action = PickupAction(player)   
         elif key == tcod.event.K_i:
             return InventoryActivateHandler(self.engine)
@@ -532,8 +523,8 @@ class GameOverEventHandler(EventHandler):
 CURSOR_Y_KEYS = {
     tcod.event.K_UP: -1,
     tcod.event.K_DOWN: 1,
-    tcod.event.K_PAGEUP: -10,
-    tcod.event.K_PAGEDOWN: 10,
+    tcod.event.K_PAGEUP: -20,
+    tcod.event.K_PAGEDOWN: 20,
 }
 
 
