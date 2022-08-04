@@ -44,10 +44,7 @@ class HealingConsumable(Consumable):
         amount_recovered = consumer.fighter.heal(self.amount)
 
         if amount_recovered > 0:
-            self.engine.message_log.add_message(
-                f"You consume the {self.parent.name}, and recover {amount_recovered} HP!",
-                color.health_recovered,
-            )
+            self.engine.message_log.add_message(f"You consume the {self.parent.name}, and recover {amount_recovered} HP!",color.green,)
             self.consume()
         else:
             raise Impossible(f"Your health is already full.")
@@ -73,8 +70,7 @@ class LightningDamageConsumable(Consumable):
 
         if target:
             self.engine.message_log.add_message(
-                f"A lighting bolt strikes the {target.name} with a loud thunder, for {self.damage} damage!"
-            )
+                f"A lighting bolt hits the {target.name} for {self.damage} damage!")
             target.fighter.take_damage(self.damage)
             self.consume()
         else:
@@ -85,13 +81,9 @@ class ConfusionConsumable(Consumable):
         self.number_of_turns = number_of_turns
 
     def get_action(self, consumer: Actor) -> SingleRangedAttackHandler:
-        self.engine.message_log.add_message(
-            "Select a target location.", color.needs_target
-        )
-        return SingleRangedAttackHandler(
-            self.engine,
-            callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
-        )
+        self.engine.message_log.add_message("Select a target location.", color.needs_target)
+        return SingleRangedAttackHandler(self.engine,
+            callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),)
 
     def activate(self, action: actions.ItemAction) -> None:
         consumer = action.entity
@@ -105,12 +97,10 @@ class ConfusionConsumable(Consumable):
             raise Impossible("You cannot confuse yourself!")
 
         self.engine.message_log.add_message(
-            f"The eyes of the {target.name} look vacant, as it starts to stumble around!",
-            color.status_effect_applied,
-        )
+            f"The {target.name} stumbles around swinging!",
+            color.status_effect_applied,)
         target.ai = components.ai.ConfusedEnemy(
-            entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns,
-        )
+            entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns,)
         self.consume()
 
 

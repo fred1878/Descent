@@ -8,7 +8,6 @@ from equipment_types import EquipmentType
 if TYPE_CHECKING:
     from entity import Actor, Item
 
-
 class Equipment(BaseComponent):
     parent: Actor
 
@@ -37,6 +36,18 @@ class Equipment(BaseComponent):
 
         if self.armor is not None and self.armor.equippable is not None:
             bonus += self.armor.equippable.power_bonus
+
+        return bonus
+    
+    @property
+    def magic_bonus(self) -> int:
+        bonus = 0
+
+        if self.weapon is not None and self.weapon.equippable is not None:
+            bonus += self.weapon.equippable.magic_bonus
+
+        if self.armor is not None and self.armor.equippable is not None:
+            bonus += self.armor.equippable.magic_bonus
 
         return bonus
 

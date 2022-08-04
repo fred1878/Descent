@@ -42,9 +42,8 @@ def new_game() -> Engine:
     engine.game_world.generate_floor()
     engine.update_fov()
 
-    engine.message_log.add_message(
-        "The walls shift around you...", color.welcome_text
-    )
+    engine.message_log.add_message("The walls shift around you...", color.welcome_text)
+    
     dagger = copy.deepcopy(entity_factories.dagger)
     leather_armor = copy.deepcopy(entity_factories.leather_armor)
 
@@ -74,25 +73,11 @@ class MainMenu(input_handlers.BaseEventHandler):
         """Render the main menu on a background image."""
         console.draw_semigraphics(background_image, 0, 0)
 
-        console.print(
-            console.width // 2,
-            console.height // 2 - 4,
-            "DESCENT",
-            fg=color.menu_title,
-            alignment=tcod.CENTER,
-        )
-        console.print(
-            console.width // 2,
-            console.height - 2,
-            "By fred1878",
-            fg=color.menu_title,
-            alignment=tcod.CENTER,
-        )
+        console.print(console.width // 2,console.height // 2 - 4,"DESCENT",fg=color.menu_title,alignment=tcod.CENTER)
+        console.print(console.width // 2,console.height - 2,"By fred1878",fg=color.menu_title,alignment=tcod.CENTER)
 
         menu_width = 24
-        for i, text in enumerate(
-            ["[N] Play a new game", "[C] Continue last game", "[Q] Quit"]
-        ):
+        for i, text in enumerate([" Play a [N]ew game", "[C]ontinue last game", "[Q]uit"]):
             console.print(
                 console.width // 2,
                 console.height // 2 - 2 + i,

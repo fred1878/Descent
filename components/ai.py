@@ -53,7 +53,7 @@ class HostileEnemy(BaseAI):
         target = self.engine.player
         dx = target.x - self.entity.x
         dy = target.y - self.entity.y
-        distance = max(abs(dx), abs(dy))  # Chebyshev distance.
+        distance = max(abs(dx), abs(dy))  # Chebyshev distance idk lmao
 
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
             if distance <= 1:
@@ -63,9 +63,7 @@ class HostileEnemy(BaseAI):
 
         if self.path:
             dest_x, dest_y = self.path.pop(0)
-            return MovementAction(
-                self.entity, dest_x - self.entity.x, dest_y - self.entity.y,
-            ).perform()
+            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y,).perform()
 
         return WaitAction(self.entity).perform()
     
@@ -78,15 +76,14 @@ class ConfusedEnemy(BaseAI):
     def __init__(
         self, entity: Actor, 
         previous_ai: Optional[BaseAI], 
-        turns_remaining: int
-    ):
+        turns_remaining: int):
         super().__init__(entity)
 
         self.previous_ai = previous_ai
         self.turns_remaining = turns_remaining
 
-    def perform(self) -> None:        # Revert the AI back to the original state if the effect has run its course.
-        if self.turns_remaining <= 0:
+    def perform(self) -> None:  # Its possible the actor will just bump into the wall, wasting a turn. The actor will either try to move or attack in the chosen random direction.  
+        if self.turns_remaining <= 0: # Revert the AI back to the original state if the effect has run its course.
             self.engine.message_log.add_message(f"The {self.entity.name} is no longer confused.")
             self.entity.ai = self.previous_ai
         else:
@@ -103,6 +100,4 @@ class ConfusedEnemy(BaseAI):
                 ]
             )
             self.turns_remaining -= 1
-            # The actor will either try to move or attack in the chosen random direction.
-            # Its possible the actor will just bump into the wall, wasting a turn.
             return BumpAction(self.entity, direction_x, direction_y,).perform()
