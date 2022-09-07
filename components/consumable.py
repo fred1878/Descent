@@ -70,8 +70,8 @@ class LightningDamageConsumable(Consumable):
 
         if target:
             self.engine.message_log.add_message(
-                f"A lighting bolt hits the {target.name} for {self.damage} damage!")
-            target.fighter.take_damage(self.damage)
+                f"A lighting bolt hits the {target.name} for {self.damage + consumer.fighter.magic} damage!")
+            target.fighter.take_damage(self.damage + consumer.fighter.magic)
             self.consume()
         else:
             raise Impossible("No enemy is close enough to strike.")
@@ -110,9 +110,7 @@ class FireballDamageConsumable(Consumable):
         self.radius = radius
 
     def get_action(self, consumer: Actor) -> AreaRangedAttackHandler:
-        self.engine.message_log.add_message(
-            "Select a target location.", color.needs_target
-        )
+        self.engine.message_log.add_message("Select a target location.", color.needs_target)
         return AreaRangedAttackHandler(
             self.engine,
             radius=self.radius,
@@ -128,10 +126,8 @@ class FireballDamageConsumable(Consumable):
         targets_hit = False
         for actor in self.engine.game_map.actors:
             if actor.distance(*target_xy) <= self.radius:
-                self.engine.message_log.add_message(
-                    f"The {actor.name} is engulfed in a fiery explosion, taking {self.damage} damage!"
-                )
-                actor.fighter.take_damage(self.damage)
+                self.engine.message_log.add_message(f"The {actor.name} is engulfed in a fiery explosion, taking {self.damage + action.entity.fighter.magic} damage!")
+                actor.fighter.take_damage(self.damage + action.entity.fighter.magic)
                 targets_hit = True
 
         if not targets_hit:

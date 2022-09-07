@@ -15,8 +15,8 @@ class Level(BaseComponent):
         self,
         current_level: int = 1,
         current_xp: int = 0,
-        level_up_base: int = 0,
-        level_up_factor: int = 50,
+        level_up_base: int = 100,
+        level_up_factor: int = 150,
         xp_given: int = 0,
     ):
         self.current_level = current_level
@@ -74,7 +74,7 @@ class Level(BaseComponent):
         self.increase_level()
 
     def increase_magic(self, amount: int = 1) -> None:
-        self.parent.fighter.base_defense += amount
+        self.parent.fighter.base_magic += amount
 
         self.engine.message_log.add_message("You feel the power coursing through you!")
 

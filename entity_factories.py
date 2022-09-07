@@ -37,6 +37,16 @@ troll = Actor(
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100),
 )
+reaper = Actor(
+    char="D",
+    color=(20, 20, 20),
+    name="Reaper",
+    ai_cls=HostileEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=50, base_defense=3, base_power=8, base_magic=0),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=500),
+)
 #items
 health_potion = Item(
     char="!",

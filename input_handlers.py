@@ -187,7 +187,7 @@ class CharacterScreenEventHandler(AskUserEventHandler):
             x=x,
             y=y,
             width=width,
-            height=7,
+            height=8,
             title=self.TITLE,
             clear=True,
             fg=(255, 255, 255),
@@ -199,7 +199,9 @@ class CharacterScreenEventHandler(AskUserEventHandler):
         console.print( x=x + 1, y=y + 3,string=f"XP for next Level: {self.engine.player.level.experience_to_next_level}",)
 
         console.print( x=x + 1, y=y + 4, string=f"Attack: {self.engine.player.fighter.power}")
-        console.print(x=x + 1, y=y + 5, string=f"Defense: {self.engine.player.fighter.defense}")
+        console.print( x=x + 1, y=y + 5, string=f"Defense: {self.engine.player.fighter.defense}")
+        console.print( x=x + 1, y=y + 6, string=f"Magic: {self.engine.player.fighter.magic}")
+        
 
 class LevelUpEventHandler(AskUserEventHandler):
     TITLE = "Level Up"
@@ -227,9 +229,9 @@ class LevelUpEventHandler(AskUserEventHandler):
         console.print(x=x + 1, y=2, string="Select an attribute to increase.")
 
         console.print( x=x + 1, y=4,string=f"a) Constitution (+20 HP, from {self.engine.player.fighter.max_hp})",)
-        console.print(x=x + 1, y=5,string=f"b) Strength (+1 attack, from {self.engine.player.fighter.power})",)
-        console.print( x=x + 1,y=6,string=f"c) Agility (+1 defense, from {self.engine.player.fighter.defense})",)
-        console.print( x=x + 1,y=7,string=f"d) Magic (+1 magic, from {self.engine.player.fighter.magic})",)
+        console.print(x=x + 1, y=5,string=f"b) Strength (+1 attack, from {self.engine.player.fighter.base_power})",)
+        console.print( x=x + 1,y=6,string=f"c) Agility (+1 defense, from {self.engine.player.fighter.base_defense})",)
+        console.print( x=x + 1,y=7,string=f"d) Magic (+1 magic, from {self.engine.player.fighter.base_magic})",)
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         player = self.engine.player

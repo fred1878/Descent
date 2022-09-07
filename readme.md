@@ -28,16 +28,14 @@ TODO:
 ## The boring shit/functionality
 
 -tidy history\
--add magic stats + change level up to reflect\
--rework level system\
 -req stats for items\
--rebalance\
 -different AIs\
 -friendly NPCs\
 -reusable/learnable spells\
 -more random damage\
+-difficulty settings\
 -environment effects\
--move message rendering from messageLog to runder_functions\
+-move message rendering from messageLog to render_functions\
 -maybe move game_map rendering\
 -move actor,item,gameworld to own files\
 -add to procgen ability to make rooms in room_factories\
@@ -58,6 +56,10 @@ TODO:
 -random item descriptions?\
 -colors change as you DescentTM\
 
+### ongoing
+-rework level system\
+-rebalance\
+
 ## The Ideas Guy
 
 -SAN meter\
@@ -69,6 +71,9 @@ TODO:
 -MOAR monsters,items inc magic items, exploives, potions, scrolls, ranged weapons, GUN, traps, rooms\
 -NPCs help or are cunts\
 
+### Done
+
+-add magic stats + change level up to reflect\
 
 
 

@@ -121,5 +121,4 @@ class GameWorld:
             room_max_size=self.room_max_size,
             map_width=self.map_width,
             map_height=self.map_height,
-            engine=self.engine,
-        )
+            engine=self.engine)

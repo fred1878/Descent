@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from components.base_component import BaseComponent
 from render_order import RenderOrder
 import color
+from actions import DropItem
 
 if TYPE_CHECKING:
     from entity import Actor
@@ -80,14 +81,14 @@ class Fighter(BaseComponent):
 
     def die(self) -> None:
         if self.engine.player is self.parent:
-            death_message = "You died!"
+            death_message = "You have reached the end!"
             death_message_color = color.player_die
         else:
             death_message = f"{self.parent.name} is dead!"
             death_message_color = color.enemy_die
 
         self.parent.char = "%"
-        self.parent.color = (191, 0, 0)
+        self.parent.color = (200, 0, 0)
         self.parent.blocks_movement = False
         self.parent.ai = None
         self.parent.name = f"remains of {self.parent.name}"
