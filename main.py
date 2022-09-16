@@ -1,7 +1,5 @@
 import traceback
 import tcod # type: ignore
-from engine import Engine
-import entity_factories
 import color
 import exceptions
 import input_handlers
@@ -44,8 +42,7 @@ def main() -> None:
                     # Then print the error to the message log.
                     if isinstance(handler, input_handlers.EventHandler):
                         handler.engine.message_log.add_message(
-                            traceback.format_exc(), color.error
-                        )
+                            traceback.format_exc(), color.error)
         except exceptions.QuitWithoutSaving:
             raise
         except SystemExit:  # Save and quit.

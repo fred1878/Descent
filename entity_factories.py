@@ -52,7 +52,7 @@ health_potion = Item(
     char="!",
     color=(127, 0, 255),
     name="Health Potion",
-    consumable=consumable.HealingConsumable(amount=4),
+    consumable=consumable.HealingConsumable(amount=6),
 )
 lightning_scroll = Item(
     char="~",
@@ -88,4 +88,8 @@ leather_armor = Item(
 
 chain_mail = Item(
     char="[", color=(139, 69, 19), name="Chain Mail", equippable=equippable.ChainMail()
+)
+
+plate_mail = Item(
+    char="[", color=(139, 69, 19), name="Chain Mail", equippable=equippable.PlateMail()
 )

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from components.base_component import BaseComponent
-from equipment_types import EquipmentType
+from components.equipment_types import EquipmentType
 
 if TYPE_CHECKING:
     from entity import Item
@@ -42,3 +42,7 @@ class LeatherArmor(Equippable):
 class ChainMail(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=3)
+        
+class PlateMail(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=5)
