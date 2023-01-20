@@ -77,7 +77,9 @@ dagger = Item(
     char="/", color=(0, 191, 255), name="Dagger", equippable=equippable.Dagger()
 )
 
-sword = Item(char="/", color=(0, 191, 255), name="Sword", equippable=equippable.Sword())
+bronze_sword = Item(char="/", color=(205, 127, 50), name="Bronze Sword", equippable=equippable.BronzeSword())
+
+iron_sword = Item(char="/", color=(200, 200, 200), name="Iron Sword", equippable=equippable.IronSword())
 
 leather_armor = Item(
     char="[",

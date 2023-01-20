@@ -138,7 +138,7 @@ class MeleeAction(ActionWithDirection):
 
         damage = self.entity.fighter.power - target.fighter.defense
 
-        attack_desc = f"{self.entity.name.capitalize()} attacks {target.name}"
+        attack_desc = f"{self.entity.name.capitalize()} attacks {target.name.capitalize()}"
         if self.entity is self.engine.player:
             attack_color = color.player_atk
         else:
@@ -148,7 +148,7 @@ class MeleeAction(ActionWithDirection):
             self.engine.message_log.add_message(f"{attack_desc} for {damage} hit points.", attack_color)
             target.fighter.hp -= damage
         else: 
-           self.engine.message_log.add_message(f"{attack_desc} but does no damage.", attack_color)
+           self.engine.message_log.add_message(f"{attack_desc} but does no damage.", color.player_atk_no_damage)
     
 class MovementAction(ActionWithDirection):
 
