@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from engine import Engine
     from game_map import GameMap
 
-
 def get_names_at_location(x: int, y: int, game_map: GameMap) -> str:
     if not game_map.in_bounds(x, y) or not game_map.visible[x, y]:
         return ""

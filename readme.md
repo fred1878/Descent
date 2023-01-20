@@ -25,7 +25,7 @@ ctrl+/ to look around
 
 TODO: 
 
-## The boring shit/functionality
+## The functionality
 
 -tidy history\
 -req stats for items\
@@ -48,7 +48,7 @@ TODO:
 -sort inventory\
 -move main.py functionality to engine\
 -difficulty settings that can set params for items monsters etc\
--talk to teh DEAD\
+-talk to the dead\
 -track kills\
 -potion hotkey\
 -pack monster spawning/better spans in general\
@@ -69,11 +69,6 @@ TODO:
 -more gruesome/twisted monsters\
 -mutations\
 -MOAR monsters,items inc magic items, exploives, potions, scrolls, ranged weapons, GUN, traps, rooms\
--NPCs help or are cunts\
-
-### Done
-
--add magic stats + change level up to reflect\
-
+-'friendly' NPCs\
 
 
