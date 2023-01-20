@@ -65,7 +65,6 @@ def load_game(filename: str) -> Engine:
     assert isinstance(engine, Engine)
     return engine
 
-
 class MainMenu(input_handlers.BaseEventHandler):
     """Handle the main menu rendering and input."""
 
