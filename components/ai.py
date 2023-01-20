@@ -29,7 +29,7 @@ class BaseAI(Action):
                 # A lower number means more enemies will crowd behind each other in
                 # hallways.  A higher number means enemies will take longer paths in
                 # order to surround the player.
-                cost[entity.x, entity.y] += 10
+                cost[entity.x, entity.y] += 12
 
         # Create a graph from the cost array and pass that graph to a new pathfinder.
         graph = tcod.path.SimpleGraph(cost=cost, cardinal=2, diagonal=3)
@@ -53,11 +53,11 @@ class HostileEnemy(BaseAI):
         target = self.engine.player
         dx = target.x - self.entity.x
         dy = target.y - self.entity.y
-        distance = max(abs(dx), abs(dy))  # Chebyshev distance idk lmao
+        distance = max(abs(dx), abs(dy))  # distance to player
 
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
             if distance <= 1:
-                return MeleeAction(self.entity, dx, dy).perform()
+                return MeleeAction(self.entity, dx, dy).perform() # Will attack player when adjacent
 
             self.path = self.get_path_to(target.x, target.y)
 

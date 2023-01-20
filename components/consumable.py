@@ -12,7 +12,6 @@ from input_handlers import AreaRangedAttackHandler, SingleRangedAttackHandler, A
 if TYPE_CHECKING:
     from entity import Actor, Item
 
-
 class Consumable(BaseComponent):
     parent: Item
     
@@ -48,7 +47,6 @@ class HealingConsumable(Consumable):
             self.consume()
         else:
             raise Impossible(f"Your health is already full.")
-
 
 class LightningDamageConsumable(Consumable):
     def __init__(self, damage: int, maximum_range: int):
@@ -102,7 +100,6 @@ class ConfusionConsumable(Consumable):
         target.ai = components.ai.ConfusedEnemy(
             entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns,)
         self.consume()
-
 
 class FireballDamageConsumable(Consumable):
     def __init__(self, damage: int, radius: int):
