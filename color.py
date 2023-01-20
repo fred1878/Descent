@@ -28,4 +28,4 @@ dark_floor = (50, 50, 30)
 light_floor = (200, 150, 50)
 
 dark_wall = (80, 40, 0)
-light_wall = (150, 60, 40)
+light_wall = (140, 60, 40)

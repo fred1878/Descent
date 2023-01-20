@@ -68,7 +68,7 @@ class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
     def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
         raise SystemExit()
 
-
+  
 class PopupMessage(BaseEventHandler):
     """Display a popup text window."""
 

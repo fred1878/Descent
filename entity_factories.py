@@ -91,5 +91,5 @@ chain_mail = Item(
 )
 
 plate_mail = Item(
-    char="[", color=(139, 69, 19), name="Chain Mail", equippable=equippable.PlateMail()
+    char="[", color=(139, 69, 19), name="Plate Mail", equippable=equippable.PlateMail()
 )
