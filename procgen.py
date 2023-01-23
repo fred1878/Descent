@@ -12,6 +12,7 @@ import tile_types
 max_items_by_floor = [
     (1, 1),
     (4, 2),
+    (8, 3)
 ]
 
 max_monsters_by_floor = [
@@ -19,14 +20,16 @@ max_monsters_by_floor = [
     (2, 3),
     (4, 4),
     (6, 5),
+    (8, 6)
 ]
 
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.health_potion, 35)],
+    0: [(entity_factories.small_health_potion, 35)],
     1: [(entity_factories.lightning_scroll, 10)],
     2: [(entity_factories.confusion_scroll, 10) ],
-    4: [(entity_factories.lightning_scroll, 25), (entity_factories.sword, 5)],
-    6: [(entity_factories.fireball_scroll, 25), (entity_factories.chain_mail, 15)],
+    4: [(entity_factories.lightning_scroll, 25), (entity_factories.bronze_sword, 5),(entity_factories.health_potion,10)],
+    6: [(entity_factories.fireball_scroll, 25), (entity_factories.chain_mail, 15), (entity_factories.bronze_sword, 25)],
+    7: [(entity_factories.iron_sword,10)],
     8: [(entity_factories.fireball_scroll, 35), (entity_factories.plate_mail, 15)],
 }
 
@@ -65,7 +68,6 @@ def get_entities_at_random(
             for value in values:
                 entity = value[0]
                 weighted_chance = value[1]
-
                 entity_weighted_chances[entity] = weighted_chance
 
     entities = list(entity_weighted_chances.keys())

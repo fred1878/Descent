@@ -33,7 +33,7 @@ troll = Actor(
     name="Troll",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=16, base_defense=1, base_power=4, base_magic=0),
+    fighter=Fighter(hp=16, base_defense=1, base_power=5, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100),
 )
@@ -43,16 +43,22 @@ reaper = Actor(
     name="Reaper",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=50, base_defense=3, base_power=8, base_magic=0),
+    fighter=Fighter(hp=50, base_defense=3, base_power=9, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=500),
 )
 #items
-health_potion = Item(
+small_health_potion = Item(
     char="!",
     color=(127, 0, 255),
-    name="Health Potion",
+    name="Small Health Potion",
     consumable=consumable.HealingConsumable(amount=6),
+)
+health_potion = Item(
+    char="!",
+    color=(0, 127, 255),
+    name="Health Potion",
+    consumable=consumable.HealingConsumable(amount=10),
 )
 lightning_scroll = Item(
     char="~",
