@@ -35,6 +35,10 @@ class BronzeSword(Equippable):
 class IronSword(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.WEAPON, power_bonus=6)
+        
+class MagicWand(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.WEAPON, magic_bonus=3)
 
 class LeatherArmor(Equippable):
     def __init__(self) -> None:

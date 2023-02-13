@@ -100,6 +100,13 @@ iron_sword = Item(
     equippable=equippable.IronSword()
 )
 
+magic_wand = Item(
+    char="\\", 
+    color=(255, 255, 255), 
+    name="Magic Wand", 
+    equippable=equippable.MagicWand()
+)
+
 leather_armor = Item(
     char="[",
     color=(139, 69, 19),
