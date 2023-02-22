@@ -6,6 +6,8 @@ import actions
 from actions import Action, BumpAction, WaitAction, PickupAction
 import colour
 import exceptions
+import setup_game
+import traceback
 
 if TYPE_CHECKING:
     from engine import Engine
@@ -67,6 +69,46 @@ class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
         raise SystemExit()
+    
+class MainMenu(BaseEventHandler):
+    """Handle the main menu rendering and input."""
+
+    def on_render(self, console: tcod.Console) -> None:
+        """Render the main menu on a background image."""
+        console.draw_semigraphics(setup_game.background_image, 0, 0)
+
+        console.print(console.width // 2,console.height // 2 - 4,"DESCENT",fg=colour.menu_title,alignment=tcod.CENTER)
+        console.print(console.width // 2,console.height - 2,"By fred1878",fg=colour.menu_title,alignment=tcod.CENTER)
+
+        menu_width = 24
+        for i, text in enumerate([" Play a [N]ew game", "[C]ontinue last game", "[Q]uit"]):
+            console.print(
+                console.width // 2,
+                console.height // 2 - 2 + i,
+                text.ljust(menu_width),
+                fg=colour.menu_text,
+                bg=colour.black,
+                alignment=tcod.CENTER,
+                bg_blend=tcod.BKGND_ALPHA(64),
+            )
+
+    def ev_keydown(
+        self, event: tcod.event.KeyDown
+    ) -> Optional[BaseEventHandler]:
+        if event.sym in (tcod.event.K_q, tcod.event.K_ESCAPE):
+            raise SystemExit()
+        elif event.sym == tcod.event.K_c:
+            try:
+                return MainGameEventHandler(setup_game.load_game("savegame.sav"))
+            except FileNotFoundError:
+                return PopupMessage(self, "No saved game to load.")
+            except Exception as exc:
+                traceback.print_exc()  # Print to stderr.
+                return PopupMessage(self, f"Failed to load save:\n{exc}")
+        elif event.sym == tcod.event.K_n:
+            return MainGameEventHandler(setup_game.new_game())
+
+        return None
 
   
 class PopupMessage(BaseEventHandler):

@@ -28,8 +28,9 @@ item_chances: Dict[int, List[Tuple[Entity, int]]] = {
     1: [(entity_factories.lightning_scroll, 10)],
     2: [(entity_factories.confusion_scroll, 10) ],
     4: [(entity_factories.lightning_scroll, 25), (entity_factories.bronze_sword, 5),(entity_factories.health_potion,10)],
+    5: [(entity_factories.wooden_wand, 5)],
     6: [(entity_factories.fireball_scroll, 25), (entity_factories.chain_mail, 15), (entity_factories.bronze_sword, 25)],
-    7: [(entity_factories.iron_sword,10)],
+    7: [(entity_factories.iron_sword,10), (entity_factories.golden_wand, 5)],
     8: [(entity_factories.fireball_scroll, 35), (entity_factories.plate_mail, 15)],
 }
 
