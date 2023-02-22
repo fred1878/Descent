@@ -54,8 +54,8 @@ class GameMap:
         """
         Renders the map.
 
-        If a tile is in the "visible" array, then draw it with the "light" colors.
-        If it isn't, but it's in the "explored" array, then draw it with the "dark" colors.
+        If a tile is in the "visible" array, then draw it with the "light" colours.
+        If it isn't, but it's in the "explored" array, then draw it with the "dark" colours.
         Otherwise, the default is "SHROUD".
         """
         console.tiles_rgb[0:self.width, 0:self.height] = np.select(
@@ -72,7 +72,7 @@ class GameMap:
         for entity in entities_sorted_for_rendering:
             # Only print entities that are in the FOV
             if self.visible[entity.x, entity.y]:
-                console.print(x=entity.x, y=entity.y, string=entity.char, fg=entity.color)
+                console.print(x=entity.x, y=entity.y, string=entity.char, fg=entity.colour)
                 
     def get_actor_at_location(self, x: int, y: int) -> Optional[Actor]:
         for actor in self.actors:

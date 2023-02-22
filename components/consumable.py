@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 import components.inventory
 import actions
-import color
+import colour
 import components.ai
 from components.base_component import BaseComponent
 from exceptions import Impossible
@@ -43,7 +43,7 @@ class HealingConsumable(Consumable):
         amount_recovered = consumer.fighter.heal(self.amount)
 
         if amount_recovered > 0:
-            self.engine.message_log.add_message(f"You consume the {self.parent.name}, and recover {amount_recovered} HP!",color.green,)
+            self.engine.message_log.add_message(f"You consume the {self.parent.name}, and recover {amount_recovered} HP!",colour.green,)
             self.consume()
         else:
             raise Impossible(f"Your health is already full.")
@@ -79,7 +79,7 @@ class ConfusionConsumable(Consumable):
         self.number_of_turns = number_of_turns
 
     def get_action(self, consumer: Actor) -> SingleRangedAttackHandler:
-        self.engine.message_log.add_message("Select a target location.", color.needs_target)
+        self.engine.message_log.add_message("Select a target location.", colour.needs_target)
         return SingleRangedAttackHandler(self.engine,
             callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),)
 
@@ -96,7 +96,7 @@ class ConfusionConsumable(Consumable):
 
         self.engine.message_log.add_message(
             f"The {target.name} stumbles around swinging!",
-            color.status_effect_applied,)
+            colour.status_effect_applied,)
         target.ai = components.ai.ConfusedEnemy(
             entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns,)
         self.consume()
@@ -107,7 +107,7 @@ class FireballDamageConsumable(Consumable):
         self.radius = radius
 
     def get_action(self, consumer: Actor) -> AreaRangedAttackHandler:
-        self.engine.message_log.add_message("Select a target location.", color.needs_target)
+        self.engine.message_log.add_message("Select a target location.", colour.needs_target)
         return AreaRangedAttackHandler(
             self.engine,
             radius=self.radius,

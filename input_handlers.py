@@ -4,7 +4,7 @@ import os
 import tcod.event # type: ignore
 import actions
 from actions import Action, BumpAction, WaitAction, PickupAction
-import color
+import colour
 import exceptions
 
 if TYPE_CHECKING:
@@ -86,8 +86,8 @@ class PopupMessage(BaseEventHandler):
             console.width // 2,
             console.height // 2,
             self.text,
-            fg=color.white,
-            bg=color.black,
+            fg=colour.white,
+            bg=colour.black,
             alignment=tcod.CENTER,
         )
 
@@ -126,7 +126,7 @@ class EventHandler(BaseEventHandler):
         try:
             action.perform()
         except exceptions.Impossible as exc:
-            self.engine.message_log.add_message(exc.args[0], color.impossible)
+            self.engine.message_log.add_message(exc.args[0], colour.impossible)
             return False  # Skip enemy turn on exceptions.
 
         self.engine.handle_enemy_turns()
@@ -248,7 +248,7 @@ class LevelUpEventHandler(AskUserEventHandler):
             else:
                 player.level.increase_magic()
         else:
-            self.engine.message_log.add_message("Invalid entry.", color.invalid)
+            self.engine.message_log.add_message("Invalid entry.", colour.invalid)
 
             return None
 
@@ -326,7 +326,7 @@ class InventoryEventHandler(AskUserEventHandler):
             try:
                 selected_item = player.inventory.items[index]
             except IndexError:
-                self.engine.message_log.add_message("Invalid entry.", color.invalid)
+                self.engine.message_log.add_message("Invalid entry.", colour.invalid)
                 return None
             return self.on_item_selected(selected_item)
         return super().ev_keydown(event)
@@ -375,8 +375,8 @@ class SelectIndexHandler(AskUserEventHandler):
         """Highlight the tile under the cursor."""
         super().on_render(console)
         x, y = self.engine.mouse_location
-        console.tiles_rgb["bg"][x, y] = color.white
-        console.tiles_rgb["fg"][x, y] = color.black
+        console.tiles_rgb["bg"][x, y] = colour.white
+        console.tiles_rgb["fg"][x, y] = colour.black
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         """Check for key movement or confirmation keys."""
@@ -461,7 +461,7 @@ class AreaRangedAttackHandler(SelectIndexHandler):
             y=y - self.radius - 1,
             width=self.radius ** 2,
             height=self.radius ** 2,
-            fg=color.red,
+            fg=colour.red,
             clear=False,
         )
 

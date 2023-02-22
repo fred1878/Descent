@@ -1,5 +1,5 @@
 from __future__ import annotations
-import color
+import colour
 import exceptions
 
 from typing import Optional, Tuple, TYPE_CHECKING
@@ -39,7 +39,7 @@ class TakeStairsAction(Action):
         """
         if (self.entity.x, self.entity.y) == self.engine.game_map.downstairs_location:
             self.engine.game_world.generate_floor()
-            self.engine.message_log.add_message("You descend the staircase.", color.descend)
+            self.engine.message_log.add_message("You descend the staircase.", colour.descend)
         else:
             raise exceptions.Impossible("There are no stairs here.")
 
@@ -140,15 +140,15 @@ class MeleeAction(ActionWithDirection):
 
         attack_desc = f"{self.entity.name.capitalize()} attacks {target.name.capitalize()}"
         if self.entity is self.engine.player:
-            attack_color = color.player_atk
+            attack_colour = colour.player_atk
         else:
-            attack_color = color.enemy_atk
+            attack_colour = colour.enemy_atk
         
         if damage > 0:
-            self.engine.message_log.add_message(f"{attack_desc} for {damage} hit points.", attack_color)
+            self.engine.message_log.add_message(f"{attack_desc} for {damage} hit points.", attack_colour)
             target.fighter.hp -= damage
         else: 
-           self.engine.message_log.add_message(f"{attack_desc} but does no damage.", color.player_atk_no_damage)
+           self.engine.message_log.add_message(f"{attack_desc} but does no damage.", colour.player_atk_no_damage)
     
 class MovementAction(ActionWithDirection):
 

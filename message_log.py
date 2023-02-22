@@ -1,7 +1,7 @@
 from typing import Iterable, List, Reversible, Tuple
 import textwrap
 import tcod # type: ignore
-import color
+import colour
 
 class Message:
     def __init__(self, text: str, fg: Tuple[int, int, int]):
@@ -22,10 +22,10 @@ class MessageLog:
         self.messages: List[Message] = []
 
     def add_message(
-        self, text: str, fg: Tuple[int, int, int] = color.white, *, stack: bool = True,
+        self, text: str, fg: Tuple[int, int, int] = colour.white, *, stack: bool = True,
     ) -> None:
         """Add a message to this log.
-        `text` is the message text, `fg` is the text color.
+        `text` is the message text, `fg` is the text colour.
         If `stack` is True then the message can stack with a previous message
         of the same text.
         """

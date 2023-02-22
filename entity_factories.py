@@ -5,10 +5,11 @@ from components.inventory import Inventory
 from components import consumable, equippable
 from components.level import Level
 from components.equipment import Equipment
+import colour
 
 player = Actor(
     char="@",
-    color=(255, 255, 255),
+    colour=(255, 255, 255),
     name="Player",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
@@ -19,7 +20,7 @@ player = Actor(
 # enemigos
 orc = Actor(
     char="o",
-    color=(63, 127, 63),
+    colour=(63, 127, 63),
     name="Orc",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
@@ -29,7 +30,7 @@ orc = Actor(
 )
 troll = Actor(
     char="T",
-    color=(0, 127, 0),
+    colour=(0, 127, 0),
     name="Troll",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
@@ -39,7 +40,7 @@ troll = Actor(
 )
 reaper = Actor(
     char="D",
-    color=(20, 20, 20),
+    colour=(20, 20, 20),
     name="Reaper",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
@@ -50,74 +51,81 @@ reaper = Actor(
 #items
 small_health_potion = Item(
     char="!",
-    color=(127, 0, 255),
+    colour=(127, 0, 255),
     name="Small Health Potion",
     consumable=consumable.HealingConsumable(amount=6),
 )
 health_potion = Item(
     char="!",
-    color=(0, 127, 255),
+    colour=(0, 127, 255),
     name="Health Potion",
     consumable=consumable.HealingConsumable(amount=10),
 )
 lightning_scroll = Item(
     char="~",
-    color=(255, 255, 0),
+    colour=(255, 255, 0),
     name="Lightning Scroll",
     consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5),
 )
 confusion_scroll = Item(
     char="~",
-    color=(207, 63, 255),
+    colour=(207, 63, 255),
     name="Confusion Scroll",
     consumable=consumable.ConfusionConsumable(number_of_turns=10),
 )
 fireball_scroll = Item(
     char="~",
-    color=(255, 0, 0),
+    colour=(255, 0, 0),
     name="Fireball Scroll",
     consumable=consumable.FireballDamageConsumable(damage=12, radius=3),
 )
 # equipment
 dagger = Item(
     char="/", 
-    color=(0, 191, 255), 
+    colour=(0, 191, 255), 
     name="Dagger",
     equippable=equippable.Dagger()
 )
 
 bronze_sword = Item(
     char="/", 
-    color=(205, 127, 50), 
+    colour=(205, 127, 50), 
     name="Bronze Sword", 
     equippable=equippable.BronzeSword()
 )
 
 iron_sword = Item(
     char="/", 
-    color=(200, 200, 200), 
+    colour=(200, 200, 200), 
     name="Iron Sword", 
     equippable=equippable.IronSword()
 )
 
-magic_wand = Item(
+wooden_wand = Item(
     char="\\", 
-    color=(255, 255, 255), 
+    colour=(139, 69, 19), 
+    name="Wooden Wand", 
+    equippable=equippable.WoodenWand()
+)
+
+golden_wand = Item(
+    char="\\", 
+    colour=colour.gold, 
     name="Magic Wand", 
-    equippable=equippable.MagicWand()
+    equippable=equippable.GoldenWand()
 )
 
 leather_armor = Item(
     char="[",
-    color=(139, 69, 19),
+    colour=(139, 69, 19),
     name="Leather Armor",
     equippable=equippable.LeatherArmor(),
 )
 
 chain_mail = Item(
-    char="[", color=(139, 69, 19), name="Chain Mail", equippable=equippable.ChainMail()
+    char="[", colour=(192, 192, 192), name="Chain Mail", equippable=equippable.ChainMail()
 )
 
 plate_mail = Item(
-    char="[", color=(139, 69, 19), name="Plate Mail", equippable=equippable.PlateMail()
+    char="[", colour=(128, 128, 128), name="Plate Mail", equippable=equippable.PlateMail()
 )

@@ -1,5 +1,5 @@
 from typing import Tuple
-import color
+import colour
 
 import numpy as np  # type: ignore
 
@@ -7,7 +7,7 @@ import numpy as np  # type: ignore
 graphic_dt = np.dtype(
     [
         ("ch", np.int32),  # Unicode codepoint.
-        ("fg", "3B"),  # 3 unsigned bytes, for RGB colors.
+        ("fg", "3B"),  # 3 unsigned bytes, for RGB colours.
         ("bg", "3B"),
     ]
 )
@@ -33,24 +33,24 @@ def new_tile(
     return np.array((walkable, transparent, dark, light), dtype=tile_dt)
 
 # SHROUD represents unexplored, unseen tiles
-SHROUD = np.array((ord(" "), color.white, color.black), dtype=graphic_dt)
+SHROUD = np.array((ord(" "), colour.white, colour.black), dtype=graphic_dt)
 
 floor = new_tile(
     walkable=True,
     transparent=True,
-    dark=(ord(" "), color.white, color.dark_floor),
-    light=(ord(" "), color.white, color.light_floor),
+    dark=(ord(" "), colour.white, colour.dark_floor),
+    light=(ord(" "), colour.white, colour.light_floor),
 )
 
 wall = new_tile(
     walkable=False,
     transparent=False,
-    dark=(ord(" "), color.white, color.dark_wall),
-    light=(ord(" "), color.white, color.light_wall),
+    dark=(ord(" "), colour.white, colour.dark_wall),
+    light=(ord(" "), colour.white, colour.light_wall),
 )
 down_stairs = new_tile(
     walkable=True,
     transparent=True,
-    dark=(ord(">"), color.white, color.dark_floor),
-    light=(ord(">"), color.white, color.light_floor),
+    dark=(ord(">"), colour.white, colour.dark_floor),
+    light=(ord(">"), colour.white, colour.light_floor),
 )

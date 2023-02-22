@@ -54,7 +54,7 @@ TODO:
 -pack monster spawning/better spans in general\
 -have monsters with different FOV/multi layer FOV\
 -random item descriptions?\
--colors change as you DescentTM\
+-colours change as you DescentTM\
 
 ### ongoing
 -rework level system\

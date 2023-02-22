@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from components.base_component import BaseComponent
 from render_order import RenderOrder
-import color
+import colour
 from actions import DropItem
 
 if TYPE_CHECKING:
@@ -82,17 +82,17 @@ class Fighter(BaseComponent):
     def die(self) -> None:
         if self.engine.player is self.parent:
             death_message = "You have reached the end!"
-            death_message_color = color.player_die
+            death_message_colour = colour.player_die
         else:
             death_message = f"{self.parent.name} is dead!"
-            death_message_color = color.enemy_die
+            death_message_colour = colour.enemy_die
 
         self.parent.char = "%"
-        self.parent.color = (190, 0, 0)
+        self.parent.colour = (190, 0, 0)
         self.parent.blocks_movement = False
         self.parent.ai = None
         self.parent.name = f"remains of {self.parent.name}"
         self.parent.render_order = RenderOrder.CORPSE
 
-        self.engine.message_log.add_message(death_message, death_message_color)
+        self.engine.message_log.add_message(death_message, death_message_colour)
         self.engine.player.level.add_xp(self.parent.level.xp_given)
