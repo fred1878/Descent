@@ -3,7 +3,7 @@ import random
 from typing import Dict, Iterator, List, Tuple, TYPE_CHECKING
 import entity_factories
 import tcod # type: ignore
-from game_map import GameMap
+import game_map
 if TYPE_CHECKING:
     from engine import Engine
     from entity import Entity
@@ -108,7 +108,7 @@ class RectangularRoom:
             and self.y2 >= other.y1
         )
         
-def place_entities(room: RectangularRoom, dungeon: GameMap, floor_number: int,) -> None:
+def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_number: int,) -> None:
     number_of_monsters = random.randint(
         0, get_max_value_for_floor(max_monsters_by_floor, floor_number)
     )
@@ -166,10 +166,10 @@ def generate_dungeon(
     map_width: int,
     map_height: int,
     engine: Engine,
-) -> GameMap:
+) -> game_map.GameMap:
     """Generate a new dungeon map."""
     player = engine.player
-    dungeon = GameMap(engine, map_width, map_height, entities=[player])
+    dungeon = game_map.GameMap(engine, map_width, map_height, entities=[player])
 
     rooms: List[RectangularRoom] = []
     
@@ -196,6 +196,8 @@ def generate_dungeon(
         if len(rooms) == 0:
             # The first room, where the player starts.
             player.place(*new_room.center, dungeon)
+            if(engine.game_world.current_floor == 1):
+                entity_factories.health_potion.place(new_room.x1 + 2, new_room.y1 + 2, dungeon)
         else:  # All rooms after the first.
             # Dig out a tunnel between this room and the previous one.
             for x, y in tunnel_between(rooms[-1].center, new_room.center):

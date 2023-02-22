@@ -7,7 +7,7 @@ import colour
 import components.ai
 from components.base_component import BaseComponent
 from exceptions import Impossible
-from input_handlers import AreaRangedAttackHandler, SingleRangedAttackHandler, ActionOrHandler
+import input_handlers
 
 if TYPE_CHECKING:
     from entity import Actor, Item
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class Consumable(BaseComponent):
     parent: Item
     
-    def get_action(self, consumer: Actor) -> Optional[ActionOrHandler]:
+    def get_action(self, consumer: Actor) -> Optional[input_handlers.ActionOrHandler]:
         """Try to return the action for this item."""
         return actions.ItemAction(consumer, self.parent)
 
@@ -78,9 +78,9 @@ class ConfusionConsumable(Consumable):
     def __init__(self, number_of_turns: int):
         self.number_of_turns = number_of_turns
 
-    def get_action(self, consumer: Actor) -> SingleRangedAttackHandler:
+    def get_action(self, consumer: Actor) -> input_handlers.SingleRangedAttackHandler:
         self.engine.message_log.add_message("Select a target location.", colour.needs_target)
-        return SingleRangedAttackHandler(self.engine,
+        return input_handlers.SingleRangedAttackHandler(self.engine,
             callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),)
 
     def activate(self, action: actions.ItemAction) -> None:
@@ -106,9 +106,9 @@ class FireballDamageConsumable(Consumable):
         self.damage = damage
         self.radius = radius
 
-    def get_action(self, consumer: Actor) -> AreaRangedAttackHandler:
+    def get_action(self, consumer: Actor) -> input_handlers.AreaRangedAttackHandler:
         self.engine.message_log.add_message("Select a target location.", colour.needs_target)
-        return AreaRangedAttackHandler(
+        return input_handlers.AreaRangedAttackHandler(
             self.engine,
             radius=self.radius,
             callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),

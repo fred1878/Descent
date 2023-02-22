@@ -3,7 +3,6 @@ import tcod # type: ignore
 import colour
 import exceptions
 import input_handlers
-import setup_game
 
 def save_game(handler: input_handlers.BaseEventHandler, filename: str) -> None:
     """If the current event handler has an active Engine then save it."""
@@ -17,7 +16,7 @@ def main() -> None:
 
     tileset = tcod.tileset.load_tilesheet("spritesheet.png", 32, 8, tcod.tileset.CHARMAP_TCOD)
     
-    handler: input_handlers.BaseEventHandler = setup_game.MainMenu()
+    handler: input_handlers.BaseEventHandler = input_handlers.MainMenu()
 
     with tcod.context.new_terminal(
         screen_width,

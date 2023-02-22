@@ -9,13 +9,9 @@ import pickle
 import colour
 from engine import Engine
 import entity_factories
-import input_handlers
 from game_map import GameWorld
 
-
-# Load the background image and remove the alpha channel.
 background_image = tcod.image.load("background.png")[:, :, :3]
-
 
 def new_game() -> Engine:
     """Return a brand new game session as an Engine instance."""
