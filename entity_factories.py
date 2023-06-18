@@ -1,4 +1,4 @@
-from components.ai import HostileEnemy, EvasiveEnemy
+from components.ai import HostileEnemy, EvasiveEnemy, HostileRangedEnemy
 from components.fighter import Fighter
 from entity import Actor, Item
 from components.inventory import Inventory
@@ -18,6 +18,16 @@ player = Actor(
     level=Level(level_up_base=50),
 )
 # enemigos
+kobold = Actor(
+    char="k",
+    colour=(240, 210, 207),
+    name="Kobold",
+    ai_cls=HostileRangedEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=3, base_defense=0, base_power=2, base_magic=0),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=15),
+)
 hobbit = Actor(
     char="h",
     colour=(127, 118, 57),

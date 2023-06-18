@@ -117,6 +117,20 @@ class ActionWithDirection(Action):
         raise NotImplementedError()
 
 
+class TargetAction(Action):
+    def __init__(self, entity: Actor, target_xy: Tuple[int, int]):
+        super().__init__(entity)
+        self.target_xy = target_xy
+
+    @property
+    def target_actor(self) -> Optional[Actor]:
+        """Return the actor at this actions destination."""
+        return self.engine.game_map.get_actor_at_location(*self.target_xy)
+
+    def perform(self) -> None:
+        raise NotImplementedError()
+
+
 class DropItem(ItemAction):
     def perform(self) -> None:
         if self.entity.equipment.item_is_equipped(self.item):
@@ -132,6 +146,30 @@ class EquipAction(Action):
 
     def perform(self) -> None:
         self.entity.equipment.toggle_equip(self.item)
+
+
+class RangedAction(TargetAction):
+    def __init__(self, entity: Actor, target_xy: Tuple[int, int]):
+        super().__init__(entity, target_xy)
+
+    def perform(self) -> None:
+        target = self.target_actor
+        if not target:
+            raise exceptions.Impossible("Nothing to attack.")
+
+        damage = self.entity.fighter.power - target.fighter.defense
+
+        attack_desc = f"{self.entity.name.capitalize()} shoots {target.name.capitalize()}"
+        if self.entity is self.engine.player:
+            attack_colour = colour.player_atk
+        else:
+            attack_colour = colour.enemy_atk
+
+        if damage > 0:
+            self.engine.message_log.add_message(f"{attack_desc} for {damage} hit points.", attack_colour)
+            target.fighter.hp -= damage
+        else:
+            self.engine.message_log.add_message(f"{attack_desc} but does no damage.", colour.player_atk_no_damage)
 
 
 class MeleeAction(ActionWithDirection):

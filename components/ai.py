@@ -4,7 +4,7 @@ from typing import List, Optional, Tuple, TYPE_CHECKING
 import random
 import numpy as np  # type: ignore
 import tcod  # type: ignore
-from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction
+from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction, RangedAction
 
 if TYPE_CHECKING:
     from entity import Actor
@@ -63,7 +63,31 @@ class HostileEnemy(BaseAI):
 
         if self.path:
             dest_x, dest_y = self.path.pop(0)
-            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+
+        return WaitAction(self.entity).perform()
+
+
+class HostileRangedEnemy(BaseAI):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+        self.path: List[Tuple[int, int]] = []
+
+    def perform(self) -> None:
+        target = self.engine.player
+        dx = target.x - self.entity.x
+        dy = target.y - self.entity.y
+        distance = max(abs(dx), abs(dy))  # distance to player
+
+        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+            if distance <= 3:
+                return RangedAction(self.entity, (target.x, target.y)).perform()  # Will attack player when in range
+
+            self.path = self.get_path_to(target.x, target.y)
+
+        if self.path:
+            dest_x, dest_y = self.path.pop(0)
+            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
 
         return WaitAction(self.entity).perform()
 
@@ -144,14 +168,6 @@ class EvasiveEnemy(BaseAI):
                             ]
                         )
                         print("dx > dy, dx < 0")
-                    # elif dx == 0:
-                    #     direction_x, direction_y = random.choice(  # Pick a random direction
-                    #         [
-                    #             (0, -1),  # North
-                    #             (0, 1),  # South
-                    #         ]
-                    #     )
-                    #     print("dx > dy, dy = 0")
                     elif dx > 0:
                         direction_x, direction_y = random.choice(  # Pick a random direction
                             [
@@ -169,14 +185,6 @@ class EvasiveEnemy(BaseAI):
                             ]
                         )
                         print("dx < dy, dy < 0")
-                    # elif dx == 0:
-                    #     direction_x, direction_y = random.choice(  # Pick a random direction
-                    #         [
-                    #             (-1, 0),  # West
-                    #             (1, 0),  # East
-                    #         ]
-                    #     )
-                    #     print("dx < dy, dx = 0")
                     elif dy > 0:
                         direction_x, direction_y = random.choice(  # Pick a random direction
                             [
