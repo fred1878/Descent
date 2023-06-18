@@ -103,4 +103,117 @@ class ConfusedEnemy(BaseAI):
                 ]
             )
             self.turns_remaining -= 1
-            return BumpAction(self.entity, direction_x, direction_y, ).perform()
+            return BumpAction(self.entity, direction_x, direction_y).perform()
+
+
+class EvasiveEnemy(BaseAI):
+    """
+    A cautious enemy will unpredictably move towards the player while evading side to side
+    """
+
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+        self.path: List[Tuple[int, int]] = []
+
+    def perform(self) -> None:
+        target = self.engine.player
+        dx = target.x - self.entity.x
+        dy = target.y - self.entity.y
+        distance = max(abs(dx), abs(dy))  # distance to player
+
+        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+            if distance <= 1:
+                return MeleeAction(self.entity, dx, dy).perform()  # Will attack player when adjacent
+
+            self.path = self.get_path_to(target.x, target.y)
+
+        if self.path:
+            dodge = random.randint(0, 1)
+            print("dx: " + str(dx) + "dy: " + str(dy))
+            if dodge == 0:
+                dest_x, dest_y = self.path.pop(0)
+                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+            if dodge == 1:
+                direction_x, direction_y = (0, 0)
+                if abs(dx) > abs(dy):
+                    if dx < 0:
+                        direction_x, direction_y = random.choice(  # Pick a random direction
+                            [
+                                (-1, -1),  # Northwest
+                                (-1, 1),  # Southwest
+                            ]
+                        )
+                        print("dx > dy, dx < 0")
+                    # elif dx == 0:
+                    #     direction_x, direction_y = random.choice(  # Pick a random direction
+                    #         [
+                    #             (0, -1),  # North
+                    #             (0, 1),  # South
+                    #         ]
+                    #     )
+                    #     print("dx > dy, dy = 0")
+                    elif dx > 0:
+                        direction_x, direction_y = random.choice(  # Pick a random direction
+                            [
+                                (1, -1),  # Northeast
+                                (1, 1),  # Southeast
+                            ]
+                        )
+                        print("dx > dy, dx > 0")
+                elif abs(dx) < abs(dy):
+                    if dy < 0:
+                        direction_x, direction_y = random.choice(  # Pick a random direction
+                            [
+                                (-1, -1),  # Northwest
+                                (1, -1),  # Northeast
+                            ]
+                        )
+                        print("dx < dy, dy < 0")
+                    # elif dx == 0:
+                    #     direction_x, direction_y = random.choice(  # Pick a random direction
+                    #         [
+                    #             (-1, 0),  # West
+                    #             (1, 0),  # East
+                    #         ]
+                    #     )
+                    #     print("dx < dy, dx = 0")
+                    elif dy > 0:
+                        direction_x, direction_y = random.choice(  # Pick a random direction
+                            [
+                                (-1, 1),  # Southwest
+                                (1, 1),  # Southeast
+                            ]
+                        )
+                        print("dx < dy, dy > 0")
+                elif abs(dx) == abs(dy):
+                    if dx < 0 and dy < 0:
+                        direction_x, direction_y = random.choice(  # Pick a random direction
+                            [
+                                (-1, 0),  # West
+                                (0, 1),  # South
+                            ]
+                        )
+                    if dx < 0 < dy:
+                        direction_x, direction_y = random.choice(  # Pick a random direction
+                            [
+                                (1, 0),  # East
+                                (0, 1),  # South
+                            ]
+                        )
+                    if dx > 0 > dy:
+                        direction_x, direction_y = random.choice(  # Pick a random direction
+                            [
+                                (0, -1),  # North
+                                (-1, 0),  # West
+                            ]
+                        )
+                    if dx > 0 and dy > 0:
+                        direction_x, direction_y = random.choice(  # Pick a random direction
+                            [
+                                (0, -1),  # North
+                                (1, 0),  # East
+                            ]
+                        )
+                return BumpAction(self.entity, direction_x, direction_y).perform()
+
+        return WaitAction(self.entity).perform()

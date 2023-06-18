@@ -1,4 +1,4 @@
-from components.ai import HostileEnemy
+from components.ai import HostileEnemy, EvasiveEnemy
 from components.fighter import Fighter
 from entity import Actor, Item
 from components.inventory import Inventory
@@ -18,6 +18,16 @@ player = Actor(
     level=Level(level_up_base=50),
 )
 # enemigos
+goblin = Actor(
+    char="g",
+    colour=(63, 146, 75),
+    name="Goblin",
+    ai_cls=EvasiveEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=6, base_defense=0, base_power=4, base_magic=0),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=30),
+)
 orc = Actor(
     char="o",
     colour=(63, 127, 63),
