@@ -18,10 +18,10 @@ player = Actor(
     level=Level(level_up_base=50),
 )
 # enemigos
-goblin = Actor(
-    char="g",
-    colour=(63, 146, 75),
-    name="Goblin",
+hobbit = Actor(
+    char="h",
+    colour=(127, 118, 57),
+    name="Hobbit",
     ai_cls=EvasiveEnemy,
     equipment=Equipment(),
     fighter=Fighter(hp=6, base_defense=0, base_power=4, base_magic=0),
