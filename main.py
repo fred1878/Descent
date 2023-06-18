@@ -1,8 +1,9 @@
 import traceback
-import tcod # type: ignore
+import tcod  # type: ignore
 import colour
 import exceptions
 import input_handlers
+
 
 def save_game(handler: input_handlers.BaseEventHandler, filename: str) -> None:
     """If the current event handler has an active Engine then save it."""
@@ -10,22 +11,23 @@ def save_game(handler: input_handlers.BaseEventHandler, filename: str) -> None:
         handler.engine.save_as(filename)
         print("Game saved.")
 
+
 def main() -> None:
     screen_width = 80
     screen_height = 50
 
     tileset = tcod.tileset.load_tilesheet("spritesheet.png", 32, 8, tcod.tileset.CHARMAP_TCOD)
-    
+
     handler: input_handlers.BaseEventHandler = input_handlers.MainMenu()
 
     with tcod.context.new_terminal(
-        screen_width,
-        screen_height,
-        tileset=tileset,
-        title="Descent",
-        vsync=True,
+            screen_width,
+            screen_height,
+            tileset=tileset,
+            title="Descent",
+            vsync=True,
     ) as context:
-        root_console = tcod.Console(screen_width, screen_height, order="F")
+        root_console = tcod.console.Console(screen_width, screen_height, order="F")
         try:
             while True:
                 root_console.clear()

@@ -28,9 +28,11 @@ class Action:
         """
         raise NotImplementedError()
 
+
 class WaitAction(Action):
     def perform(self) -> None:
         pass
+
 
 class TakeStairsAction(Action):
     def perform(self) -> None:
@@ -42,6 +44,7 @@ class TakeStairsAction(Action):
             self.engine.message_log.add_message("You descend the staircase.", colour.descend)
         else:
             raise exceptions.Impossible("There are no stairs here.")
+
 
 class PickupAction(Action):
     """Pickup an item and add it to the inventory, if there is room for it."""
@@ -94,7 +97,7 @@ class ActionWithDirection(Action):
 
         self.dx = dx
         self.dy = dy
-        
+
     @property
     def dest_xy(self) -> Tuple[int, int]:
         """Returns this actions destination."""
@@ -104,7 +107,7 @@ class ActionWithDirection(Action):
     def blocking_entity(self) -> Optional[Entity]:
         """Return the blocking entity at this actions destination.."""
         return self.engine.game_map.get_blocking_entity_at_location(*self.dest_xy)
-    
+
     @property
     def target_actor(self) -> Optional[Actor]:
         """Return the actor at this actions destination."""
@@ -112,8 +115,8 @@ class ActionWithDirection(Action):
 
     def perform(self) -> None:
         raise NotImplementedError()
-    
-    
+
+
 class DropItem(ItemAction):
     def perform(self) -> None:
         if self.entity.equipment.item_is_equipped(self.item):
@@ -129,7 +132,8 @@ class EquipAction(Action):
 
     def perform(self) -> None:
         self.entity.equipment.toggle_equip(self.item)
-    
+
+
 class MeleeAction(ActionWithDirection):
     def perform(self) -> None:
         target = self.target_actor
@@ -143,13 +147,14 @@ class MeleeAction(ActionWithDirection):
             attack_colour = colour.player_atk
         else:
             attack_colour = colour.enemy_atk
-        
+
         if damage > 0:
             self.engine.message_log.add_message(f"{attack_desc} for {damage} hit points.", attack_colour)
             target.fighter.hp -= damage
-        else: 
-           self.engine.message_log.add_message(f"{attack_desc} but does no damage.", colour.player_atk_no_damage)
-    
+        else:
+            self.engine.message_log.add_message(f"{attack_desc} but does no damage.", colour.player_atk_no_damage)
+
+
 class MovementAction(ActionWithDirection):
 
     def perform(self) -> None:
@@ -165,8 +170,8 @@ class MovementAction(ActionWithDirection):
             # Destination is blocked by an entity.
             raise exceptions.Impossible("That way is blocked.")
         self.entity.move(self.dx, self.dy)
-        
-        
+
+
 class BumpAction(ActionWithDirection):
     def perform(self) -> None:
         if self.target_actor:

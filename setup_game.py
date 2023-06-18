@@ -3,7 +3,7 @@ from __future__ import annotations
 import copy
 from typing import Optional
 
-import tcod # type:ignore
+import tcod  # type:ignore
 import lzma
 import pickle
 import colour
@@ -12,6 +12,7 @@ import entity_factories
 from game_map import GameWorld
 
 background_image = tcod.image.load("background.png")[:, :, :3]
+
 
 def new_game() -> Engine:
     """Return a brand new game session as an Engine instance."""
@@ -38,7 +39,7 @@ def new_game() -> Engine:
     engine.update_fov()
 
     engine.message_log.add_message("The walls shift around you...", colour.welcome_text)
-    
+
     dagger = copy.deepcopy(entity_factories.dagger)
     leather_armor = copy.deepcopy(entity_factories.leather_armor)
 
@@ -53,10 +54,10 @@ def new_game() -> Engine:
 
     return engine
 
+
 def load_game(filename: str) -> Engine:
     """Load an Engine instance from a file."""
     with open(filename, "rb") as f:
         engine = pickle.loads(lzma.decompress(f.read()))
     assert isinstance(engine, Engine)
     return engine
-

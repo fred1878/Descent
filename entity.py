@@ -26,15 +26,15 @@ class Entity:
     parent: Union[GameMap, Inventory]
 
     def __init__(
-        self,
-        parent: Optional[GameMap] = None,
-        x: int = 0,
-        y: int = 0,
-        char: str = "?",
-        colour: Tuple[int, int, int] = (255, 255, 255),
-        name: str = "should have name",
-        blocks_movement: bool = False,
-        render_order: RenderOrder = RenderOrder.CORPSE,
+            self,
+            parent: Optional[GameMap] = None,
+            x: int = 0,
+            y: int = 0,
+            char: str = "?",
+            colour: Tuple[int, int, int] = (255, 255, 255),
+            name: str = "should have name",
+            blocks_movement: bool = False,
+            render_order: RenderOrder = RenderOrder.CORPSE,
     ):
         self.x = x
         self.y = y
@@ -47,7 +47,7 @@ class Entity:
             # If parent isn't provided now then it will be set later.
             self.parent = parent
             parent.entities.add(self)
-            
+
     @property
     def gamemap(self) -> GameMap:
         return self.parent.gamemap
@@ -61,17 +61,16 @@ class Entity:
         gamemap.entities.add(clone)
         return clone
 
-    def move(self, dx: int, dy: int) -> None: # Move the entity
+    def move(self, dx: int, dy: int) -> None:  # Move the entity
         self.x += dx
         self.y += dy
-    
-    
+
     def distance(self, x: int, y: int) -> float:
         """
         Return the distance between the current entity and the given (x, y) coordinate.
         """
         return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
-        
+
     def place(self, x: int, y: int, gamemap: Optional[GameMap] = None) -> None:
         """Place this entity at a new location.  Handles moving across GameMaps."""
         self.x = x
@@ -82,21 +81,22 @@ class Entity:
                     self.gamemap.entities.remove(self)
             self.parent = gamemap
             gamemap.entities.add(self)
-            
+
+
 class Actor(Entity):
     def __init__(
-        self,
-        *,
-        x: int = 0,
-        y: int = 0,
-        char: str = "?",
-        colour: Tuple[int, int, int] = (255, 255, 255),
-        name: str = "<Unnamed>",
-        ai_cls: Type[BaseAI],
-        equipment: Equipment,
-        fighter: Fighter,
-        inventory: Inventory,
-        level: Level,
+            self,
+            *,
+            x: int = 0,
+            y: int = 0,
+            char: str = "?",
+            colour: Tuple[int, int, int] = (255, 255, 255),
+            name: str = "<Unnamed>",
+            ai_cls: Type[BaseAI],
+            equipment: Equipment,
+            fighter: Fighter,
+            inventory: Inventory,
+            level: Level,
     ):
         super().__init__(
             x=x,
@@ -113,10 +113,10 @@ class Actor(Entity):
         self.equipment.parent = self
         self.fighter = fighter
         self.fighter.parent = self
-        
+
         self.inventory = inventory
         self.inventory.parent = self
-        
+
         self.level = level
         self.level.parent = self
 
@@ -124,19 +124,19 @@ class Actor(Entity):
     def is_alive(self) -> bool:
         """Returns True as long as this actor can perform actions."""
         return bool(self.ai)
-    
+
 
 class Item(Entity):
     def __init__(
-        self,
-        *,
-        x: int = 0,
-        y: int = 0,
-        char: str = "?",
-        colour: Tuple[int, int, int] = (255, 255, 255),
-        name: str = "<Unnamed>",
-        consumable: Optional[Consumable] = None,
-        equippable: Optional[Equippable] = None,
+            self,
+            *,
+            x: int = 0,
+            y: int = 0,
+            char: str = "?",
+            colour: Tuple[int, int, int] = (255, 255, 255),
+            name: str = "<Unnamed>",
+            consumable: Optional[Consumable] = None,
+            equippable: Optional[Equippable] = None,
     ):
         super().__init__(
             x=x,

@@ -48,7 +48,7 @@ reaper = Actor(
     inventory=Inventory(capacity=0),
     level=Level(xp_given=500),
 )
-#items
+# items
 small_health_potion = Item(
     char="!",
     colour=(127, 0, 255),
@@ -81,37 +81,37 @@ fireball_scroll = Item(
 )
 # equipment
 dagger = Item(
-    char="/", 
-    colour=(0, 191, 255), 
+    char="/",
+    colour=(0, 191, 255),
     name="Dagger",
     equippable=equippable.Dagger()
 )
 
 bronze_sword = Item(
-    char="/", 
-    colour=(205, 127, 50), 
-    name="Bronze Sword", 
+    char="/",
+    colour=(205, 127, 50),
+    name="Bronze Sword",
     equippable=equippable.BronzeSword()
 )
 
 iron_sword = Item(
-    char="/", 
-    colour=(200, 200, 200), 
-    name="Iron Sword", 
+    char="/",
+    colour=(200, 200, 200),
+    name="Iron Sword",
     equippable=equippable.IronSword()
 )
 
 wooden_wand = Item(
-    char="\\", 
-    colour=(139, 69, 19), 
-    name="Wooden Wand", 
+    char="\\",
+    colour=(139, 69, 19),
+    name="Wooden Wand",
     equippable=equippable.WoodenWand()
 )
 
 golden_wand = Item(
-    char="\\", 
-    colour=colour.gold, 
-    name="Magic Wand", 
+    char="\\",
+    colour=colour.gold,
+    name="Magic Wand",
     equippable=equippable.GoldenWand()
 )
 

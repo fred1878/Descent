@@ -8,6 +8,7 @@ from components.equipment_types import EquipmentType
 if TYPE_CHECKING:
     from entity import Actor, Item
 
+
 class Equipment(BaseComponent):
     parent: Actor
 
@@ -38,7 +39,7 @@ class Equipment(BaseComponent):
             bonus += self.armor.equippable.power_bonus
 
         return bonus
-    
+
     @property
     def magic_bonus(self) -> int:
         bonus = 0
@@ -83,8 +84,8 @@ class Equipment(BaseComponent):
 
     def toggle_equip(self, equippable_item: Item, add_message: bool = True) -> None:
         if (
-            equippable_item.equippable
-            and equippable_item.equippable.equipment_type == EquipmentType.WEAPON
+                equippable_item.equippable
+                and equippable_item.equippable.equipment_type == EquipmentType.WEAPON
         ):
             slot = "weapon"
         else:

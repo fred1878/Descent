@@ -22,15 +22,17 @@ tile_dt = np.dtype(
     ]
 )
 
+
 def new_tile(
-    *,  # Enforce the use of keywords, so that parameter order doesn't matter.
-    walkable: int,
-    transparent: int,
-    dark: Tuple[int, Tuple[int, int, int], Tuple[int, int, int]],
-    light: Tuple[int, Tuple[int, int, int], Tuple[int, int, int]],
+        *,  # Enforce the use of keywords, so that parameter order doesn't matter.
+        walkable: int,
+        transparent: int,
+        dark: Tuple[int, Tuple[int, int, int], Tuple[int, int, int]],
+        light: Tuple[int, Tuple[int, int, int], Tuple[int, int, int]],
 ) -> np.ndarray:
     """Helper function for defining individual tile types """
     return np.array((walkable, transparent, dark, light), dtype=tile_dt)
+
 
 # SHROUD represents unexplored, unseen tiles
 SHROUD = np.array((ord(" "), colour.white, colour.black), dtype=graphic_dt)

@@ -12,9 +12,10 @@ import input_handlers
 if TYPE_CHECKING:
     from entity import Actor, Item
 
+
 class Consumable(BaseComponent):
     parent: Item
-    
+
     def get_action(self, consumer: Actor) -> Optional[input_handlers.ActionOrHandler]:
         """Try to return the action for this item."""
         return actions.ItemAction(consumer, self.parent)
@@ -25,7 +26,7 @@ class Consumable(BaseComponent):
         `action` is the context for this activation.
         """
         raise NotImplementedError()
-    
+
     def consume(self) -> None:
         """Remove the consumed item from its containing inventory."""
         entity = self.parent
@@ -43,10 +44,12 @@ class HealingConsumable(Consumable):
         amount_recovered = consumer.fighter.heal(self.amount)
 
         if amount_recovered > 0:
-            self.engine.message_log.add_message(f"You consume the {self.parent.name}, and recover {amount_recovered} HP!",colour.green,)
+            self.engine.message_log.add_message(
+                f"You consume the {self.parent.name}, and recover {amount_recovered} HP!", colour.green, )
             self.consume()
         else:
             raise Impossible(f"Your health is already full.")
+
 
 class LightningDamageConsumable(Consumable):
     def __init__(self, damage: int, maximum_range: int):
@@ -73,7 +76,8 @@ class LightningDamageConsumable(Consumable):
             self.consume()
         else:
             raise Impossible("No enemy is close enough to strike.")
-        
+
+
 class ConfusionConsumable(Consumable):
     def __init__(self, number_of_turns: int):
         self.number_of_turns = number_of_turns
@@ -81,7 +85,8 @@ class ConfusionConsumable(Consumable):
     def get_action(self, consumer: Actor) -> input_handlers.SingleRangedAttackHandler:
         self.engine.message_log.add_message("Select a target location.", colour.needs_target)
         return input_handlers.SingleRangedAttackHandler(self.engine,
-            callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),)
+                                                        callback=lambda xy: actions.ItemAction(consumer, self.parent,
+                                                                                               xy), )
 
     def activate(self, action: actions.ItemAction) -> None:
         consumer = action.entity
@@ -96,10 +101,11 @@ class ConfusionConsumable(Consumable):
 
         self.engine.message_log.add_message(
             f"The {target.name} stumbles around swinging!",
-            colour.status_effect_applied,)
+            colour.status_effect_applied, )
         target.ai = components.ai.ConfusedEnemy(
-            entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns,)
+            entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns, )
         self.consume()
+
 
 class FireballDamageConsumable(Consumable):
     def __init__(self, damage: int, radius: int):
@@ -123,7 +129,8 @@ class FireballDamageConsumable(Consumable):
         targets_hit = False
         for actor in self.engine.game_map.actors:
             if actor.distance(*target_xy) <= self.radius:
-                self.engine.message_log.add_message(f"The {actor.name} is engulfed in a fiery explosion, taking {self.damage + action.entity.fighter.magic} damage!")
+                self.engine.message_log.add_message(
+                    f"The {actor.name} is engulfed in a fiery explosion, taking {self.damage + action.entity.fighter.magic} damage!")
                 actor.fighter.take_damage(self.damage + action.entity.fighter.magic)
                 targets_hit = True
 
