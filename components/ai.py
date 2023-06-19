@@ -94,7 +94,8 @@ class HostileRangedEnemy(BaseAI):
 class MinionEnemy(BaseAI):
     def __init__(self, entity: Actor):
         super().__init__(entity)
-        self.path: List[Tuple[int, int]] = []
+        self.path_to_player: List[Tuple[int, int]] = []
+        self.path_to_master: List[Tuple[int, int]] = []
 
     def perform(self) -> None:
         target = self.engine.player
@@ -103,6 +104,7 @@ class MinionEnemy(BaseAI):
         distance_to_player = max(abs(dx_player), abs(dy_player))  # distance to player
 
         nearest_master = Optional[Actor]
+
         for entity in self.entity.gamemap.actors:
             if entity.x - self.entity.x < 8 and entity.y - self.entity.y < 8 and entity.master:
                 nearest_master = entity
@@ -111,16 +113,28 @@ class MinionEnemy(BaseAI):
             if distance_to_player <= 1:
                 return MeleeAction(self.entity, dx_player, dy_player).perform()  # Will attack player when adjacent
 
-            self.path = self.get_path_to(target.x, target.y)
+            self.path_to_player = self.get_path_to(target.x, target.y)
+            self.path_to_master = self.get_path_to(nearest_master.x, nearest_master.y)
 
-        if self.path:
-            dest_x, dest_y = self.path.pop(0)
-            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
-
-        if nearest_master:
-            dx_master = nearest_master.x - self.entity.x
-            dy_master = nearest_master.y - self.entity.y
-            distance_to_master = max(abs(dx_master), abs(dy_master))  # distance to master
+        if self.path_to_player:
+            if nearest_master:
+                dx_master = nearest_master.x - self.entity.x
+                dy_master = nearest_master.y - self.entity.y
+                distance_to_master = max(abs(dx_master), abs(dy_master))  # distance to master
+                follow = 1
+                if follow == 0:
+                    dest_x, dest_y = self.path_to_player.pop(0)
+                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+                if follow == 1:
+                    if distance_to_master <= 1:
+                        dest_x, dest_y = self.path_to_player.pop(0)
+                        return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+                    else:
+                        dest_x, dest_y = self.path_to_master.pop(0)
+                        return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+            else:
+                dest_x, dest_y = self.path_to_player.pop(0)
+                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
 
         return WaitAction(self.entity).perform()
 
