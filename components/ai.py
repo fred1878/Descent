@@ -108,6 +108,7 @@ class MinionEnemy(BaseAI):
         for entity in self.entity.gamemap.actors:
             if -8 < entity.x - self.entity.x < 8 and -8 < entity.y - self.entity.y < 8 and entity.master:
                 nearest_master = entity
+                self.path_to_master = self.get_path_to(nearest_master.x, nearest_master.y)
                 break
             else:
                 nearest_master = None
@@ -117,8 +118,6 @@ class MinionEnemy(BaseAI):
                 return MeleeAction(self.entity, dx_player, dy_player).perform()  # Will attack player when adjacent
 
             self.path_to_player = self.get_path_to(target.x, target.y)
-            if nearest_master:
-                self.path_to_master = self.get_path_to(nearest_master.x, nearest_master.y)
 
         if self.path_to_player:
             if nearest_master:
