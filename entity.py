@@ -32,7 +32,7 @@ class Entity:
             y: int = 0,
             char: str = "?",
             colour: Tuple[int, int, int] = (255, 255, 255),
-            name: str = "should have name",
+            name: str = "unimplemented",
             blocks_movement: bool = False,
             render_order: RenderOrder = RenderOrder.CORPSE,
     ):
@@ -97,6 +97,7 @@ class Actor(Entity):
             fighter: Fighter,
             inventory: Inventory,
             level: Level,
+            master: bool = False
     ):
         super().__init__(
             x=x,
@@ -119,6 +120,8 @@ class Actor(Entity):
 
         self.level = level
         self.level.parent = self
+
+        self.master = master
 
     @property
     def is_alive(self) -> bool:

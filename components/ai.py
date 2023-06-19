@@ -6,8 +6,7 @@ import numpy as np  # type: ignore
 import tcod  # type: ignore
 from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction, RangedAction
 
-if TYPE_CHECKING:
-    from entity import Actor
+from entity import Actor
 
 
 class BaseAI(Action):
@@ -92,6 +91,40 @@ class HostileRangedEnemy(BaseAI):
         return WaitAction(self.entity).perform()
 
 
+class MinionEnemy(BaseAI):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+        self.path: List[Tuple[int, int]] = []
+
+    def perform(self) -> None:
+        target = self.engine.player
+        dx_player = target.x - self.entity.x
+        dy_player = target.y - self.entity.y
+        distance_to_player = max(abs(dx_player), abs(dy_player))  # distance to player
+
+        nearest_master = Optional[Actor]
+        for entity in self.entity.gamemap.actors:
+            if entity.x - self.entity.x < 8 and entity.y - self.entity.y < 8 and entity.master:
+                nearest_master = entity
+
+        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+            if distance_to_player <= 1:
+                return MeleeAction(self.entity, dx_player, dy_player).perform()  # Will attack player when adjacent
+
+            self.path = self.get_path_to(target.x, target.y)
+
+        if self.path:
+            dest_x, dest_y = self.path.pop(0)
+            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+
+        if nearest_master:
+            dx_master = nearest_master.x - self.entity.x
+            dy_master = nearest_master.y - self.entity.y
+            distance_to_master = max(abs(dx_master), abs(dy_master))  # distance to master
+
+        return WaitAction(self.entity).perform()
+
+
 class ConfusedEnemy(BaseAI):
     """
     A confused enemy will stumble around aimlessly for a given number of turns, then revert back to its previous AI.
@@ -132,7 +165,7 @@ class ConfusedEnemy(BaseAI):
 
 class EvasiveEnemy(BaseAI):
     """
-    A cautious enemy will unpredictably move towards the player while evading side to side
+    An Evasive enemy will unpredictably move towards the player while evading side to side
     """
 
     def __init__(self, entity: Actor):

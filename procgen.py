@@ -6,10 +6,8 @@ import tcod  # type: ignore
 import game_map
 
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances
-
-if TYPE_CHECKING:
-    from engine import Engine
-    from entity import Entity
+from engine import Engine
+from entity import Entity, Actor
 import tile_types
 
 
@@ -103,6 +101,29 @@ def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_numbe
 
         if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
             entity.spawn(dungeon, x, y)
+            if isinstance(entity, Actor):
+                if entity.master:
+                    minion_spawn_locations = (
+                        [
+                            (x + 1, y + 1),
+                            (x + 1, y),
+                            (x + 1, y - 1),
+                            (x, y + 1),
+                            (x, y - 1),
+                            (x - 1, y + 1),
+                            (x - 1, y),
+                            (x - 1, y - 1),
+                        ]
+                    )
+                    valid_locations = list(filter(lambda s: valid_spawn(room, s), minion_spawn_locations))
+
+                    spawn_x, spawn_y = random.choice(valid_locations)
+                    entity_factories.minion.spawn(dungeon, spawn_x, spawn_y)
+
+
+def valid_spawn(room: RectangularRoom, xy: Tuple[int, int]) -> bool:
+    (x, y) = xy
+    return room.x1 + 1 < x < room.x2 - 1 and room.y1 + 1 < y < room.y2 - 1
 
 
 def tunnel_between(

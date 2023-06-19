@@ -1,4 +1,4 @@
-from components.ai import HostileEnemy, EvasiveEnemy, HostileRangedEnemy
+from components.ai import *
 from components.fighter import Fighter
 from entity import Actor, Item
 from components.inventory import Inventory
@@ -18,6 +18,27 @@ player = Actor(
     level=Level(level_up_base=50),
 )
 # enemigos
+minion = Actor(
+    char="m",
+    colour=(240, 210, 207),
+    name="Minion",
+    ai_cls=MinionEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=10, base_defense=0, base_power=2, base_magic=0),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=15),
+)
+master = Actor(
+    char="M",
+    colour=(240, 210, 207),
+    name="Master",
+    ai_cls=HostileEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=10, base_defense=0, base_power=2, base_magic=0),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=15),
+    master=True,
+)
 kobold = Actor(
     char="k",
     colour=(240, 210, 207),

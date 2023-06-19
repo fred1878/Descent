@@ -9,8 +9,10 @@ from actions import DropItem
 if TYPE_CHECKING:
     from entity import Actor
 
+
 class Fighter(BaseComponent):
     parent: Actor
+
     def __init__(self, hp: int, base_defense: int, base_power: int, base_magic: int):
         self.max_hp = hp
         self._hp = hp
@@ -53,14 +55,14 @@ class Fighter(BaseComponent):
             return self.parent.equipment.power_bonus
         else:
             return 0
-        
+
     @property
     def magic_bonus(self) -> int:
         if self.parent.equipment:
             return self.parent.equipment.magic_bonus
         else:
             return 0
-        
+
     def heal(self, amount: int) -> int:
         if self.hp == self.max_hp:
             return 0
