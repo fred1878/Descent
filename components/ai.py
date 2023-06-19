@@ -106,15 +106,19 @@ class MinionEnemy(BaseAI):
         nearest_master = Optional[Actor]
 
         for entity in self.entity.gamemap.actors:
-            if entity.x - self.entity.x < 8 and entity.y - self.entity.y < 8 and entity.master:
+            if -8 < entity.x - self.entity.x < 8 and -8 < entity.y - self.entity.y < 8 and entity.master:
                 nearest_master = entity
+                break
+            else:
+                nearest_master = None
 
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
             if distance_to_player <= 1:
                 return MeleeAction(self.entity, dx_player, dy_player).perform()  # Will attack player when adjacent
 
             self.path_to_player = self.get_path_to(target.x, target.y)
-            self.path_to_master = self.get_path_to(nearest_master.x, nearest_master.y)
+            if nearest_master:
+                self.path_to_master = self.get_path_to(nearest_master.x, nearest_master.y)
 
         if self.path_to_player:
             if nearest_master:
@@ -124,17 +128,17 @@ class MinionEnemy(BaseAI):
                 follow = 1
                 if follow == 0:
                     dest_x, dest_y = self.path_to_player.pop(0)
-                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
                 if follow == 1:
                     if distance_to_master <= 1:
                         dest_x, dest_y = self.path_to_player.pop(0)
-                        return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+                        return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
                     else:
                         dest_x, dest_y = self.path_to_master.pop(0)
-                        return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+                        return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
             else:
                 dest_x, dest_y = self.path_to_player.pop(0)
-                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
 
         return WaitAction(self.entity).perform()
 
@@ -203,7 +207,7 @@ class EvasiveEnemy(BaseAI):
             print("dx: " + str(dx) + "dy: " + str(dy))
             if dodge == 0:
                 dest_x, dest_y = self.path.pop(0)
-                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y, ).perform()
+                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
             if dodge == 1:
                 direction_x, direction_y = (0, 0)
                 if abs(dx) > abs(dy):
