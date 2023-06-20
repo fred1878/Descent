@@ -29,7 +29,7 @@ TODO:
 
 -tidy history\
 -req stats for items\
--different AIs\
+-different AIs --in progress\
 -friendly NPCs\
 -reusable/learnable spells\
 -more random damage\
@@ -43,7 +43,7 @@ TODO:
 -separate root, map, message, stats console\
 -move MainMenu to input_handlers\
 -monsters sometimes have gear\
--when monsters die they drop invbentory\
+-when monsters die they drop inventory\
 -status bar has more info?\
 -sort inventory\
 -move main.py functionality to engine\
@@ -51,7 +51,7 @@ TODO:
 -talk to the dead\
 -track kills\
 -potion hotkey\
--pack monster spawning/better spans in general\
+-pack monster spawning/better spans in general --monsters can spawn minions\
 -have monsters with different FOV/multi layer FOV\
 -random item descriptions?\
 -colours change as you DescentTM\
@@ -68,7 +68,7 @@ TODO:
 -more monsters\
 -more gruesome/twisted monsters\
 -mutations\
--MOAR monsters,items inc magic items, exploives, potions, scrolls, ranged weapons, GUN, traps, rooms\
+-MOAR items inc magic items, exploives, potions, scrolls, ranged weapons, GUN, traps, rooms\
 -'friendly' NPCs\
 
 

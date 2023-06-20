@@ -11,6 +11,7 @@ from entity import Entity, Actor
 import tile_types
 
 
+
 def get_max_value_for_floor(
         max_value_by_floor: List[Tuple[int, int]], floor: int
 ) -> int:
@@ -80,7 +81,7 @@ class RectangularRoom:
         )
 
 
-def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_number: int) -> None:
+def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_number: int ) -> None:
     number_of_monsters = random.randint(
         0, get_max_value_for_floor(max_monsters_by_floor, floor_number)
     )
@@ -101,6 +102,7 @@ def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_numbe
 
         if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
             entity.spawn(dungeon, x, y)
+
             if isinstance(entity, Actor):
                 if entity.master:
                     minion_spawn_locations = (
@@ -124,7 +126,6 @@ def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_numbe
 def valid_spawn(room: RectangularRoom, xy: Tuple[int, int]) -> bool:
     (x, y) = xy
     return room.x1 + 1 < x < room.x2 - 1 and room.y1 + 1 < y < room.y2 - 1
-
 
 def tunnel_between(
         start: Tuple[int, int], end: Tuple[int, int]

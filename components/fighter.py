@@ -29,7 +29,7 @@ class Fighter(BaseComponent):
         self._hp = max(0, min(value, self.max_hp))
         if self._hp == 0 and self.parent.ai:
             self.die()
-            
+
     @property
     def defense(self) -> int:
         return self.base_defense + self.defense_bonus

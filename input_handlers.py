@@ -3,7 +3,6 @@ from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union
 import os
 import tcod.event  # type: ignore
 from tcod import libtcodpy
-
 import actions
 from actions import Action, BumpAction, WaitAction, PickupAction
 import colour
@@ -194,12 +193,12 @@ class AskUserEventHandler(EventHandler):
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         """By default any key exits this input handler."""
         if event.sym in {
-            tcod.event.K_LSHIFT,
-            tcod.event.K_RSHIFT,
-            tcod.event.K_LCTRL,
-            tcod.event.K_RCTRL,
-            tcod.event.K_LALT,
-            tcod.event.K_RALT, }:  # Ignore modifier keys.
+            tcod.event.KeySym.LSHIFT,
+            tcod.event.KeySym.RSHIFT,
+            tcod.event.KeySym.LCTRL,
+            tcod.event.KeySym.RCTRL,
+            tcod.event.KeySym.LALT,
+            tcod.event.KeySym.RALT}:  # Ignore modifier keys.
             return None
         return self.on_exit()
 

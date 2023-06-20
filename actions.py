@@ -116,7 +116,6 @@ class ActionWithDirection(Action):
     def perform(self) -> None:
         raise NotImplementedError()
 
-
 class TargetAction(Action):
     def __init__(self, entity: Actor, target_xy: Tuple[int, int]):
         super().__init__(entity)
@@ -129,7 +128,6 @@ class TargetAction(Action):
 
     def perform(self) -> None:
         raise NotImplementedError()
-
 
 class DropItem(ItemAction):
     def perform(self) -> None:
@@ -146,7 +144,6 @@ class EquipAction(Action):
 
     def perform(self) -> None:
         self.entity.equipment.toggle_equip(self.item)
-
 
 class RangedAction(TargetAction):
     def __init__(self, entity: Actor, target_xy: Tuple[int, int]):
@@ -170,7 +167,6 @@ class RangedAction(TargetAction):
             target.fighter.hp -= damage
         else:
             self.engine.message_log.add_message(f"{attack_desc} but does no damage.", colour.player_atk_no_damage)
-
 
 class MeleeAction(ActionWithDirection):
     def perform(self) -> None:
