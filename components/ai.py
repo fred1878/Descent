@@ -104,14 +104,23 @@ class MinionEnemy(BaseAI):
         distance_to_player = max(abs(dx_player), abs(dy_player))  # distance to player
 
         nearest_master = Optional[Actor]
+        master_list: List[Actor] = []
 
-        for entity in self.entity.gamemap.actors:
-            if -8 < entity.x - self.entity.x < 8 and -8 < entity.y - self.entity.y < 8 and entity.master:
-                nearest_master = entity
-                self.path_to_master = self.get_path_to(nearest_master.x, nearest_master.y)
-                break
-            else:
-                nearest_master = None
+        for actor in self.entity.gamemap.actors:
+            if -8 < actor.x - self.entity.x < 8 and -8 < actor.y - self.entity.y < 8 and actor.master:
+                master_list.append(actor)
+
+        if master_list:
+            nearest_master = master_list[0]
+            dx_master = nearest_master.x - self.entity.x
+            dy_master = nearest_master.y - self.entity.y
+            for master in master_list:
+                distance = abs(master.x - self.entity.x) + abs(master.y - self.entity.y)
+                if distance < abs(dx_master) + abs(dy_master):
+                    nearest_master = master
+            self.path_to_master = self.get_path_to(nearest_master.x, nearest_master.y)
+        else:
+            nearest_master = None
 
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
             if distance_to_player <= 1:
@@ -124,17 +133,12 @@ class MinionEnemy(BaseAI):
                 dx_master = nearest_master.x - self.entity.x
                 dy_master = nearest_master.y - self.entity.y
                 distance_to_master = max(abs(dx_master), abs(dy_master))  # distance to master
-                follow = 1
-                if follow == 0:
+                if distance_to_master <= 1:
                     dest_x, dest_y = self.path_to_player.pop(0)
                     return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
-                if follow == 1:
-                    if distance_to_master <= 1:
-                        dest_x, dest_y = self.path_to_player.pop(0)
-                        return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
-                    else:
-                        dest_x, dest_y = self.path_to_master.pop(0)
-                        return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+                else:
+                    dest_x, dest_y = self.path_to_master.pop(0)
+                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
             else:
                 dest_x, dest_y = self.path_to_player.pop(0)
                 return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
@@ -203,7 +207,6 @@ class EvasiveEnemy(BaseAI):
 
         if self.path:
             dodge = random.randint(0, 1)
-            print("dx: " + str(dx) + "dy: " + str(dy))
             if dodge == 0:
                 dest_x, dest_y = self.path.pop(0)
                 return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
@@ -217,7 +220,6 @@ class EvasiveEnemy(BaseAI):
                                 (-1, 1),  # Southwest
                             ]
                         )
-                        print("dx > dy, dx < 0")
                     elif dx > 0:
                         direction_x, direction_y = random.choice(  # Pick a random direction
                             [
@@ -225,7 +227,6 @@ class EvasiveEnemy(BaseAI):
                                 (1, 1),  # Southeast
                             ]
                         )
-                        print("dx > dy, dx > 0")
                 elif abs(dx) < abs(dy):
                     if dy < 0:
                         direction_x, direction_y = random.choice(  # Pick a random direction
@@ -234,7 +235,6 @@ class EvasiveEnemy(BaseAI):
                                 (1, -1),  # Northeast
                             ]
                         )
-                        print("dx < dy, dy < 0")
                     elif dy > 0:
                         direction_x, direction_y = random.choice(  # Pick a random direction
                             [
@@ -242,7 +242,6 @@ class EvasiveEnemy(BaseAI):
                                 (1, 1),  # Southeast
                             ]
                         )
-                        print("dx < dy, dy > 0")
                 elif abs(dx) == abs(dy):
                     if dx < 0 and dy < 0:
                         direction_x, direction_y = random.choice(  # Pick a random direction
