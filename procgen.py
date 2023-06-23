@@ -149,7 +149,6 @@ def generate_dungeon(
     x = random.randint(0, dungeon.width - room_width - 1)
     y = random.randint(0, dungeon.height - room_height - 1)
     shop_room = ShopRoom(x, y, room_width, room_height, dungeon)
-    shop_room.place_shopkeeper(dungeon)
     dungeon.tiles[shop_room.inner] = tile_types.floor
     rooms.append(shop_room)
 

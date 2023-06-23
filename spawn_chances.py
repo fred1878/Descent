@@ -1,7 +1,7 @@
 import entity_factories
 from typing import Dict, List, Tuple, TYPE_CHECKING
 import tcod  # type: ignore
-from engine import Engine
+
 from entity import Entity
 
 max_items_by_floor = [
@@ -38,3 +38,8 @@ enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
     5: [(entity_factories.orc, 40), (entity_factories.troll, 40)],
     7: [(entity_factories.troll, 60), (entity_factories.reaper, 30)],
 }
+
+# room_chances: Dict[int, List[Tuple[Entity, int]]] = {
+#     0: [(room_factories.shop, 100)],
+#     2: [(entity_factories.master, 30), (entity_factories.orc, 50)],
+# }

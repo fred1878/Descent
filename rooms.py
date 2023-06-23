@@ -39,7 +39,5 @@ class ShopRoom(RectangularRoom):
     def __init__(self, x: int, y: int, width: int, height: int, dungeon: game_map.GameMap):
         super().__init__(x, y, width, height)
         self.entities = dungeon.entities
-
-    def place_shopkeeper(self, dungeon):
-        (x, y) = self.center
-        entity_factories.shopkeeper.spawn(dungeon, x, y)
+        (x_shop, y_shop) = self.center
+        entity_factories.shopkeeper.spawn(dungeon, x_shop, y_shop)
