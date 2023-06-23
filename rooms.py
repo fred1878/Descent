@@ -41,4 +41,5 @@ class ShopRoom(RectangularRoom):
         self.entities = dungeon.entities
 
     def place_shopkeeper(self, dungeon):
-        entity_factories.shopkeeper.spawn(self, dungeon, self.center)
+        (x, y) = self.center
+        entity_factories.shopkeeper.spawn(dungeon, x, y)

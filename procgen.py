@@ -144,12 +144,12 @@ def generate_dungeon(
 
     center_of_last_room = (0, 0)
 
-    room_width = 5
-    room_height = 5
+    room_width = 6
+    room_height = 6
     x = random.randint(0, dungeon.width - room_width - 1)
     y = random.randint(0, dungeon.height - room_height - 1)
     shop_room = ShopRoom(x, y, room_width, room_height, dungeon)
-    entity_factories.shopkeeper.spawn(dungeon, x + 2, y + 2)
+    shop_room.place_shopkeeper(dungeon)
     dungeon.tiles[shop_room.inner] = tile_types.floor
     rooms.append(shop_room)
 
@@ -170,18 +170,15 @@ def generate_dungeon(
             continue  # This room intersects, so go to the next attempt.
         # If there are no intersections then the room is valid.
 
-        # Dig out this rooms inner area.
+        # Dig out current rooms inner area.
         dungeon.tiles[new_room.inner] = tile_types.floor
 
-        if len(rooms) == 0:
-            # The first room, where the player starts.
-            if engine.game_world.current_floor == 1:
-                entity_factories.health_potion.place(new_room.x1 + 2, new_room.y1 + 2, dungeon)
-        else:  # All rooms after the first.
+        if len(rooms) != 0:  # All rooms after the first.
             # Dig out a tunnel between this room and the previous one.
             for x, y in tunnel_between(rooms[-1].center, new_room.center):
                 dungeon.tiles[x, y] = tile_types.floor
             if len(rooms) == number_of_custom_rooms:
+                # The first room, where the player starts.
                 player.place(*new_room.center, dungeon)
 
             center_of_last_room = new_room.center
