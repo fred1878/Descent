@@ -17,6 +17,17 @@ player = Actor(
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=50),
 )
+# fren
+shopkeeper = Actor(
+    char="S",
+    colour=(240, 210, 207),
+    name="Shopkeeper",
+    ai_cls=ShopAI,
+    equipment=Equipment(),
+    fighter=Fighter(hp=30, base_defense=1, base_power=7, base_magic=0),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=200),
+)
 # enemigos
 minion = Actor(
     char="m",

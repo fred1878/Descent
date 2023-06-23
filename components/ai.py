@@ -43,6 +43,33 @@ class BaseAI(Action):
         return [(index[0], index[1]) for index in path]
 
 
+class ShopAI(BaseAI):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+        self.path: List[Tuple[int, int]] = []
+        self.hostile = False
+
+    def perform(self) -> None:
+        if not self.hostile:
+            return WaitAction(self.entity).perform()
+        else:
+            target = self.engine.player
+            dx = target.x - self.entity.x
+            dy = target.y - self.entity.y
+            distance = max(abs(dx), abs(dy))  # distance to player
+
+            if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+                if distance <= 1:
+                    return MeleeAction(self.entity, dx, dy).perform()  # Will attack player when adjacent
+                else:
+                    self.path = self.get_path_to(target.x, target.y)
+                    dest_x, dest_y = self.path.pop(0)
+                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+
+            return WaitAction(self.entity).perform()
+
+
+
 class HostileEnemy(BaseAI):
     def __init__(self, entity: Actor):
         super().__init__(entity)
@@ -206,11 +233,11 @@ class EvasiveEnemy(BaseAI):
             self.path = self.get_path_to(target.x, target.y)
 
         if self.path:
-            dodge = random.randint(0, 1)
-            if dodge == 0:
+            dodge = bool(random.getrandbits(1))
+            if not dodge:
                 dest_x, dest_y = self.path.pop(0)
                 return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
-            if dodge == 1:
+            if dodge:
                 direction_x, direction_y = (0, 0)
                 if abs(dx) > abs(dy):
                     if dx < 0:

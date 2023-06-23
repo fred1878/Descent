@@ -4,12 +4,11 @@ from typing import Dict, Iterator, List, Tuple, TYPE_CHECKING
 import entity_factories
 import tcod  # type: ignore
 import game_map
-
+from rooms import *
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances
 from engine import Engine
 from entity import Entity, Actor
 import tile_types
-
 
 
 def get_max_value_for_floor(
@@ -52,36 +51,7 @@ def get_entities_at_random(
     return chosen_entities
 
 
-class RectangularRoom:
-    def __init__(self, x: int, y: int, width: int, height: int):
-        self.x1 = x
-        self.y1 = y
-        self.x2 = x + width
-        self.y2 = y + height
-
-    @property
-    def center(self) -> Tuple[int, int]:
-        center_x = int((self.x1 + self.x2) / 2)
-        center_y = int((self.y1 + self.y2) / 2)
-
-        return center_x, center_y
-
-    @property
-    def inner(self) -> Tuple[slice, slice]:
-        """Return the inner area of this room as a 2D array index."""
-        return slice(self.x1 + 1, self.x2), slice(self.y1 + 1, self.y2)
-
-    def intersects(self, other: RectangularRoom) -> bool:
-        """Return True if this room overlaps with another RectangularRoom."""
-        return (
-                self.x1 <= other.x2
-                and self.x2 >= other.x1
-                and self.y1 <= other.y2
-                and self.y2 >= other.y1
-        )
-
-
-def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_number: int ) -> None:
+def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_number: int) -> None:
     number_of_monsters = random.randint(
         0, get_max_value_for_floor(max_monsters_by_floor, floor_number)
     )
@@ -125,7 +95,8 @@ def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_numbe
 
 def valid_spawn(room: RectangularRoom, xy: Tuple[int, int]) -> bool:
     (x, y) = xy
-    return room.x1 + 1 < x < room.x2 - 1 and room.y1 + 1 < y < room.y2 - 1
+    return room.inner[0].start < x < room.inner[0].stop and room.inner[1].start < y < room.inner[1].stop
+
 
 def tunnel_between(
         start: Tuple[int, int], end: Tuple[int, int]
@@ -167,10 +138,22 @@ def generate_dungeon(
     """Generate a new dungeon map."""
     player = engine.player
     dungeon = game_map.GameMap(engine, map_width, map_height, entities=[player])
+    print(dungeon.entities.pop().name)
 
     rooms: List[RectangularRoom] = []
 
     center_of_last_room = (0, 0)
+
+    room_width = 5
+    room_height = 5
+    x = random.randint(0, dungeon.width - room_width - 1)
+    y = random.randint(0, dungeon.height - room_height - 1)
+    shop_room = ShopRoom(x, y, room_width, room_height, dungeon)
+    entity_factories.shopkeeper.spawn(dungeon, x + 2, y + 2)
+    dungeon.tiles[shop_room.inner] = tile_types.floor
+    rooms.append(shop_room)
+
+    number_of_custom_rooms = len(rooms)
 
     for r in range(max_rooms):
         room_width = random.randint(room_min_size, room_max_size)
@@ -192,13 +175,14 @@ def generate_dungeon(
 
         if len(rooms) == 0:
             # The first room, where the player starts.
-            player.place(*new_room.center, dungeon)
             if engine.game_world.current_floor == 1:
                 entity_factories.health_potion.place(new_room.x1 + 2, new_room.y1 + 2, dungeon)
         else:  # All rooms after the first.
             # Dig out a tunnel between this room and the previous one.
             for x, y in tunnel_between(rooms[-1].center, new_room.center):
                 dungeon.tiles[x, y] = tile_types.floor
+            if len(rooms) == number_of_custom_rooms:
+                player.place(*new_room.center, dungeon)
 
             center_of_last_room = new_room.center
 
@@ -207,5 +191,8 @@ def generate_dungeon(
         dungeon.downstairs_location = center_of_last_room
         # Finally, append the new room to the list.
         rooms.append(new_room)
+
+    for entity in dungeon.entities:
+        print(entity.name + " " + str(entity.x) + " " + str(entity.y))
 
     return dungeon
