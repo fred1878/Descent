@@ -21,8 +21,9 @@ if TYPE_CHECKING:
 class Engine:
     game_map: GameMap
     game_world: GameWorld
+    engine: Engine
 
-    def __init__(self, player: Entity):
+    def __init__(self, player: Actor):
         self.player = player
         self.message_log = MessageLog()
         self.mouse_location = (0, 0)
@@ -42,8 +43,7 @@ class Engine:
     def update_fov(self) -> None:  # Recompute the visible area based on the players point of view.
         self.game_map.visible[:] = compute_fov(
             self.game_map.tiles["transparent"],
-            (self.player.x, self.player.y),
-            radius=8, )
+            (self.player.x, self.player.y), radius=8)
         self.game_map.explored |= self.game_map.visible  # If a tile is "visible" it should be added to "explored".
 
     def render(self, console: Console) -> None:
@@ -53,7 +53,7 @@ class Engine:
                                     maximum_value=self.player.fighter.max_hp, total_width=20)
         render_functions.render_names_at_mouse_location(console=console, x=21, y=44, engine=self)
         render_functions.render_dungeon_level(console=console, dungeon_level=self.game_world.current_floor,
-                                              location=(0, 47), )
+                                              location=(0, 47))
 
     def save_as(self, filename: str) -> None:
         """Save this Engine instance as a compressed file."""

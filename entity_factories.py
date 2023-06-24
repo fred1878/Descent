@@ -26,7 +26,7 @@ shopkeeper = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=30, base_defense=1, base_power=7, base_magic=0),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=200),
+    level=Level(xp_given=200, gold_given=100),
 )
 # enemigos
 minion = Actor(
@@ -37,7 +37,7 @@ minion = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=10, base_defense=0, base_power=2, base_magic=0),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=15),
+    level=Level(xp_given=15, gold_given=5),
 )
 master = Actor(
     char="M",
@@ -47,7 +47,7 @@ master = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=10, base_defense=0, base_power=2, base_magic=0),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=15),
+    level=Level(xp_given=15, gold_given=5),
     master=True,
 )
 kobold = Actor(
@@ -58,7 +58,7 @@ kobold = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=3, base_defense=0, base_power=2, base_magic=0),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=15),
+    level=Level(xp_given=15, gold_given=5),
 )
 hobbit = Actor(
     char="h",
@@ -68,7 +68,7 @@ hobbit = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=6, base_defense=0, base_power=4, base_magic=0),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=30),
+    level=Level(xp_given=30, gold_given=5),
 )
 orc = Actor(
     char="o",
@@ -78,7 +78,7 @@ orc = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=10, base_defense=0, base_power=3, base_magic=0),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=35),
+    level=Level(xp_given=35, gold_given=5),
 )
 troll = Actor(
     char="T",
@@ -88,7 +88,7 @@ troll = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=16, base_defense=1, base_power=5, base_magic=0),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=100),
+    level=Level(xp_given=100, gold_given=5),
 )
 reaper = Actor(
     char="D",
@@ -98,7 +98,7 @@ reaper = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=50, base_defense=3, base_power=9, base_magic=0),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=500),
+    level=Level(xp_given=500, gold_given=5),
 )
 # items
 small_health_potion = Item(

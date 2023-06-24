@@ -18,12 +18,22 @@ class Level(BaseComponent):
         level_up_base: int = 100,
         level_up_factor: int = 160,
         xp_given: int = 0,
+        current_gold: int = 0,
+        gold_given: int = 0
     ):
         self.current_level = current_level
         self.current_xp = current_xp
         self.level_up_base = level_up_base
         self.level_up_factor = level_up_factor
         self.xp_given = xp_given
+        self.current_gold = current_gold
+        self.gold_given = gold_given
+
+    def change_gold(self, value: int) -> bool:
+        if self.current_gold + value < 0:
+            return False
+        else:
+            self.current_gold += value
 
     @property
     def experience_to_next_level(self) -> int:
