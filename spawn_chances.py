@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, TYPE_CHECKING, Type
+from typing import Dict, List, Type
 import tcod  # type: ignore
 
 from rooms import *
@@ -50,4 +50,3 @@ shop_params: Dict[int, List[int]] = {
     1: [6, 6],
     2: [8, 8],
 }
-

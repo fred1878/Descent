@@ -1,7 +1,7 @@
 from __future__ import annotations
 import random
 from itertools import repeat
-from typing import Dict, Iterator, List, Tuple, TYPE_CHECKING, Type
+from typing import Dict, Iterator, List, Type
 import tcod  # type: ignore
 from rooms import *
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
