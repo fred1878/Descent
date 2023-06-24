@@ -34,8 +34,15 @@ def render_dungeon_level(console: Console, dungeon_level: int, location: Tuple[i
     Render the level the player is currently on, at the given location.
     """
     x, y = location
-
     console.print(x=x, y=y, string=f"Dungeon level: {dungeon_level}")
+
+
+def render_gold(console: Console, gold: int, location: Tuple[int, int]) -> None:
+    """
+    Render the player's gold amount
+    """
+    x, y = location
+    console.print(x, y, string=f"Gold: {gold}")
 
 
 def render_names_at_mouse_location(console: Console, x: int, y: int, engine: Engine) -> None:

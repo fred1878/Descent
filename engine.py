@@ -52,6 +52,7 @@ class Engine:
         render_functions.render_names_at_mouse_location(console=console, x=21, y=44, engine=self)
         render_functions.render_dungeon_level(console=console, dungeon_level=self.game_world.current_floor,
                                               location=(0, 47))
+        render_functions.render_gold(console=console, gold=self.player.level.current_gold, location=(0, 48))
 
     def save_as(self, filename: str) -> None:
         """Save this Engine instance as a compressed file."""
