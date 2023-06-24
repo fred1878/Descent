@@ -234,11 +234,10 @@ class EvasiveEnemy(BaseAI):
             self.path = self.get_path_to(target.x, target.y)
 
         if self.path:
-            dodge = bool(random.getrandbits(1))
-            if not dodge:
+            if bool(random.getrandbits(1)):
                 dest_x, dest_y = self.path.pop(0)
                 return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
-            if dodge:
+            else:
                 direction_x, direction_y = (0, 0)
                 if abs(dx) > abs(dy):
                     if dx < 0:

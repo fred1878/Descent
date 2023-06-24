@@ -1,19 +1,17 @@
 from __future__ import annotations
 import random
-from typing import Dict, Iterator, List, Tuple, TYPE_CHECKING
-import entity_factories
+from itertools import repeat
+from typing import Dict, Iterator, List, Tuple, TYPE_CHECKING, Type
 import tcod  # type: ignore
-import game_map
 from rooms import *
-from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances
+from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
+    shop_params
 from engine import Engine
 from entity import Entity, Actor
 import tile_types
 
 
-def get_max_value_for_floor(
-        max_value_by_floor: List[Tuple[int, int]], floor: int
-) -> int:
+def get_max_value_for_floor(max_value_by_floor: List[Tuple[int, int]], floor: int) -> int:
     current_value = 0
 
     for floor_minimum, value in max_value_by_floor:
@@ -43,6 +41,7 @@ def get_entities_at_random(
 
     entities = list(entity_weighted_chances.keys())
     entity_weighted_chance_values = list(entity_weighted_chances.values())
+    print(entities, entity_weighted_chance_values)
 
     chosen_entities = random.choices(
         entities, weights=entity_weighted_chance_values, k=number_of_entities
@@ -104,7 +103,7 @@ def tunnel_between(
     """Return an L-shaped tunnel between these two points."""
     x1, y1 = start
     x2, y2 = end
-    if random.random() < 0.5:  # 50% chance.
+    if bool(random.getrandbits(1)):  # 50% chance.
         corner_x, corner_y = x2, y1  # Move horizontally, then vertically.
     else:
         corner_x, corner_y = x1, y2  # Move vertically, then horizontally.
@@ -127,6 +126,42 @@ def intersects(self, other: RectangularRoom) -> bool:
     return dungeon
 
 
+def get_custom_rooms(
+        number_of_rooms_by_floor: Dict[int, List[Tuple[Type[RectangularRoom], int]]],
+        floor: int
+) -> List[Type[RectangularRoom]]:
+    rooms: List[Type[RectangularRoom]] = []
+    for key, values in number_of_rooms_by_floor.items():
+        if key == floor:
+            for value in values:
+                room = value[0]
+                number_of_room = value[1]
+                rooms.extend(repeat(room, number_of_room))
+
+    return rooms
+
+
+def generate_custom_rooms(
+        dungeon: game_map.GameMap,
+        floor: int) -> List[RectangularRoom]:
+    rooms: List[RectangularRoom] = []
+    room_types: List[Type[RectangularRoom]] = get_custom_rooms(room_count, floor)
+    for room in room_types:
+        if room.__name__ == 'ShopRoom':
+            for key, values in shop_params.items():
+                if key == floor:
+                    room_width = values[0]
+                    room_height = values[1]
+                    x = random.randint(0, dungeon.width - room_width - 1)
+                    y = random.randint(0, dungeon.height - room_height - 1)
+                    new_room = room(x, y, room_width, room_height, dungeon)
+                    dungeon.tiles[new_room.inner] = tile_types.floor
+                    rooms.append(new_room)
+        else:
+            print("fuck")
+    return rooms
+
+
 def generate_dungeon(
         max_rooms: int,
         room_min_size: int,
@@ -138,19 +173,14 @@ def generate_dungeon(
     """Generate a new dungeon map."""
     player = engine.player
     dungeon = game_map.GameMap(engine, map_width, map_height, entities=[player])
-    print(dungeon.entities.pop().name)
+    current_floor = engine.game_world.current_floor
 
     rooms: List[RectangularRoom] = []
 
     center_of_last_room = (0, 0)
 
-    room_width = 6
-    room_height = 6
-    x = random.randint(0, dungeon.width - room_width - 1)
-    y = random.randint(0, dungeon.height - room_height - 1)
-    shop_room = ShopRoom(x, y, room_width, room_height, dungeon)
-    dungeon.tiles[shop_room.inner] = tile_types.floor
-    rooms.append(shop_room)
+    custom_rooms = generate_custom_rooms(dungeon, current_floor)
+    rooms.extend(custom_rooms)
 
     number_of_custom_rooms = len(rooms)
 
@@ -176,19 +206,20 @@ def generate_dungeon(
             # Dig out a tunnel between this room and the previous one.
             for x, y in tunnel_between(rooms[-1].center, new_room.center):
                 dungeon.tiles[x, y] = tile_types.floor
-            if len(rooms) == number_of_custom_rooms:
-                # The first room, where the player starts.
-                player.place(*new_room.center, dungeon)
-
             center_of_last_room = new_room.center
 
-        place_entities(new_room, dungeon, engine.game_world.current_floor)
+        if len(rooms) == number_of_custom_rooms:
+            # The first room, where the player starts.
+            player.place(*new_room.center, dungeon)
+
+        place_entities(new_room, dungeon, current_floor)
         dungeon.tiles[center_of_last_room] = tile_types.down_stairs
         dungeon.downstairs_location = center_of_last_room
         # Finally, append the new room to the list.
         rooms.append(new_room)
 
-    for entity in dungeon.entities:
-        print(entity.name + " " + str(entity.x) + " " + str(entity.y))
+    # for entity in dungeon.entities:
+    #     print(entity.name + " " + str(entity.x) + " " + str(entity.y))
+    print("stairs x:" + str(dungeon.downstairs_location[0]), "y: " + str(dungeon.downstairs_location[1]))
 
     return dungeon

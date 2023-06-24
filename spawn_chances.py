@@ -1,7 +1,7 @@
-import entity_factories
-from typing import Dict, List, Tuple, TYPE_CHECKING
+from typing import Dict, List, Tuple, TYPE_CHECKING, Type
 import tcod  # type: ignore
 
+from rooms import *
 from entity import Entity
 
 max_items_by_floor = [
@@ -18,6 +18,7 @@ max_monsters_by_floor = [
     (8, 6)
 ]
 
+# entity chances override previous floors
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
     0: [(entity_factories.small_health_potion, 35)],
     1: [(entity_factories.lightning_scroll, 10)],
@@ -39,7 +40,14 @@ enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
     7: [(entity_factories.troll, 60), (entity_factories.reaper, 30)],
 }
 
-# room_chances: Dict[int, List[Tuple[Entity, int]]] = {
-#     0: [(room_factories.shop, 100)],
-#     2: [(entity_factories.master, 30), (entity_factories.orc, 50)],
-# }
+# room counts are set per floor
+room_count: Dict[int, List[Tuple[Type[RectangularRoom], int]]] = {
+    1: [(ShopRoom, 1)],
+    2: [(ShopRoom, 2)],
+}
+
+shop_params: Dict[int, List[int]] = {
+    1: [6, 6],
+    2: [8, 8],
+}
+
