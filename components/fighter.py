@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 from components.base_component import BaseComponent
 from render_order import RenderOrder
 import colour
-from actions import DropItem
 
 if TYPE_CHECKING:
     from entity import Actor

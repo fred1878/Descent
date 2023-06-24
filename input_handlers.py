@@ -557,20 +557,21 @@ class MainGameEventHandler(EventHandler):
         return action
 
 
+def on_quit() -> None:
+    """Handle exiting out of a finished game."""
+    if os.path.exists("savegame.sav"):
+        os.remove("savegame.sav")  # Deletes the active save file.
+    raise exceptions.QuitWithoutSaving()  # Avoid saving a finished game.
+
+
 class GameOverEventHandler(EventHandler):
 
-    def on_quit(self) -> None:
-        """Handle exiting out of a finished game."""
-        if os.path.exists("savegame.sav"):
-            os.remove("savegame.sav")  # Deletes the active save file.
-        raise exceptions.QuitWithoutSaving()  # Avoid saving a finished game.
-
     def ev_quit(self, event: tcod.event.Quit) -> None:
-        self.on_quit()
+        on_quit()
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> None:
         if event.sym == tcod.event.KeySym.ESCAPE:
-            self.on_quit()
+            on_quit()
 
 
 CURSOR_Y_KEYS = {
