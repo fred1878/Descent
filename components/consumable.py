@@ -21,7 +21,7 @@ class Consumable(BaseComponent):
         return actions.ItemAction(consumer, self.parent)
 
     def activate(self, action: actions.ItemAction) -> None:
-        """Invoke this items ability.
+        """Invoke this item's ability.
 
         `action` is the context for this activation.
         """
@@ -130,7 +130,8 @@ class FireballDamageConsumable(Consumable):
         for actor in self.engine.game_map.actors:
             if actor.distance(*target_xy) <= self.radius:
                 self.engine.message_log.add_message(
-                    f"The {actor.name} is engulfed in a fiery explosion, taking {self.damage + action.entity.fighter.magic} damage!")
+                    f"The {actor.name} is engulfed in a fiery explosion, taking "
+                    f"{self.damage + action.entity.fighter.magic} damage!")
                 actor.fighter.take_damage(self.damage + action.entity.fighter.magic)
                 targets_hit = True
 

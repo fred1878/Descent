@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import copy
-from typing import Optional
 
 import tcod  # type:ignore
 import lzma

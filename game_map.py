@@ -26,7 +26,7 @@ class GameMap:
 
     @property
     def actors(self) -> Iterator[Actor]:
-        """Iterate over this maps living actors."""
+        """Iterate over this map's living actors."""
         yield from (
             entity
             for entity in self.entities
@@ -48,7 +48,7 @@ class GameMap:
         return None
 
     def in_bounds(self, x: int, y: int) -> bool:
-        """Return True if x and y are inside of the bounds of this map."""
+        """Return True if x and y are inside the bounds of this map."""
         return 0 <= x < self.width and 0 <= y < self.height
 
     def render(self, console: Console) -> None:

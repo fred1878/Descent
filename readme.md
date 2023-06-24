@@ -33,21 +33,18 @@ TODO:
 -friendly NPCs\
 -reusable/learnable spells\
 -more random damage\
--difficulty settings\
 -environment effects\
--move message rendering from messageLog to render_functions\
--maybe move game_map rendering\
 -move actor,item,gameworld to own files\
 -add to procgen ability to make rooms in room_factories\
 -add static rooms by floor\
 -separate root, map, message, stats console\
--move MainMenu to input_handlers\
+-move MainMenu to input_handlers --done\
 -monsters sometimes have gear\
 -when monsters die they drop inventory\
 -status bar has more info?\
 -sort inventory\
 -move main.py functionality to engine\
--difficulty settings that can set params for items monsters etc\
+-difficulty settings that can set params for items monsters etc --menu implemented\
 -talk to the dead\
 -track kills\
 -potion hotkey\
@@ -63,12 +60,13 @@ TODO:
 ## The Ideas Guy
 
 -SAN meter\
--corruption\
--shopkeeper\
+-corruption - items, scrolls and potions etc increase corruption\
+-traits tied to corruption and seperate\
+-mutations\
+-shopkeeper --entity done, need to make actual shop interface\
 -more monsters\
 -more gruesome/twisted monsters\
--mutations\
 -MOAR items inc magic items, exploives, potions, scrolls, ranged weapons, GUN, traps, rooms\
--'friendly' NPCs\
+-"friendly" NPCs i.e patches type friendly\
 
 

@@ -82,7 +82,7 @@ class ItemAction(Action):
 
     @property
     def target_actor(self) -> Optional[Actor]:
-        """Return the actor at this actions destination."""
+        """Return the actor at this action's destination."""
         return self.engine.game_map.get_actor_at_location(*self.target_xy)
 
     def perform(self) -> None:
@@ -110,7 +110,7 @@ class ActionWithDirection(Action):
 
     @property
     def target_actor(self) -> Optional[Actor]:
-        """Return the actor at this actions destination."""
+        """Return the actor at this action's destination."""
         return self.engine.game_map.get_actor_at_location(*self.dest_xy)
 
     def perform(self) -> None:
@@ -124,7 +124,7 @@ class TargetAction(Action):
 
     @property
     def target_actor(self) -> Optional[Actor]:
-        """Return the actor at this actions destination."""
+        """Return the actor at this action's destination."""
         return self.engine.game_map.get_actor_at_location(*self.target_xy)
 
     def perform(self) -> None:
