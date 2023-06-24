@@ -74,6 +74,10 @@ class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
 class MainMenu(BaseEventHandler):
     """Handle the main menu rendering and input."""
 
+    def __init__(self, screen_width: int, screen_height: int):
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+
     def on_render(self, console: tcod.Console) -> None:
         """Render the main menu on a background image."""
         console.draw_semigraphics(setup_game.background_image, 0, 0)
@@ -109,13 +113,17 @@ class MainMenu(BaseEventHandler):
                 traceback.print_exc()  # Print to stderr.
                 return PopupMessage(self, f"Failed to load save:\n{exc}")
         elif event.sym == tcod.event.KeySym.n:
-            return DifficultySelect()
+            return DifficultySelect(self.screen_width, self.screen_height)
 
         return None
 
 
 class DifficultySelect(BaseEventHandler):
     """Display select difficulty menu"""
+
+    def __init__(self, screen_width: int, screen_height: int):
+        self.screen_width = screen_width
+        self.screen_height = screen_height
 
     def on_render(self, console: tcod.Console) -> None:
         console.draw_semigraphics(setup_game.background_image, 0, 0)
@@ -139,11 +147,11 @@ class DifficultySelect(BaseEventHandler):
         if event.sym == tcod.event.KeySym.ESCAPE:
             raise SystemExit()
         elif event.sym == tcod.event.KeySym.e:
-            return MainGameEventHandler(setup_game.new_game())
+            return MainGameEventHandler(setup_game.new_game(self.screen_width, self.screen_height))
         elif event.sym == tcod.event.KeySym.m:
-            return MainGameEventHandler(setup_game.new_game())
+            return MainGameEventHandler(setup_game.new_game(self.screen_width, self.screen_height))
         elif event.sym == tcod.event.KeySym.h:
-            return MainGameEventHandler(setup_game.new_game())
+            return MainGameEventHandler(setup_game.new_game(self.screen_width, self.screen_height))
 
         return None
 

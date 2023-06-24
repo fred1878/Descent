@@ -13,10 +13,10 @@ from game_map import GameWorld
 background_image = tcod.image.load("background.png")[:, :, :3]
 
 
-def new_game() -> Engine:
+def new_game(screen_width: int, screen_height: int) -> Engine:
     """Return a brand new game session as an Engine instance."""
-    map_width = 80
-    map_height = 43
+    map_width = screen_width
+    map_height = screen_height - 7
 
     room_max_size = 10
     room_min_size = 6
