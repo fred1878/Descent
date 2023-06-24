@@ -109,6 +109,40 @@ class MainMenu(BaseEventHandler):
                 traceback.print_exc()  # Print to stderr.
                 return PopupMessage(self, f"Failed to load save:\n{exc}")
         elif event.sym == tcod.event.KeySym.n:
+            return DifficultySelect()
+
+        return None
+
+
+class DifficultySelect(BaseEventHandler):
+    """Display select difficulty menu"""
+
+    def on_render(self, console: tcod.Console) -> None:
+        console.draw_semigraphics(setup_game.background_image, 0, 0)
+        console.print(console.width // 2, console.height // 2 - 4, "Select a difficulty", fg=colour.menu_title,
+                      alignment=libtcodpy.CENTER)
+        menu_width = 8
+        for i, text in enumerate(["[E]asy", "[M]edium", "[H]ard"]):
+            console.print(
+                console.width // 2,
+                console.height // 2 - 2 + i,
+                text.ljust(menu_width),
+                fg=colour.menu_text,
+                bg=colour.black,
+                alignment=libtcodpy.CENTER,
+                bg_blend=libtcodpy.BKGND_ALPHA(64),
+            )
+
+    def ev_keydown(
+            self, event: tcod.event.KeyDown
+    ) -> Optional[BaseEventHandler]:
+        if event.sym == tcod.event.KeySym.ESCAPE:
+            raise SystemExit()
+        elif event.sym == tcod.event.KeySym.e:
+            return MainGameEventHandler(setup_game.new_game())
+        elif event.sym == tcod.event.KeySym.m:
+            return MainGameEventHandler(setup_game.new_game())
+        elif event.sym == tcod.event.KeySym.h:
             return MainGameEventHandler(setup_game.new_game())
 
         return None
