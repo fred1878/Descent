@@ -61,12 +61,12 @@ TODO:
 
 -SAN meter\
 -corruption - items, scrolls and potions etc increase corruption\
--traits tied to corruption and seperate\
+-traits tied to corruption and separate\
 -mutations\
 -shopkeeper --entity done, need to make actual shop interface\
 -more monsters\
 -more gruesome/twisted monsters\
--MOAR items inc magic items, exploives, potions, scrolls, ranged weapons, GUN, traps, rooms\
+-MOAR items inc magic items, explosives, potions, scrolls, ranged weapons, GUN, traps, rooms\
 -"friendly" NPCs i.e patches type friendly\
 
 
