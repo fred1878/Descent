@@ -53,7 +53,7 @@ class Engine:
         render_functions.render_names_at_mouse_location(
             console=console, x=21, y=self.game_world.map_height + 1, engine=self)
         render_functions.render_dungeon_level(
-            console=console, dungeon_level=self.game_world.current_floor,location=(0, self.game_world.map_height + 4))
+            console=console, dungeon_level=self.game_world.current_floor, location=(0, self.game_world.map_height + 4))
         render_functions.render_gold(
             console=console, gold=self.player.level.current_gold, location=(0, self.game_world.map_height + 5))
 
