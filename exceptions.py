@@ -7,3 +7,8 @@ class Impossible(Exception):
 
 class QuitWithoutSaving(SystemExit):
     """Can be raised to exit the game without automatically saving."""
+
+
+class RoomNotFound(Exception):
+    """ Exception raised when attempting to generate a room which has a type
+    that has not been accounted for"""

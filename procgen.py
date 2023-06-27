@@ -3,6 +3,8 @@ import random
 from itertools import repeat
 from typing import Dict, Iterator, List, Type
 import tcod  # type: ignore
+
+from exceptions import RoomNotFound
 from rooms import *
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
     shop_params
@@ -41,7 +43,6 @@ def get_entities_at_random(
 
     entities = list(entity_weighted_chances.keys())
     entity_weighted_chance_values = list(entity_weighted_chances.values())
-    print(entities, entity_weighted_chance_values)
 
     chosen_entities = random.choices(
         entities, weights=entity_weighted_chance_values, k=number_of_entities
@@ -93,7 +94,7 @@ def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_numbe
 
 
 def valid_spawn(room: RectangularRoom, xy: Tuple[int, int]) -> bool:
-    (x, y) = xy
+    x, y = xy
     return room.inner[0].start < x < room.inner[0].stop and room.inner[1].start < y < room.inner[1].stop
 
 
@@ -134,8 +135,7 @@ def get_custom_rooms(
     for key, values in number_of_rooms_by_floor.items():
         if key == floor:
             for value in values:
-                room = value[0]
-                number_of_room = value[1]
+                room, number_of_room = value
                 rooms.extend(repeat(room, number_of_room))
 
     return rooms
@@ -158,7 +158,7 @@ def generate_custom_rooms(
                     dungeon.tiles[new_room.inner] = tile_types.floor
                     rooms.append(new_room)
         else:
-            print("fuck")
+            raise RoomNotFound(str(room.__name__) + " not in room generator")
     return rooms
 
 
@@ -218,8 +218,8 @@ def generate_dungeon(
         # Finally, append the new room to the list.
         rooms.append(new_room)
 
-    # for entity in dungeon.entities:
-    #     print(entity.name + " " + str(entity.x) + " " + str(entity.y))
+    for entity in dungeon.entities:
+        print(entity.name + " " + str(entity.x) + " " + str(entity.y))
     print("stairs x:" + str(dungeon.downstairs_location[0]), "y: " + str(dungeon.downstairs_location[1]))
 
     return dungeon

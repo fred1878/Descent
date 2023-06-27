@@ -513,6 +513,34 @@ class LookHandler(SelectIndexHandler):
         return MainGameEventHandler(self.engine)
 
 
+class TargetMeleeAttackHandler(SelectIndexHandler):
+
+    def __init__(self, engine: Engine):
+        super().__init__(engine)
+        self.player = self.engine.player
+        engine.mouse_location = self.player.x, self.player.y
+
+    def on_render(self, console: tcod.Console) -> None:
+        super().on_render(console)
+
+    def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
+        key = event.sym
+        if key in MOVE_KEYS:
+            x, y = self.engine.mouse_location
+            dx, dy = MOVE_KEYS[key]
+            x += dx
+            y += dy
+            x = max(self.player.x - 1, min(x, self.player.x + 1))
+            y = max(self.player.y - 1, min(y, self.player.y + 1))
+            self.engine.mouse_location = x, y
+            return None
+        elif key in CONFIRM_KEYS or tcod.event.KeySym.a:
+            x, y = self.engine.mouse_location
+            dx = x - self.player.x
+            dy = y - self.player.y
+            return actions.MeleeAction(self.player, dx, dy)
+
+
 class SingleRangedAttackHandler(SelectIndexHandler):
     """Handles targeting a single enemy. Only the enemy selected will be affected."""
 
@@ -594,6 +622,8 @@ class MainGameEventHandler(EventHandler):
             return LookHandler(self.engine)
         elif key == tcod.event.KeySym.c:
             return CharacterScreenEventHandler(self.engine)
+        elif key == tcod.event.KeySym.a:
+            return TargetMeleeAttackHandler(self.engine)
 
         # No valid key was pressed
         return action

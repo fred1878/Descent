@@ -48,6 +48,7 @@ TODO:
 -have monsters with different FOV/multi layer FOV\
 -random item descriptions?\
 -colours change as you DescentTM\
+-key rebinding\
 
 ### ongoing
 -rework level system\
