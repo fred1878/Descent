@@ -77,6 +77,10 @@ class Equipment(BaseComponent):
 
         return bonus
 
+    @property
+    def range(self) -> int:
+        return self.ranged_weapon.equippable.weapon_range
+
     def item_is_equipped(self, item: Item) -> bool:
         return self.melee_weapon == item or self.armor == item or self.ranged_weapon == item
 

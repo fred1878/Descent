@@ -19,12 +19,14 @@ class Equippable(BaseComponent):
             ranged_bonus: int = 0,
             defense_bonus: int = 0,
             magic_bonus: int = 0,
+            weapon_range: int = 0
     ):
         self.equipment_type = equipment_type
         self.melee_bonus = melee_bonus
         self.ranged_bonus = ranged_bonus
         self.defense_bonus = defense_bonus
         self.magic_bonus = magic_bonus
+        self.weapon_range = weapon_range
 
 
 class Dagger(Equippable):
@@ -44,7 +46,7 @@ class IronSword(Equippable):
 
 class WoodenBow(Equippable):
     def __init__(self) -> None:
-        super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=1)
+        super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=1, weapon_range=4)
 
 
 class WoodenWand(Equippable):
