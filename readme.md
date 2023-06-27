@@ -29,7 +29,6 @@ TODO:
 
 -tidy history\
 -req stats for items\
--different AIs --in progress\
 -friendly NPCs\
 -reusable/learnable spells\
 -more random damage\
@@ -38,17 +37,14 @@ TODO:
 -add to procgen ability to make rooms in room_factories\
 -add static rooms by floor\
 -separate root, map, message, stats console\
--move MainMenu to input_handlers --done\
 -monsters sometimes have gear\
 -when monsters die they drop inventory\
 -status bar has more info?\
 -sort inventory\
 -move main.py functionality to engine\
--difficulty settings that can set params for items monsters etc --menu implemented\
 -talk to the dead\
 -track kills\
 -potion hotkey\
--pack monster spawning/better spans in general --monsters can spawn minions\
 -have monsters with different FOV/multi layer FOV\
 -random item descriptions?\
 -colours change as you DescentTM\
@@ -56,6 +52,9 @@ TODO:
 ### ongoing
 -rework level system\
 -rebalance\
+-pack monster spawning/better spans in general --monsters can spawn minions\
+-difficulty settings that can set params for items monsters etc --menu implemented\
+-different AIs --in progress\
 
 ## The Ideas Guy
 
@@ -69,4 +68,5 @@ TODO:
 -MOAR items inc magic items, explosives, potions, scrolls, ranged weapons, GUN, traps, rooms\
 -"friendly" NPCs i.e patches type friendly\
 
-
+### Done pile
+-move MainMenu to input_handlers --done\
