@@ -540,6 +540,16 @@ class TargetMeleeAttackHandler(SelectIndexHandler):
             dy = y - self.player.y
             return actions.MeleeAction(self.player, dx, dy)
 
+    def on_index_selected(self, x: int, y: int) -> Optional[Action]:
+        if self.player.x - 1 < x < self.player.x + 1 or self.player.y - 1 < y < self.player.y + 1:
+            self.engine.message_log.add_message("Out of melee range")
+        else:
+            x, y = self.engine.mouse_location
+            dx = x - self.player.x
+            dy = y - self.player.y
+            return actions.MeleeAction(self.player, dx, dy)
+
+
 
 class SingleRangedAttackHandler(SelectIndexHandler):
     """Handles targeting a single enemy. Only the enemy selected will be affected."""
