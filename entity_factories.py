@@ -91,7 +91,7 @@ troll = Actor(
     level=Level(xp_given=100, gold_given=5),
 )
 reaper = Actor(
-    char="D",
+    char="R",
     colour=(20, 20, 20),
     name="Reaper",
     ai_cls=HostileEnemy,
@@ -152,6 +152,14 @@ iron_sword = Item(
     name="Iron Sword",
     equippable=equippable.IronSword()
 )
+
+wooden_bow = Item(
+    char="D",
+    colour=(139, 69, 19),
+    name="Wooden Bow",
+    equippable=equippable.WoodenBow()
+)
+
 
 wooden_wand = Item(
     char="\\",

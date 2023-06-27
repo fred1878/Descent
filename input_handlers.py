@@ -550,7 +550,6 @@ class TargetMeleeAttackHandler(SelectIndexHandler):
             return actions.MeleeAction(self.player, dx, dy)
 
 
-
 class SingleRangedAttackHandler(SelectIndexHandler):
     """Handles targeting a single enemy. Only the enemy selected will be affected."""
 
