@@ -13,7 +13,7 @@ player = Actor(
     name="Player",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=30, base_defense=10, base_power=2, base_magic=1),
+    fighter=Fighter(hp=30, base_defense=10, base_melee=2, base_magic=1),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=50),
 )
@@ -24,7 +24,7 @@ shopkeeper = Actor(
     name="Shopkeeper",
     ai_cls=ShopAI,
     equipment=Equipment(),
-    fighter=Fighter(hp=30, base_defense=1, base_power=7, base_magic=0),
+    fighter=Fighter(hp=30, base_defense=1, base_melee=7, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=200, gold_given=100),
 )
@@ -35,7 +35,7 @@ minion = Actor(
     name="Minion",
     ai_cls=MinionEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=10, base_defense=0, base_power=2, base_magic=0),
+    fighter=Fighter(hp=10, base_defense=0, base_melee=2, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=5),
 )
@@ -45,7 +45,7 @@ master = Actor(
     name="Master",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=10, base_defense=0, base_power=2, base_magic=0),
+    fighter=Fighter(hp=10, base_defense=0, base_melee=2, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=5),
     master=True,
@@ -56,7 +56,7 @@ kobold = Actor(
     name="Kobold",
     ai_cls=HostileRangedEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=3, base_defense=0, base_power=2, base_magic=0),
+    fighter=Fighter(hp=3, base_defense=0, base_melee=2, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=5),
 )
@@ -66,7 +66,7 @@ hobbit = Actor(
     name="Hobbit",
     ai_cls=EvasiveEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=6, base_defense=0, base_power=4, base_magic=0),
+    fighter=Fighter(hp=6, base_defense=0, base_melee=4, base_ranged=4, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=30, gold_given=5),
 )
@@ -76,7 +76,7 @@ orc = Actor(
     name="Orc",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=10, base_defense=0, base_power=3, base_magic=0),
+    fighter=Fighter(hp=10, base_defense=0, base_melee=3, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=35, gold_given=5),
 )
@@ -86,7 +86,7 @@ troll = Actor(
     name="Troll",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=16, base_defense=1, base_power=5, base_magic=0),
+    fighter=Fighter(hp=16, base_defense=1, base_melee=5, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100, gold_given=5),
 )
@@ -96,7 +96,7 @@ reaper = Actor(
     name="Reaper",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=50, base_defense=3, base_power=9, base_magic=0),
+    fighter=Fighter(hp=50, base_defense=3, base_melee=9, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=500, gold_given=5),
 )

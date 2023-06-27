@@ -633,6 +633,9 @@ class MainGameEventHandler(EventHandler):
             return CharacterScreenEventHandler(self.engine)
         elif key == tcod.event.KeySym.a:
             return TargetMeleeAttackHandler(self.engine)
+        elif key == tcod.event.KeySym.s:
+            return SingleRangedAttackHandler(
+                self.engine, callback=lambda xy: actions.RangedAction(self.engine.player, xy))
 
         # No valid key was pressed
         return action

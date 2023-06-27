@@ -12,11 +12,12 @@ if TYPE_CHECKING:
 class Fighter(BaseComponent):
     parent: Actor
 
-    def __init__(self, hp: int, base_defense: int, base_power: int, base_magic: int):
+    def __init__(self, hp: int, base_defense: int, base_melee: int = 0, base_ranged: int = 0, base_magic: int = 0):
         self.max_hp = hp
         self._hp = hp
         self.base_defense = base_defense
-        self.base_power = base_power
+        self.base_melee = base_melee
+        self.base_ranged = base_ranged
         self.base_magic = base_magic
 
     @property
@@ -34,8 +35,12 @@ class Fighter(BaseComponent):
         return self.base_defense + self.defense_bonus
 
     @property
-    def power(self) -> int:
-        return self.base_power + self.power_bonus
+    def melee_power(self) -> int:
+        return self.base_melee + self.melee_bonus
+
+    @property
+    def ranged_power(self) -> int:
+        return self.base_ranged + self.ranged_bonus
 
     @property
     def magic(self) -> int:
@@ -49,9 +54,16 @@ class Fighter(BaseComponent):
             return 0
 
     @property
-    def power_bonus(self) -> int:
+    def melee_bonus(self) -> int:
         if self.parent.equipment:
-            return self.parent.equipment.power_bonus
+            return self.parent.equipment.melee_bonus
+        else:
+            return 0
+
+    @property
+    def ranged_bonus(self) -> int:
+        if self.parent.equipment:
+            return self.parent.equipment.ranged_bonus
         else:
             return 0
 

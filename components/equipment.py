@@ -33,17 +33,32 @@ class Equipment(BaseComponent):
         return bonus
 
     @property
-    def power_bonus(self) -> int:
+    def melee_bonus(self) -> int:
         bonus = 0
 
         if self.melee_weapon is not None and self.melee_weapon.equippable is not None:
-            bonus += self.melee_weapon.equippable.power_bonus
+            bonus += self.melee_weapon.equippable.melee_bonus
 
         if self.ranged_weapon is not None and self.ranged_weapon.equippable is not None:
-            bonus += self.ranged_weapon.equippable.power_bonus
+            bonus += self.ranged_weapon.equippable.melee_bonus
 
         if self.armor is not None and self.armor.equippable is not None:
-            bonus += self.armor.equippable.power_bonus
+            bonus += self.armor.equippable.melee_bonus
+
+        return bonus
+
+    @property
+    def ranged_bonus(self) -> int:
+        bonus = 0
+
+        if self.melee_weapon is not None and self.melee_weapon.equippable is not None:
+            bonus += self.melee_weapon.equippable.ranged_bonus
+
+        if self.ranged_weapon is not None and self.ranged_weapon.equippable is not None:
+            bonus += self.ranged_weapon.equippable.ranged_bonus
+
+        if self.armor is not None and self.armor.equippable is not None:
+            bonus += self.armor.equippable.ranged_bonus
 
         return bonus
 

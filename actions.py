@@ -157,7 +157,7 @@ class RangedAction(TargetAction):
         if not target:
             raise exceptions.Impossible("Nothing to attack.")
 
-        damage = self.entity.fighter.power - target.fighter.defense
+        damage = self.entity.fighter.ranged_power - target.fighter.defense
 
         attack_desc = f"{self.entity.name.capitalize()} shoots {target.name.capitalize()}"
         if self.entity is self.engine.player:
@@ -178,7 +178,7 @@ class MeleeAction(ActionWithDirection):
         if not target:
             raise exceptions.Impossible("Nothing to attack.")
 
-        damage = self.entity.fighter.power - target.fighter.defense
+        damage = self.entity.fighter.melee_power - target.fighter.defense
 
         attack_desc = f"{self.entity.name.capitalize()} attacks {target.name.capitalize()}"
         if self.entity is self.engine.player:
