@@ -44,7 +44,6 @@ TODO:
 -move main.py functionality to engine\
 -talk to the dead\
 -track kills\
--potion hotkey\
 -have monsters with different FOV/multi layer FOV\
 -random item descriptions?\
 -colours change as you DescentTM\
@@ -72,4 +71,5 @@ TODO:
 -"friendly" NPCs i.e patches type friendly\
 
 ### Done pile
+-potion hotkey --done\
 -move MainMenu to input_handlers --done\
