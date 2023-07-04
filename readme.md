@@ -50,6 +50,7 @@ TODO:
 -colours change as you DescentTM\
 -key rebinding\
 -make equipment match consumable entity factories\
+-trait system\
 
 ### ongoing
 -rework level system\

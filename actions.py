@@ -91,6 +91,35 @@ class ItemAction(Action):
             self.item.consumable.activate(self)
 
 
+def findQuickHeal(player: Actor) -> ItemAction:
+    for item in player.inventory.items:
+        if item.name == "Health Potion" and (player.fighter.max_hp - player.fighter.hp) >= 10:
+            return ItemAction(player, item)
+        if item.name == "Small Health Potion" and (player.fighter.max_hp - player.fighter.hp) >= 6:
+            return ItemAction(player, item)
+
+
+class QuickHealAction(Action):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+
+    @property
+    def target_actor(self) -> Optional[Actor]:
+        """Always perform on self"""
+        return self.entity
+
+    def perform(self) -> None:
+        import entity_factories
+        """Invoke the items ability, this action will be given to provide context."""
+        for item in self.entity.inventory.items:
+            if item.name == "Health Potion" and (self.entity.fighter.max_hp - self.entity.fighter.hp) >= 10:
+                item.consumable.activate(self)
+        else:
+            print("no pot here")
+            for item in self.entity.inventory.items:
+                print(item.name)
+
+
 class ActionWithDirection(Action):
     def __init__(self, entity: Actor, dx: int, dy: int):
         super().__init__(entity)

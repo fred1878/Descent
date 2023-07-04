@@ -4,7 +4,7 @@ import os
 import tcod.event  # type: ignore
 from tcod import libtcodpy
 import actions
-from actions import Action, BumpAction, WaitAction, PickupAction
+from actions import Action, BumpAction, WaitAction, PickupAction, QuickHealAction
 import colour
 import exceptions
 import setup_game
@@ -722,6 +722,8 @@ class MainGameEventHandler(EventHandler):
         elif key == tcod.event.KeySym.s:
             return SingleRangedAttackHandler(
                 self.engine, callback=lambda xy: actions.RangedAction(self.engine.player, xy))
+        elif key == tcod.event.KeySym.p:
+            action = actions.findQuickHeal(self.engine.player)
         elif key == tcod.event.KeySym.z:
             nearest_shop = None
             closest_distance = 3
