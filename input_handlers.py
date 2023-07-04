@@ -531,7 +531,7 @@ class ShopEventHandler(AskUserEventHandler):
             self.shopkeeper.inventory.items.remove(item)
             player.inventory.items.append(item)
             player.level.change_gold(-item.price)
-            self.engine.message_log.add_message(f"You bought the {item.name} for {item.price}!")
+            self.engine.message_log.add_message(f"You bought the {item.name} for {item.price}!", colour.gold)
         elif item.price > self.engine.player.level.current_gold:
             raise exceptions.Impossible("You do not have enough gold")
         elif len(self.engine.player.inventory.items) <= self.engine.player.inventory.capacity:

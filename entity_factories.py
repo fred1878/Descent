@@ -9,7 +9,7 @@ import colour
 
 player = Actor(
     char="@",
-    colour=(255, 255, 255),
+    colour=colour.white,
     name="Player",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
@@ -92,7 +92,7 @@ troll = Actor(
 )
 reaper = Actor(
     char="R",
-    colour=(20, 20, 20),
+    colour=colour.reaper,
     name="Reaper",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
@@ -103,35 +103,35 @@ reaper = Actor(
 # items
 small_health_potion = Item(
     char="!",
-    colour=(127, 0, 255),
+    colour=colour.light_purple,
     name="Small Health Potion",
     consumable=consumable.HealingConsumable(amount=6),
     price=5
 )
 health_potion = Item(
     char="!",
-    colour=(0, 127, 255),
+    colour=colour.light_blue,
     name="Health Potion",
     consumable=consumable.HealingConsumable(amount=10),
     price=15
 )
 lightning_scroll = Item(
     char="~",
-    colour=(255, 255, 0),
+    colour=colour.yellow,
     name="Lightning Scroll",
     consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5),
     price=20
 )
 confusion_scroll = Item(
     char="~",
-    colour=(207, 63, 255),
+    colour=colour.purple,
     name="Confusion Scroll",
     consumable=consumable.ConfusionConsumable(number_of_turns=10),
     price=15
 )
 fireball_scroll = Item(
     char="~",
-    colour=(255, 0, 0),
+    colour=colour.red,
     name="Fireball Scroll",
     consumable=consumable.FireballDamageConsumable(damage=12, radius=3),
     price=30
@@ -147,7 +147,7 @@ dagger = Item(
 
 bronze_sword = Item(
     char="/",
-    colour=(205, 127, 50),
+    colour=colour.bronze,
     name="Bronze Sword",
     equippable=equippable.BronzeSword(),
     price=60
@@ -155,7 +155,7 @@ bronze_sword = Item(
 
 iron_sword = Item(
     char="/",
-    colour=(200, 200, 200),
+    colour=colour.iron,
     name="Iron Sword",
     equippable=equippable.IronSword(),
     price=200
@@ -163,7 +163,7 @@ iron_sword = Item(
 
 steel_sword = Item(
     char="/",
-    colour=(120, 120, 120),
+    colour=colour.steel,
     name="Steel Sword",
     equippable=equippable.SteelSword(),
     price=500
@@ -171,7 +171,7 @@ steel_sword = Item(
 
 wooden_bow = Item(
     char="D",
-    colour=(139, 69, 19),
+    colour=colour.wood,
     name="Wooden Bow",
     equippable=equippable.WoodenBow(),
     price=20
@@ -180,7 +180,7 @@ wooden_bow = Item(
 
 wooden_wand = Item(
     char="\\",
-    colour=(139, 69, 19),
+    colour=colour.wood,
     name="Wooden Wand",
     equippable=equippable.WoodenWand(),
     price=50
@@ -196,7 +196,7 @@ golden_wand = Item(
 
 leather_armor = Item(
     char="[",
-    colour=(139, 69, 19),
+    colour=colour.leather,
     name="Leather Armor",
     equippable=equippable.LeatherArmor(),
     price=20
@@ -204,7 +204,7 @@ leather_armor = Item(
 
 chain_mail = Item(
     char="[",
-    colour=(192, 192, 192),
+    colour=colour.steel,
     name="Chain Mail",
     equippable=equippable.ChainMail(),
     price=100
@@ -212,7 +212,7 @@ chain_mail = Item(
 
 plate_mail = Item(
     char="[",
-    colour=(128, 128, 128),
+    colour=colour.iron,
     name="Plate Mail",
     equippable=equippable.PlateMail(),
     price=300
