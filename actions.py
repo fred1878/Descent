@@ -217,7 +217,7 @@ class BumpAction(ActionWithDirection):
     def perform(self) -> None:
         if self.target_actor:
             if self.target_actor.name == 'Shopkeeper':
-                self.engine.message_log.add_message(self, "Buy my stuff!", colour.gold)
+                self.engine.message_log.add_message("Buy my stuff!", colour.gold)
             else:
                 return MeleeAction(self.entity, self.dx, self.dy).perform()
 

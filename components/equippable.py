@@ -44,6 +44,11 @@ class IronSword(Equippable):
         super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=6)
 
 
+class SteelSword(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8)
+
+
 class WoodenBow(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=1, weapon_range=4)

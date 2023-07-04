@@ -499,7 +499,7 @@ class ShopEventHandler(AskUserEventHandler):
                 item_key = chr(ord("a") + i)
                 is_equipped = self.shopkeeper.equipment.item_is_equipped(item)
 
-                item_string = f"({item_key}) {item.name}"
+                item_string = f"({item_key}) {item.name} Cost:{item.price}"
 
                 if is_equipped:
                     item_string = f"{item_string} (E)"
@@ -522,13 +522,16 @@ class ShopEventHandler(AskUserEventHandler):
         return super().ev_keydown(event)
 
     def on_item_selected(self, item: Item) -> None:
+        player = self.engine.player
         """Called when the user selects a valid item."""
-        if item.price < self.engine.player.level.current_gold and \
-                len(self.engine.player.inventory.items) <= self.engine.player.inventory.capacity:
+        if item.price < player.level.current_gold and \
+                len(player.inventory.items) <= self.engine.player.inventory.capacity:
             if self.shopkeeper.equipment.item_is_equipped(item):
-                self.shopkeeper.equipment.toggle_equip(item)
+                self.shopkeeper.equipment.toggle_equip(item, add_message=False)
             self.shopkeeper.inventory.items.remove(item)
-            self.engine.player.inventory.items.append(item)
+            player.inventory.items.append(item)
+            player.level.change_gold(-item.price)
+            self.engine.message_log.add_message(f"You bought the {item.name} for {item.price}!")
         elif item.price > self.engine.player.level.current_gold:
             raise exceptions.Impossible("You do not have enough gold")
         elif len(self.engine.player.inventory.items) <= self.engine.player.inventory.capacity:

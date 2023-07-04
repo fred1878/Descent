@@ -161,6 +161,14 @@ iron_sword = Item(
     price=200
 )
 
+steel_sword = Item(
+    char="/",
+    colour=(120, 120, 120),
+    name="Steel Sword",
+    equippable=equippable.SteelSword(),
+    price=500
+)
+
 wooden_bow = Item(
     char="D",
     colour=(139, 69, 19),
