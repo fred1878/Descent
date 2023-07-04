@@ -28,7 +28,7 @@ class Equippable(BaseComponent):
         self.defense_bonus = defense_bonus
         self.magic_bonus = magic_bonus
         self.weapon_range = weapon_range
-        self.price = price
+        self.parent.price = price
 
 
 class Dagger(Equippable):

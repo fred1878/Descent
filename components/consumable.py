@@ -17,7 +17,7 @@ class Consumable(BaseComponent):
     parent: Item
 
     def __init__(self, price: int = 0):
-        self.price = price
+        self.parent.price = price
 
     def get_action(self, consumer: Actor) -> Optional[input_handlers.ActionOrHandler]:
         """Try to return the action for this item."""
