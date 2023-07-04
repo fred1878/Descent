@@ -49,6 +49,7 @@ TODO:
 -random item descriptions?\
 -colours change as you DescentTM\
 -key rebinding\
+-make equipment match consumable entity factories\
 
 ### ongoing
 -rework level system\

@@ -160,3 +160,4 @@ class Item(Entity):
 
         if self.equippable:
             self.equippable.parent = self
+

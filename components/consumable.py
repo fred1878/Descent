@@ -16,6 +16,9 @@ if TYPE_CHECKING:
 class Consumable(BaseComponent):
     parent: Item
 
+    def __init__(self, price: int = 0):
+        self.price = price
+
     def get_action(self, consumer: Actor) -> Optional[input_handlers.ActionOrHandler]:
         """Try to return the action for this item."""
         return actions.ItemAction(consumer, self.parent)
@@ -36,7 +39,8 @@ class Consumable(BaseComponent):
 
 
 class HealingConsumable(Consumable):
-    def __init__(self, amount: int):
+    def __init__(self, amount: int, price: int):
+        super().__init__(price)
         self.amount = amount
 
     def activate(self, action: actions.ItemAction) -> None:
@@ -52,7 +56,8 @@ class HealingConsumable(Consumable):
 
 
 class LightningDamageConsumable(Consumable):
-    def __init__(self, damage: int, maximum_range: int):
+    def __init__(self, damage: int, maximum_range: int, price: int):
+        super().__init__(price)
         self.damage = damage
         self.maximum_range = maximum_range
 
@@ -79,7 +84,8 @@ class LightningDamageConsumable(Consumable):
 
 
 class ConfusionConsumable(Consumable):
-    def __init__(self, number_of_turns: int):
+    def __init__(self, number_of_turns: int, price: int):
+        super().__init__(price)
         self.number_of_turns = number_of_turns
 
     def get_action(self, consumer: Actor) -> input_handlers.SingleRangedAttackHandler:
@@ -108,7 +114,8 @@ class ConfusionConsumable(Consumable):
 
 
 class FireballDamageConsumable(Consumable):
-    def __init__(self, damage: int, radius: int):
+    def __init__(self, damage: int, radius: int, price: int):
+        super().__init__(price)
         self.damage = damage
         self.radius = radius
 
