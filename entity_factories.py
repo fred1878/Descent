@@ -15,7 +15,7 @@ player = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=30, base_defense=10, base_melee=2, base_magic=1),
     inventory=Inventory(capacity=26),
-    level=Level(level_up_base=50),
+    level=Level(level_up_base=50, current_gold=1000),
 )
 # fren
 shopkeeper = Actor(
@@ -105,59 +105,68 @@ small_health_potion = Item(
     char="!",
     colour=(127, 0, 255),
     name="Small Health Potion",
-    consumable=consumable.HealingConsumable(amount=6, price=5),
+    consumable=consumable.HealingConsumable(amount=6),
+    price=5
 )
 health_potion = Item(
     char="!",
     colour=(0, 127, 255),
     name="Health Potion",
-    consumable=consumable.HealingConsumable(amount=10, price=15),
+    consumable=consumable.HealingConsumable(amount=10),
+    price=15
 )
 lightning_scroll = Item(
     char="~",
     colour=(255, 255, 0),
     name="Lightning Scroll",
-    consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5, price=20),
+    consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5),
+    price=20
 )
 confusion_scroll = Item(
     char="~",
     colour=(207, 63, 255),
     name="Confusion Scroll",
-    consumable=consumable.ConfusionConsumable(number_of_turns=10, price=15),
+    consumable=consumable.ConfusionConsumable(number_of_turns=10),
+    price=15
 )
 fireball_scroll = Item(
     char="~",
     colour=(255, 0, 0),
     name="Fireball Scroll",
-    consumable=consumable.FireballDamageConsumable(damage=12, radius=3, price=30),
+    consumable=consumable.FireballDamageConsumable(damage=12, radius=3),
+    price=30
 )
 # equipment
 dagger = Item(
     char="/",
     colour=(0, 191, 255),
     name="Dagger",
-    equippable=equippable.Dagger()
+    equippable=equippable.Dagger(),
+    price=20
 )
 
 bronze_sword = Item(
     char="/",
     colour=(205, 127, 50),
     name="Bronze Sword",
-    equippable=equippable.BronzeSword()
+    equippable=equippable.BronzeSword(),
+    price=60
 )
 
 iron_sword = Item(
     char="/",
     colour=(200, 200, 200),
     name="Iron Sword",
-    equippable=equippable.IronSword()
+    equippable=equippable.IronSword(),
+    price=200
 )
 
 wooden_bow = Item(
     char="D",
     colour=(139, 69, 19),
     name="Wooden Bow",
-    equippable=equippable.WoodenBow()
+    equippable=equippable.WoodenBow(),
+    price=20
 )
 
 
@@ -165,14 +174,16 @@ wooden_wand = Item(
     char="\\",
     colour=(139, 69, 19),
     name="Wooden Wand",
-    equippable=equippable.WoodenWand()
+    equippable=equippable.WoodenWand(),
+    price=50
 )
 
 golden_wand = Item(
     char="\\",
     colour=colour.gold,
     name="Magic Wand",
-    equippable=equippable.GoldenWand()
+    equippable=equippable.GoldenWand(),
+    price=250
 )
 
 leather_armor = Item(
@@ -180,12 +191,21 @@ leather_armor = Item(
     colour=(139, 69, 19),
     name="Leather Armor",
     equippable=equippable.LeatherArmor(),
+    price=20
 )
 
 chain_mail = Item(
-    char="[", colour=(192, 192, 192), name="Chain Mail", equippable=equippable.ChainMail()
+    char="[",
+    colour=(192, 192, 192),
+    name="Chain Mail",
+    equippable=equippable.ChainMail(),
+    price=100
 )
 
 plate_mail = Item(
-    char="[", colour=(128, 128, 128), name="Plate Mail", equippable=equippable.PlateMail()
+    char="[",
+    colour=(128, 128, 128),
+    name="Plate Mail",
+    equippable=equippable.PlateMail(),
+    price=300
 )

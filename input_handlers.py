@@ -459,7 +459,7 @@ class ShopEventHandler(AskUserEventHandler):
         super().__init__(engine)
         self.shopkeeper = shopkeeper
 
-    TITLE = "Shop"
+    TITLE = "Select an item to buy"
 
     def on_render(self, console: tcod.Console) -> None:
         """Render an shop menu, which displays the items in the shop, and the letter to select them.
@@ -509,7 +509,6 @@ class ShopEventHandler(AskUserEventHandler):
             console.print(x + 1, y + 1, "(Empty)")
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
-        player = self.engine.player
         key = event.sym
         index = key - tcod.event.KeySym.a
 
@@ -522,9 +521,18 @@ class ShopEventHandler(AskUserEventHandler):
             return self.on_item_selected(selected_item)
         return super().ev_keydown(event)
 
-    def on_item_selected(self, item: Item) -> Optional[ActionOrHandler]:
+    def on_item_selected(self, item: Item) -> None:
         """Called when the user selects a valid item."""
-        raise NotImplementedError()
+        if item.price < self.engine.player.level.current_gold and \
+                len(self.engine.player.inventory.items) <= self.engine.player.inventory.capacity:
+            if self.shopkeeper.equipment.item_is_equipped(item):
+                self.shopkeeper.equipment.toggle_equip(item)
+            self.shopkeeper.inventory.items.remove(item)
+            self.engine.player.inventory.items.append(item)
+        elif item.price > self.engine.player.level.current_gold:
+            raise exceptions.Impossible("You do not have enough gold")
+        elif len(self.engine.player.inventory.items) <= self.engine.player.inventory.capacity:
+            raise exceptions.Impossible("Your inventory is full.")
 
 
 class SelectIndexHandler(AskUserEventHandler):
