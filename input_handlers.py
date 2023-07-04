@@ -12,7 +12,7 @@ import traceback
 
 if TYPE_CHECKING:
     from engine import Engine
-    from entity import Item
+    from entity import Item, Actor
 
 MOVE_KEYS = {
     # Arrow keys.
@@ -452,6 +452,81 @@ class InventoryDropHandler(InventoryEventHandler):
         return actions.DropItem(self.engine.player, item)
 
 
+class ShopEventHandler(AskUserEventHandler):
+    """This handler lets access the shop"""
+
+    def __init__(self, engine: Engine, shopkeeper: Actor):
+        super().__init__(engine)
+        self.shopkeeper = shopkeeper
+
+    TITLE = "Shop"
+
+    def on_render(self, console: tcod.Console) -> None:
+        """Render an shop menu, which displays the items in the shop, and the letter to select them.
+        Will move to a different position based on where the player is located, so the player can always see where
+        they are.
+        """
+        super().on_render(console)
+        number_of_items_in_shop = len(self.shopkeeper.inventory.items)
+
+        height = number_of_items_in_shop + 2
+
+        if height <= 3:
+            height = 3
+
+        if self.engine.player.x <= 30:
+            x = 40
+        else:
+            x = 0
+
+        y = 0
+
+        width = len(self.TITLE) + 4
+
+        console.draw_frame(
+            x=x,
+            y=y,
+            width=width,
+            height=height,
+            title=self.TITLE,
+            clear=True,
+            fg=(255, 255, 255),
+            bg=(0, 0, 0),
+        )
+
+        if number_of_items_in_shop > 0:
+            for i, item in enumerate(self.shopkeeper.inventory.items):
+                item_key = chr(ord("a") + i)
+                is_equipped = self.shopkeeper.equipment.item_is_equipped(item)
+
+                item_string = f"({item_key}) {item.name}"
+
+                if is_equipped:
+                    item_string = f"{item_string} (E)"
+
+                console.print(x + 1, y + i + 1, item_string)
+        else:
+            console.print(x + 1, y + 1, "(Empty)")
+
+    def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
+        player = self.engine.player
+        key = event.sym
+        index = key - tcod.event.KeySym.a
+
+        if 0 <= index <= 26:
+            try:
+                selected_item = self.shopkeeper.inventory.items[index]
+            except IndexError:
+                self.engine.message_log.add_message("Invalid entry.", colour.invalid)
+                return None
+            return self.on_item_selected(selected_item)
+        return super().ev_keydown(event)
+
+    def on_item_selected(self, item: Item) -> Optional[ActionOrHandler]:
+        """Called when the user selects a valid item."""
+        raise NotImplementedError()
+
+
 class SelectIndexHandler(AskUserEventHandler):
     """Handles asking the user for an index on the map."""
 
@@ -636,6 +711,16 @@ class MainGameEventHandler(EventHandler):
         elif key == tcod.event.KeySym.s:
             return SingleRangedAttackHandler(
                 self.engine, callback=lambda xy: actions.RangedAction(self.engine.player, xy))
+        elif key == tcod.event.KeySym.z:
+            nearest_shop = None
+            closest_distance = 3
+            for actor in self.engine.game_map.actors:
+                if actor is not self.engine.player and self.engine.game_map.visible[actor.x, actor.y]:
+                    distance = self.engine.player.distance(actor.x, actor.y)
+                    if distance < closest_distance:
+                        nearest_shop = actor
+                        closest_distance = distance
+            return ShopEventHandler(self.engine, nearest_shop)
 
         # No valid key was pressed
         return action

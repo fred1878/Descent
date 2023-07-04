@@ -25,7 +25,7 @@ shopkeeper = Actor(
     ai_cls=ShopAI,
     equipment=Equipment(),
     fighter=Fighter(hp=30, base_defense=1, base_melee=7, base_magic=0),
-    inventory=Inventory(capacity=0),
+    inventory=Inventory(capacity=5),
     level=Level(xp_given=200, gold_given=100),
 )
 # enemigos

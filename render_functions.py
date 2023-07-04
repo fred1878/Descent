@@ -42,7 +42,7 @@ def render_gold(console: Console, gold: int, location: Tuple[int, int]) -> None:
     Render the player's gold amount
     """
     x, y = location
-    console.print(x, y, string=f"Gold: {gold}")
+    console.print(x, y, string=f"Gold: {gold}", fg=colour.gold)
 
 
 def render_names_at_mouse_location(console: Console, x: int, y: int, engine: Engine) -> None:

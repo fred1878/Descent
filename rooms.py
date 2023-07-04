@@ -1,3 +1,4 @@
+import copy
 from typing import Tuple
 
 import tcod  # type: ignore
@@ -40,4 +41,15 @@ class ShopRoom(RectangularRoom):
         super().__init__(x, y, width, height)
         self.entities = dungeon.entities
         (x_shop, y_shop) = self.center
-        entity_factories.shopkeeper.spawn(dungeon, x_shop, y_shop)
+        shopkeeper = entity_factories.shopkeeper.spawn(dungeon, x_shop, y_shop)
+
+        iron_sword = copy.deepcopy(entity_factories.iron_sword)
+        chain_mail = copy.deepcopy(entity_factories.chain_mail)
+        golden_wand = copy.deepcopy(entity_factories.golden_wand)
+
+        iron_sword.parent = shopkeeper.inventory
+        chain_mail.parent = shopkeeper.inventory
+        golden_wand.parent = shopkeeper.inventory
+        shopkeeper.inventory.items.append(iron_sword)
+        shopkeeper.inventory.items.append(chain_mail)
+        shopkeeper.inventory.items.append(golden_wand)
