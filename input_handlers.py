@@ -720,7 +720,11 @@ class MainGameEventHandler(EventHandler):
                     if distance < closest_distance:
                         nearest_shop = actor
                         closest_distance = distance
-            return ShopEventHandler(self.engine, nearest_shop)
+            if nearest_shop is None:
+                self.engine.message_log.add_message("No shop nearby", colour.invalid)
+                return WaitAction(player)
+            else:
+                return ShopEventHandler(self.engine, nearest_shop)
 
         # No valid key was pressed
         return action
