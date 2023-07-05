@@ -48,10 +48,12 @@ class Fighter(BaseComponent):
 
     @property
     def defense_bonus(self) -> int:
+        bonus = 0
         if self.parent.equipment:
-            return self.parent.equipment.defense_bonus
-        else:
-            return 0
+            bonus += self.parent.equipment.equip_defence_bonus
+        if self.parent.attribute:
+            bonus += self.parent.attribute.trait_defence_bonus
+        return bonus
 
     @property
     def melee_bonus(self) -> int:

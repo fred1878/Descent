@@ -18,17 +18,17 @@ class Equipment(BaseComponent):
         self.armor = armor
 
     @property
-    def defense_bonus(self) -> int:
+    def equip_defence_bonus(self) -> int:
         bonus = 0
 
         if self.melee_weapon is not None and self.melee_weapon.equippable is not None:
-            bonus += self.melee_weapon.equippable.defense_bonus
+            bonus += self.melee_weapon.equippable.equip_defense_bonus
 
         if self.ranged_weapon is not None and self.ranged_weapon.equippable is not None:
-            bonus += self.ranged_weapon.equippable.defense_bonus
+            bonus += self.ranged_weapon.equippable.equip_defense_bonus
 
         if self.armor is not None and self.armor.equippable is not None:
-            bonus += self.armor.equippable.defense_bonus
+            bonus += self.armor.equippable.equip_defense_bonus
 
         return bonus
 

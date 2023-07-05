@@ -1,11 +1,13 @@
 from components.ai import *
 from components.fighter import Fighter
+from components.attribute import Attribute
 from entity import Actor, Item
 from components.inventory import Inventory
 from components import consumable, equippable
 from components.level import Level
 from components.equipment import Equipment
 import colour
+import traits
 
 player = Actor(
     char="@",
@@ -16,6 +18,7 @@ player = Actor(
     fighter=Fighter(hp=30, base_defense=10, base_melee=2, base_magic=1),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=50, current_gold=1000),
+    attribute=Attribute(traits=traits.Strong)
 )
 # fren
 shopkeeper = Actor(
@@ -27,6 +30,7 @@ shopkeeper = Actor(
     fighter=Fighter(hp=30, base_defense=1, base_melee=7),
     inventory=Inventory(capacity=5),
     level=Level(xp_given=200, gold_given=100),
+    attribute=Attribute()
 )
 # enemigos
 minion = Actor(
@@ -38,6 +42,7 @@ minion = Actor(
     fighter=Fighter(hp=10, base_defense=0, base_melee=2),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=5),
+    attribute=Attribute()
 )
 master = Actor(
     char="M",
@@ -49,6 +54,7 @@ master = Actor(
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=5),
     master=True,
+    attribute=Attribute()
 )
 kobold = Actor(
     char="k",
@@ -59,6 +65,7 @@ kobold = Actor(
     fighter=Fighter(hp=3, base_defense=0, base_melee=2),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=5),
+    attribute=Attribute()
 )
 hobbit = Actor(
     char="h",
@@ -69,6 +76,7 @@ hobbit = Actor(
     fighter=Fighter(hp=6, base_defense=0, base_melee=4, base_ranged=4),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=30, gold_given=5),
+    attribute=Attribute()
 )
 orc = Actor(
     char="o",
@@ -79,6 +87,7 @@ orc = Actor(
     fighter=Fighter(hp=10, base_defense=0, base_melee=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=35, gold_given=5),
+    attribute=Attribute()
 )
 troll = Actor(
     char="T",
@@ -89,6 +98,7 @@ troll = Actor(
     fighter=Fighter(hp=16, base_defense=1, base_melee=5),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100, gold_given=5),
+    attribute=Attribute()
 )
 reaper = Actor(
     char="R",
@@ -99,6 +109,7 @@ reaper = Actor(
     fighter=Fighter(hp=50, base_defense=3, base_melee=9),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=500, gold_given=5),
+    attribute=Attribute()
 )
 # items
 small_health_potion = Item(

@@ -24,7 +24,7 @@ class Equippable(BaseComponent):
         self.equipment_type = equipment_type
         self.melee_bonus = melee_bonus
         self.ranged_bonus = ranged_bonus
-        self.defense_bonus = defense_bonus
+        self.equip_defense_bonus = defense_bonus
         self.magic_bonus = magic_bonus
         self.weapon_range = weapon_range
 

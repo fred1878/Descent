@@ -3,9 +3,10 @@ from __future__ import annotations
 import copy
 import math
 from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
-from render_order import RenderOrder
 from components.level import Level
 from components.equipment import Equipment
+from render_order import RenderOrder
+
 
 if TYPE_CHECKING:
     from components.ai import BaseAI
@@ -14,6 +15,7 @@ if TYPE_CHECKING:
     from game_map import GameMap
     from components.inventory import Inventory
     from components.equippable import Equippable
+    from components.attribute import Attribute
 
 T = TypeVar("T", bound="Entity")
 
@@ -97,7 +99,8 @@ class Actor(Entity):
             fighter: Fighter,
             inventory: Inventory,
             level: Level,
-            master: bool = False
+            master: bool = False,
+            attribute: Attribute
     ):
         super().__init__(
             x=x,
@@ -122,6 +125,8 @@ class Actor(Entity):
         self.level.parent = self
 
         self.master = master
+        self.attribute = attribute
+        self.attribute.parent = self
 
     @property
     def is_alive(self) -> bool:
