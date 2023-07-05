@@ -8,9 +8,10 @@ class StatModifyingTrait(Trait):
                  defence_bonus: int = 0,
                  magic_bonus: int = 0,
                  name: str = "stat modifying trait",
+                 description: str = "stat modifying trait description",
                  cost: int = 0
                  ):
-        super().__init__(name, cost)
+        super().__init__(name, description, cost)
         self.melee_bonus = melee_bonus
         self.ranged_bonus = ranged_bonus
         self.defence_bonus = defence_bonus
@@ -38,4 +39,6 @@ god_mode = StatModifyingTrait(
     ranged_bonus=100,
     defence_bonus=100,
     magic_bonus=100,
-    name="God Mode")
+    name="God Mode",
+    description="God Mode"
+)

@@ -265,8 +265,9 @@ class CharacterScreenEventHandler(AskUserEventHandler):
 
     def on_render(self, console: tcod.Console) -> None:
         super().on_render(console)
+        player = self.engine.player
 
-        if self.engine.player.x <= 30:
+        if player.x <= 30:
             x = 40
         else:
             x = 0
@@ -286,15 +287,57 @@ class CharacterScreenEventHandler(AskUserEventHandler):
             bg=(0, 0, 0),
         )
 
-        console.print(x=x + 1, y=y + 1, string=f"Level: {self.engine.player.level.current_level}")
-        console.print(x=x + 1, y=y + 2, string=f"XP: {self.engine.player.level.current_xp}")
+        console.print(x=x + 1, y=y + 1, string=f"Level: {player.level.current_level}")
+        console.print(x=x + 1, y=y + 2, string=f"XP: {player.level.current_xp}")
         console.print(x=x + 1, y=y + 3,
-                      string=f"XP for next Level: {self.engine.player.level.experience_to_next_level}", )
+                      string=f"XP for next Level: {player.level.experience_to_next_level}", )
 
-        console.print(x=x + 1, y=y + 4, string=f"Melee Attack: {self.engine.player.fighter.melee_power}")
-        console.print(x=x + 1, y=y + 5, string=f"Ranged Attack: {self.engine.player.fighter.ranged_power}")
-        console.print(x=x + 1, y=y + 6, string=f"Defense: {self.engine.player.fighter.defense}")
-        console.print(x=x + 1, y=y + 7, string=f"Magic: {self.engine.player.fighter.magic}")
+        console.print(x=x + 1, y=y + 4, string=f"Melee Attack: {player.fighter.melee_power}")
+        console.print(x=x + 1, y=y + 5, string=f"Ranged Attack: {player.fighter.ranged_power}")
+        console.print(x=x + 1, y=y + 6, string=f"Defense: {player.fighter.defense}")
+        console.print(x=x + 1, y=y + 7, string=f"Magic: {player.fighter.magic}")
+
+
+class TraitScreenEventHandler(AskUserEventHandler):
+    TITLE = "Trait Information"
+
+    def on_render(self, console: tcod.Console) -> None:
+        super().on_render(console)
+        player = self.engine.player
+
+        if player.x <= 30:
+            x = 40
+        else:
+            x = 0
+
+        y = 0
+
+        width = len(self.TITLE) + 4
+        traits = player.attribute.traits
+        if len(traits) > 0:
+            for i, trait in enumerate(traits):
+                trait_length = len(trait.name) + len(trait.description) + 7
+                if trait_length > width:
+                    width = trait_length
+
+        console.draw_frame(
+            x=x,
+            y=y,
+            width=width,
+            height=9,
+            title=self.TITLE,
+            clear=True,
+            fg=(255, 255, 255),
+            bg=(0, 0, 0),
+        )
+
+        if len(traits) > 0:
+            for i, trait in enumerate(traits):
+
+                trait_string = f"({trait.name}) - {trait.description}"
+                console.print(x + 1, y + i + 1, trait_string)
+        else:
+            console.print(x + 1, y + 1, "No Traits")
 
 
 class LevelUpEventHandler(AskUserEventHandler):
@@ -302,8 +345,9 @@ class LevelUpEventHandler(AskUserEventHandler):
 
     def on_render(self, console: tcod.Console) -> None:
         super().on_render(console)
+        player = self.engine.player
 
-        if self.engine.player.x <= 30:
+        if player.x <= 30:
             x = 40
         else:
             x = 0
@@ -312,7 +356,7 @@ class LevelUpEventHandler(AskUserEventHandler):
             x=x,
             y=0,
             width=35,
-            height=9,
+            height=10,
             title=self.TITLE,
             clear=True,
             fg=(255, 255, 255),
@@ -322,11 +366,11 @@ class LevelUpEventHandler(AskUserEventHandler):
         console.print(x=x + 1, y=1, string="Congratulations! You level up!")
         console.print(x=x + 1, y=2, string="Select an attribute to increase.")
 
-        console.print(x=x + 1, y=4, string=f"a) Constitution (+20 HP, from {self.engine.player.fighter.max_hp})")
-        console.print(x=x + 1, y=5, string=f"b) Strength (+1 attack, from {self.engine.player.fighter.melee_power})")
-        console.print(x=x + 1, y=5, string=f"b) Perception (+1 attack, from {self.engine.player.fighter.ranged_power})")
-        console.print(x=x + 1, y=6, string=f"c) Agility (+1 defense, from {self.engine.player.fighter.base_defense})")
-        console.print(x=x + 1, y=7, string=f"d) Magic (+1 magic, from {self.engine.player.fighter.base_magic})")
+        console.print(x=x + 1, y=4, string=f"a) Constitution (+20 HP, from {player.fighter.max_hp})")
+        console.print(x=x + 1, y=5, string=f"b) Strength (+1 attack, from {player.fighter.melee_power})")
+        console.print(x=x + 1, y=6, string=f"b) Perception (+1 attack, from {player.fighter.ranged_power})")
+        console.print(x=x + 1, y=7, string=f"c) Agility (+1 defense, from {player.fighter.base_defense})")
+        console.print(x=x + 1, y=8, string=f"d) Magic (+1 magic, from {player.fighter.base_magic})")
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         player = self.engine.player
@@ -372,14 +416,15 @@ class InventoryEventHandler(AskUserEventHandler):
         they are.
         """
         super().on_render(console)
-        number_of_items_in_inventory = len(self.engine.player.inventory.items)
+        player = self.engine.player
+        number_of_items_in_inventory = len(player.inventory.items)
 
         height = number_of_items_in_inventory + 2
 
         if height <= 3:
             height = 3
 
-        if self.engine.player.x <= 30:
+        if player.x <= 30:
             x = 40
         else:
             x = 0
@@ -400,9 +445,9 @@ class InventoryEventHandler(AskUserEventHandler):
         )
 
         if number_of_items_in_inventory > 0:
-            for i, item in enumerate(self.engine.player.inventory.items):
+            for i, item in enumerate(player.inventory.items):
                 item_key = chr(ord("a") + i)
-                is_equipped = self.engine.player.equipment.item_is_equipped(item)
+                is_equipped = player.equipment.item_is_equipped(item)
 
                 item_string = f"({item_key}) {item.name}"
 
@@ -474,13 +519,14 @@ class ShopEventHandler(AskUserEventHandler):
         """
         super().on_render(console)
         number_of_items_in_shop = len(self.shopkeeper.inventory.items)
+        player = self.engine.player
 
         height = number_of_items_in_shop + 2
 
         if height <= 3:
             height = 3
 
-        if self.engine.player.x <= 30:
+        if player.x <= 30:
             x = 40
         else:
             x = 0
@@ -536,16 +582,16 @@ class ShopEventHandler(AskUserEventHandler):
         player = self.engine.player
         """Called when the user selects a valid item."""
         if item.price < player.level.current_gold and \
-                len(player.inventory.items) <= self.engine.player.inventory.capacity:
+                len(player.inventory.items) <= player.inventory.capacity:
             if self.shopkeeper.equipment.item_is_equipped(item):
                 self.shopkeeper.equipment.toggle_equip(item, add_message=False)
             self.shopkeeper.inventory.items.remove(item)
             player.inventory.items.append(item)
             player.level.change_gold(-item.price)
             self.engine.message_log.add_message(f"You bought the {item.name} for {item.price}!", colour.gold)
-        elif item.price > self.engine.player.level.current_gold:
+        elif item.price > player.level.current_gold:
             raise exceptions.Impossible("You do not have enough gold")
-        elif len(self.engine.player.inventory.items) <= self.engine.player.inventory.capacity:
+        elif len(player.inventory.items) <= player.inventory.capacity:
             raise exceptions.Impossible("Your inventory is full.")
 
 
@@ -735,6 +781,8 @@ class MainGameEventHandler(EventHandler):
                 self.engine, callback=lambda xy: actions.RangedAction(self.engine.player, xy))
         elif key == tcod.event.KeySym.p:
             action = actions.findQuickHeal(self.engine.player)
+        elif key == tcod.event.KeySym.t:
+            return TraitScreenEventHandler(self.engine)
         elif key == tcod.event.KeySym.z:
             nearest_shop = None
             closest_distance = 3

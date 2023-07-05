@@ -13,9 +13,11 @@ class Trait(BaseComponent):
     def __init__(
             self,
             name: str = "<unnamed trait>",
+            description: str = "<undescribed trait>",
             cost: int = 0
     ):
         self.cost = cost
+        self.description = description
         self.name = name
 
 
