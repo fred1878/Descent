@@ -18,7 +18,7 @@ player = Actor(
     fighter=Fighter(hp=30, base_defense=10, base_melee=2, base_magic=1),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=50, current_gold=1000),
-    attribute=Attribute(traits=traits.Strong)
+    attribute=Attribute(trait_list=[])
 )
 # fren
 shopkeeper = Actor(

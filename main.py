@@ -17,6 +17,7 @@ def main() -> None:
     screen_height = 80
 
     tileset = tcod.tileset.load_tilesheet("spritesheet.png", 32, 8, tcod.tileset.CHARMAP_TCOD)
+    # tcod.tileset.set_truetype_font()
 
     handler: input_handlers.BaseEventHandler = input_handlers.MainMenu(screen_width, screen_height)
 

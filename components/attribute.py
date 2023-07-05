@@ -1,4 +1,6 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
+
+import numpy as np
 
 from components.base_component import BaseComponent
 
@@ -14,6 +16,7 @@ class Trait(BaseComponent):
             cost: int = 0
     ):
         self.cost = cost
+        self.name = name
 
 
 class Attribute(BaseComponent):
@@ -21,12 +24,12 @@ class Attribute(BaseComponent):
 
     def __init__(
             self,
+            trait_list=None,
             insanity: int = 0,
             corruption: int = 0,
-            traits=None
     ):
-        self.traits = traits
-        if traits is None:
+        self.traits = trait_list
+        if trait_list is None:
             self.traits = []
         self.insanity = insanity
         self.corruption = corruption
@@ -34,8 +37,7 @@ class Attribute(BaseComponent):
     @property
     def trait_defence_bonus(self) -> int:
         bonus = 0
-        for trait in self.parent.attribute.traits:
-            print(trait.name)
+        for trait in self.traits:
             if hasattr(trait, "trait_defence_bonus"):
                 bonus += trait.trait_defence_bonus
         return bonus
