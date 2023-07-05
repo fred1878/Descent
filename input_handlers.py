@@ -9,6 +9,7 @@ import colour
 import exceptions
 import setup_game
 import traceback
+from difficulty_settings import DifficultySettings
 
 if TYPE_CHECKING:
     from engine import Engine
@@ -147,11 +148,14 @@ class DifficultySelect(BaseEventHandler):
         if event.sym == tcod.event.KeySym.ESCAPE:
             raise SystemExit()
         elif event.sym == tcod.event.KeySym.e:
-            return MainGameEventHandler(setup_game.new_game(self.screen_width, self.screen_height))
+            return MainGameEventHandler(setup_game.new_game(self.screen_width, self.screen_height,
+                                                            DifficultySettings.EASY))
         elif event.sym == tcod.event.KeySym.m:
-            return MainGameEventHandler(setup_game.new_game(self.screen_width, self.screen_height))
+            return MainGameEventHandler(setup_game.new_game(self.screen_width, self.screen_height,
+                                                            DifficultySettings.MEDIUM))
         elif event.sym == tcod.event.KeySym.h:
-            return MainGameEventHandler(setup_game.new_game(self.screen_width, self.screen_height))
+            return MainGameEventHandler(setup_game.new_game(self.screen_width, self.screen_height,
+                                                            DifficultySettings.HARD))
 
         return None
 
@@ -275,7 +279,7 @@ class CharacterScreenEventHandler(AskUserEventHandler):
             x=x,
             y=y,
             width=width,
-            height=8,
+            height=9,
             title=self.TITLE,
             clear=True,
             fg=(255, 255, 255),
@@ -288,9 +292,9 @@ class CharacterScreenEventHandler(AskUserEventHandler):
                       string=f"XP for next Level: {self.engine.player.level.experience_to_next_level}", )
 
         console.print(x=x + 1, y=y + 4, string=f"Melee Attack: {self.engine.player.fighter.melee_power}")
-        console.print(x=x + 1, y=y + 4, string=f"Ranged Attack: {self.engine.player.fighter.ranged_power}")
-        console.print(x=x + 1, y=y + 5, string=f"Defense: {self.engine.player.fighter.defense}")
-        console.print(x=x + 1, y=y + 6, string=f"Magic: {self.engine.player.fighter.magic}")
+        console.print(x=x + 1, y=y + 5, string=f"Ranged Attack: {self.engine.player.fighter.ranged_power}")
+        console.print(x=x + 1, y=y + 6, string=f"Defense: {self.engine.player.fighter.defense}")
+        console.print(x=x + 1, y=y + 7, string=f"Magic: {self.engine.player.fighter.magic}")
 
 
 class LevelUpEventHandler(AskUserEventHandler):
@@ -318,11 +322,11 @@ class LevelUpEventHandler(AskUserEventHandler):
         console.print(x=x + 1, y=1, string="Congratulations! You level up!")
         console.print(x=x + 1, y=2, string="Select an attribute to increase.")
 
-        console.print(x=x + 1, y=4, string=f"a) Constitution (+20 HP, from {self.engine.player.fighter.max_hp})", )
-        console.print(x=x + 1, y=5, string=f"b) Strength (+1 attack, from {self.engine.player.fighter.melee_power})", )
-        console.print(x=x + 1, y=5, string=f"b) Perception (+1 attack, from {self.engine.player.fighter.ranged_power})", )
-        console.print(x=x + 1, y=6, string=f"c) Agility (+1 defense, from {self.engine.player.fighter.base_defense})", )
-        console.print(x=x + 1, y=7, string=f"d) Magic (+1 magic, from {self.engine.player.fighter.base_magic})", )
+        console.print(x=x + 1, y=4, string=f"a) Constitution (+20 HP, from {self.engine.player.fighter.max_hp})")
+        console.print(x=x + 1, y=5, string=f"b) Strength (+1 attack, from {self.engine.player.fighter.melee_power})")
+        console.print(x=x + 1, y=5, string=f"b) Perception (+1 attack, from {self.engine.player.fighter.ranged_power})")
+        console.print(x=x + 1, y=6, string=f"c) Agility (+1 defense, from {self.engine.player.fighter.base_defense})")
+        console.print(x=x + 1, y=7, string=f"d) Magic (+1 magic, from {self.engine.player.fighter.base_magic})")
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         player = self.engine.player

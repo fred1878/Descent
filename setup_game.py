@@ -9,11 +9,13 @@ import colour
 from engine import Engine
 import entity_factories
 from game_map import GameWorld
+from difficulty_settings import DifficultySettings
+from traits import god_mode
 
 background_image = tcod.image.load("background.png")[:, :, :3]
 
 
-def new_game(screen_width: int, screen_height: int) -> Engine:
+def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettings) -> Engine:
     """Return a brand new game session as an Engine instance."""
     map_width = screen_width
     map_height = screen_height - 7
@@ -59,6 +61,8 @@ def new_game(screen_width: int, screen_height: int) -> Engine:
     player.equipment.toggle_equip(wooden_bow, add_message=False)
 
     player.inventory.items.append(small_health_potion)
+    if difficulty == DifficultySettings.EASY:
+        player.attribute.traits.append(god_mode)
 
     return engine
 

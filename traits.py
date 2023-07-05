@@ -33,6 +33,9 @@ class StatModifyingTrait(Trait):
         return self.magic_bonus
 
 
-class GodMode(StatModifyingTrait):
-    def __init__(self):
-        super().__init__(melee_bonus=100, ranged_bonus=100, defence_bonus=100, magic_bonus=100)
+god_mode = StatModifyingTrait(
+    melee_bonus=100,
+    ranged_bonus=100,
+    defence_bonus=100,
+    magic_bonus=100,
+    name="God Mode")
