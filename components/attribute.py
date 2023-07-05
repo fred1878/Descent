@@ -34,10 +34,32 @@ class Attribute(BaseComponent):
         self.insanity = insanity
         self.corruption = corruption
 
+
+    @property
+    def trait_melee_bonus(self) -> int:
+        bonus = 0
+        for trait in self.traits:
+            if hasattr(trait, "trait_melee_bonus"):
+                bonus += trait.trait_melee_bonus
+        return bonus
+    @property
+    def trait_ranged_bonus(self) -> int:
+        bonus = 0
+        for trait in self.traits:
+            if hasattr(trait, "trait_ranged_bonus"):
+                bonus += trait.trait_ranged_bonus
+        return bonus
     @property
     def trait_defence_bonus(self) -> int:
         bonus = 0
         for trait in self.traits:
             if hasattr(trait, "trait_defence_bonus"):
                 bonus += trait.trait_defence_bonus
+        return bonus
+    @property
+    def trait_magic_bonus(self) -> int:
+        bonus = 0
+        for trait in self.traits:
+            if hasattr(trait, "trait_magic_bonus"):
+                bonus += trait.trait_magic_bonus
         return bonus
