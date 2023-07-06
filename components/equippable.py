@@ -34,6 +34,9 @@ class Equippable(BaseComponent):
     def on_unequip(self) -> None:
         pass
 
+    def on_pickup(self) -> None:
+        pass
+
 
 class Dagger(Equippable):
     def __init__(self) -> None:
@@ -94,3 +97,11 @@ class ChainMail(Equippable):
 class PlateMail(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=5)
+
+
+class CursedLeatherArmor(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=1)
+
+    def on_pickup(self) -> None:
+        self.engine.player.level.change_gold(-69)

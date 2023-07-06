@@ -42,3 +42,5 @@ god_mode = StatModifyingTrait(
     name="God Mode",
     description="God Mode"
 )
+
+

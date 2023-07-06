@@ -236,3 +236,11 @@ plate_mail = Item(
     equippable=equippable.PlateMail(),
     price=300
 )
+
+cursed_leather_armor = Item(
+    char="[",
+    colour=colour.purple,
+    name="Cursed Leather Armor",
+    equippable=equippable.CursedLeatherArmor(),
+    price=20
+)

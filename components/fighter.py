@@ -16,7 +16,7 @@ class Fighter(BaseComponent):
         self.max_hp = hp
         self._hp = hp
         self.base_defense = base_defense
-        self.base_melee = base_melee
+        self.base_melee: int = base_melee
         self.base_ranged = base_ranged
         self.base_magic = base_magic
 
@@ -59,31 +59,28 @@ class Fighter(BaseComponent):
     def melee_bonus(self) -> int:
         bonus = 0
         if self.parent.equipment:
-            return self.parent.equipment.melee_bonus
+            bonus += self.parent.equipment.equip_melee_bonus
         if self.parent.attribute:
             bonus += self.parent.attribute.trait_melee_bonus
-        else:
-            return 0
+        return bonus
 
     @property
     def ranged_bonus(self) -> int:
         bonus = 0
         if self.parent.equipment:
-            return self.parent.equipment.ranged_bonus
+            bonus += self.parent.equipment.equip_ranged_bonus
         if self.parent.attribute:
             bonus += self.parent.attribute.trait_ranged_bonus
-        else:
-            return 0
+        return bonus
 
     @property
     def magic_bonus(self) -> int:
         bonus = 0
         if self.parent.equipment:
-            return self.parent.equipment.magic_bonus
+            bonus += self.parent.equipment.equip_magic_bonus
         if self.parent.attribute:
             bonus += self.parent.attribute.trait_magic_bonus
-        else:
-            return 0
+        return bonus
 
     def heal(self, amount: int) -> int:
         if self.hp == self.max_hp:

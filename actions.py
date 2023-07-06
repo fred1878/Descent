@@ -65,6 +65,8 @@ class PickupAction(Action):
                 self.engine.game_map.entities.remove(item)
                 item.parent = self.entity.inventory
                 inventory.items.append(item)
+                if item.equippable:
+                    item.equippable.on_pickup()
 
                 self.engine.message_log.add_message(f"You picked up the {item.name}!")
                 return
