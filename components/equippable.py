@@ -31,6 +31,9 @@ class Equippable(BaseComponent):
     def on_equip(self) -> None:
         pass
 
+    def on_unequip(self) -> None:
+        pass
+
 
 class Dagger(Equippable):
     def __init__(self) -> None:
@@ -58,6 +61,9 @@ class DarkSword(Equippable):
 
     def on_equip(self) -> None:
         self.engine.player.level.change_gold(100)
+
+    def on_unequip(self) -> None:
+        self.engine.player.level.change_gold(-100)
 
 
 class WoodenBow(Equippable):

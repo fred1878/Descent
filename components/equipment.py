@@ -124,5 +124,7 @@ class Equipment(BaseComponent):
 
         if getattr(self, slot) == equippable_item:
             self.unequip_from_slot(slot, add_message)
+            equippable_item.equippable.on_unequip()
         else:
             self.equip_to_slot(slot, equippable_item, add_message)
+            equippable_item.equippable.on_equip()

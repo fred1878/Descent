@@ -218,6 +218,8 @@ def generate_dungeon(
         # Finally, append the new room to the list.
         rooms.append(new_room)
 
+    entity_factories.dark_sword.spawn(dungeon, player.x, player.y + 1)
+
     for entity in dungeon.entities:
         print(entity.name + " " + str(entity.x) + " " + str(entity.y))
     print("stairs x:" + str(dungeon.downstairs_location[0]), "y: " + str(dungeon.downstairs_location[1]))
