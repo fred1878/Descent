@@ -63,3 +63,19 @@ class Attribute(BaseComponent):
             if hasattr(trait, "trait_magic_bonus"):
                 bonus += trait.trait_magic_bonus
         return bonus
+
+    def change_corruption(self, amount: int, add_message: bool) -> None:
+        self.parent.attribute.corruption += amount
+        if add_message:
+            if amount > 0:
+                self.engine.message_log.add_message("Your body festers!")
+            elif amount < 0:
+                self.engine.message_log.add_message("Your body is purified!")
+
+    def change_insanity(self, amount: int, add_message: bool) -> None:
+        self.parent.attribute.corruption += amount
+        if add_message:
+            if amount > 0:
+                self.engine.message_log.add_message("The madness deppens!")
+            elif amount < 0:
+                self.engine.message_log.add_message("Your mind is clear!")

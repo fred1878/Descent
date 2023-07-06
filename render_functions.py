@@ -45,6 +45,22 @@ def render_gold(console: Console, gold: int, location: Tuple[int, int]) -> None:
     console.print(x, y, string=f"Gold: {gold}", fg=colour.gold)
 
 
+def render_corruption(console: Console, corruption: int, location: Tuple[int, int]) -> None:
+    """
+    Render the player's gold amount
+    """
+    x, y = location
+    console.print(x, y, string=f"Corruption: {corruption}", fg=colour.gold)
+
+
+def render_insanity(console: Console, insanity: int, location: Tuple[int, int]) -> None:
+    """
+    Render the player's gold amount
+    """
+    x, y = location
+    console.print(x, y, string=f"Insanity: {insanity}", fg=colour.gold)
+
+
 def render_names_at_mouse_location(console: Console, x: int, y: int, engine: Engine) -> None:
     mouse_x, mouse_y = engine.mouse_location
     names_at_mouse_location = get_names_at_location(x=mouse_x, y=mouse_y, game_map=engine.game_map)

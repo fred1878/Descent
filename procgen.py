@@ -220,6 +220,7 @@ def generate_dungeon(
 
     entity_factories.dark_sword.spawn(dungeon, player.x, player.y + 1)
     entity_factories.cursed_leather_armor.spawn(dungeon, player.x, player.y - 1)
+    entity_factories.cursed_orb.spawn(dungeon, player.x, player.y - 2)
 
     for entity in dungeon.entities:
         print(entity.name + " " + str(entity.x) + " " + str(entity.y))

@@ -81,7 +81,16 @@ class WoodenWand(Equippable):
 
 class GoldenWand(Equippable):
     def __init__(self) -> None:
-        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, magic_bonus=6)
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, ranged_bonus=2, magic_bonus=6, weapon_range=3)
+
+
+class CursedOrb(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, ranged_bonus=3, magic_bonus=12, weapon_range=2)
+
+    def on_pickup(self) -> None:
+        self.engine.player.attribute.change_corruption(20, add_message=True)
+        self.engine.player.attribute.change_insanity(10, add_message=True)
 
 
 class LeatherArmor(Equippable):

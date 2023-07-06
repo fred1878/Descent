@@ -213,6 +213,14 @@ golden_wand = Item(
     price=250
 )
 
+cursed_orb = Item(
+    char="\\",
+    colour=colour.black,
+    name="Cursed Orb",
+    equippable=equippable.CursedOrb(),
+    price=450
+)
+
 leather_armor = Item(
     char="[",
     colour=colour.leather,
