@@ -114,8 +114,9 @@ class QuickHealAction(Action):
         for item in self.entity.inventory.items:
             if item.name == "Health Potion" and (self.entity.fighter.max_hp - self.entity.fighter.hp) >= 10:
                 item.consumable.activate(self)
+            if item.name == "Small Health Potion" and (self.entity.fighter.max_hp - self.entity.fighter.hp) >= 6:
+                item.consumable.activate(self)
         else:
-            print("no pot here")
             for item in self.entity.inventory.items:
                 print(item.name)
 
@@ -229,6 +230,7 @@ class MovementAction(ActionWithDirection):
 
         if self.entity is self.engine.player:
             print("x: " + str(self.entity.x) + "y: " + str(self.entity.y))
+            print(self.entity.attribute.traits[0].name)
 
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
             # Destination is out of bounds.

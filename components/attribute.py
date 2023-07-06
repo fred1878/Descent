@@ -1,7 +1,3 @@
-from typing import TYPE_CHECKING, List
-
-import numpy as np
-
 from components.base_component import BaseComponent
 
 from entity import Actor
