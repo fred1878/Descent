@@ -15,7 +15,7 @@ player = Actor(
     name="Player",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=30, base_defense=10, base_melee=2, base_magic=1),
+    fighter=Fighter(hp=30, base_defense=0, base_melee=2, base_magic=1),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=50, current_gold=1000),
     attribute=Attribute(trait_list=[])
@@ -39,7 +39,7 @@ minion = Actor(
     name="Minion",
     ai_cls=MinionEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=10, base_defense=0, base_melee=2),
+    fighter=Fighter(hp=5, base_defense=0, base_melee=2),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=5),
     attribute=Attribute()
@@ -50,7 +50,7 @@ master = Actor(
     name="Master",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=10, base_defense=0, base_melee=2),
+    fighter=Fighter(hp=10, base_defense=0, base_melee=4),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=5),
     master=True,
@@ -62,7 +62,7 @@ kobold = Actor(
     name="Kobold",
     ai_cls=HostileRangedEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=3, base_defense=0, base_melee=2),
+    fighter=Fighter(hp=8, base_defense=0, base_melee=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=5),
     attribute=Attribute()
@@ -178,6 +178,14 @@ steel_sword = Item(
     name="Steel Sword",
     equippable=equippable.SteelSword(),
     price=500
+)
+
+dark_sword = Item(
+    char="/",
+    colour=colour.black,
+    name="Dark Sword",
+    equippable=equippable.DarkSword(),
+    price=1000
 )
 
 wooden_bow = Item(

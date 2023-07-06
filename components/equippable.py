@@ -28,6 +28,9 @@ class Equippable(BaseComponent):
         self.magic_bonus = magic_bonus
         self.weapon_range = weapon_range
 
+    def on_equip(self) -> None:
+        pass
+
 
 class Dagger(Equippable):
     def __init__(self) -> None:
@@ -47,6 +50,14 @@ class IronSword(Equippable):
 class SteelSword(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8)
+
+
+class DarkSword(Equippable):
+    def __init__(self):
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8)
+
+    def on_equip(self) -> None:
+        self.engine.player.level.change_gold(100)
 
 
 class WoodenBow(Equippable):

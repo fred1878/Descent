@@ -131,9 +131,7 @@ class MinionEnemy(BaseAI):
         dy_player = target.y - self.entity.y
         distance_to_player = max(abs(dx_player), abs(dy_player))  # distance to player
 
-        nearest_master = Optional[Actor]
         master_list: List[Actor] = []
-
         for actor in self.entity.gamemap.actors:
             if -8 < actor.x - self.entity.x < 8 and -8 < actor.y - self.entity.y < 8 and actor.master:
                 master_list.append(actor)
