@@ -11,6 +11,7 @@ leather = (139, 69, 19)
 iron = (128, 128, 128)
 steel = (192, 192, 192)
 wood = (120, 70, 50)
+light_wood = (150, 90, 70)
 bronze = (205, 110, 60)
 
 player_atk = (0xE0, 0xE0, 0xE0)

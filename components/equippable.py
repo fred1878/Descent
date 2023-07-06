@@ -74,6 +74,11 @@ class WoodenBow(Equippable):
         super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=1, weapon_range=4)
 
 
+class CompositeWoodenBow(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=2, weapon_range=5)
+
+
 class WoodenWand(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, magic_bonus=3)

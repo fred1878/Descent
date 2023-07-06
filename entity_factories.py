@@ -7,7 +7,6 @@ from components import consumable, equippable
 from components.level import Level
 from components.equipment import Equipment
 import colour
-import traits
 
 player = Actor(
     char="@",
@@ -194,6 +193,14 @@ wooden_bow = Item(
     name="Wooden Bow",
     equippable=equippable.WoodenBow(),
     price=20
+)
+
+composite_wooden_bow = Item(
+    char="D",
+    colour=colour.light_wood,
+    name="Composite Wooden Bow",
+    equippable=equippable.CompositeWoodenBow(),
+    price=120
 )
 
 
