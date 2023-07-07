@@ -146,7 +146,13 @@ def generate_custom_rooms(
         floor: int) -> List[RectangularRoom]:
     rooms: List[RectangularRoom] = []
     room_types: List[Type[RectangularRoom]] = get_custom_rooms(room_count, floor)
+    center_of_last_room = (0, 0)
     for room in room_types:
+        if len(rooms) != 0:  # All rooms after the first.
+            # Dig out a tunnel between this room and the previous one.
+            for x, y in tunnel_between(rooms[-1].center, new_room.center):
+                dungeon.tiles[x, y] = tile_types.floor
+            center_of_last_room = new_room.center
         if room.__name__ == 'ShopRoom':
             for key, values in shop_params.items():
                 if key == floor:
@@ -188,10 +194,9 @@ def generate_dungeon(
 
     rooms: List[RectangularRoom] = []
 
-    center_of_last_room = (0, 0)
-
     custom_rooms = generate_custom_rooms(dungeon, current_floor)
     rooms.extend(custom_rooms)
+    center_of_last_room = rooms[-1].center[0], rooms[-1].center[0]
 
     number_of_custom_rooms = len(rooms)
 
@@ -229,12 +234,14 @@ def generate_dungeon(
         # Finally, append the new room to the list.
         rooms.append(new_room)
 
-    entity_factories.dark_sword.spawn(dungeon, player.x, player.y + 1)
-    entity_factories.cursed_leather_armor.spawn(dungeon, player.x, player.y - 1)
-    entity_factories.cursed_orb.spawn(dungeon, player.x, player.y - 2)
+    entity_factories.small_health_potion.spawn(dungeon, player.x, player.y + 1)
+    entity_factories.small_health_potion.spawn(dungeon, player.x, player.y - 1)
+    entity_factories.health_potion.spawn(dungeon, player.x, player.y - 2)
+    # dungeon.downstairs_location = (player.x - 1, player.y - 1)
 
     for entity in dungeon.entities:
-        print(entity.name + " " + str(entity.x) + " " + str(entity.y))
+        if entity.name == "Shopkeeper":
+            print(entity.name + " " + str(entity.x) + " " + str(entity.y))
     print("stairs x:" + str(dungeon.downstairs_location[0]), "y: " + str(dungeon.downstairs_location[1]))
 
     return dungeon

@@ -14,10 +14,10 @@ player = Actor(
     name="Player",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=30, base_defense=0, base_melee=2, base_magic=1),
+    fighter=Fighter(hp=30, base_defense=0, base_melee=2, base_magic=0),
     inventory=Inventory(capacity=26),
-    level=Level(level_up_base=50, current_gold=1000),
-    attribute=Attribute(trait_list=[])
+    level=Level(level_up_base=50, current_gold=0),
+    attribute=Attribute()
 )
 # fren
 shopkeeper = Actor(
@@ -26,9 +26,9 @@ shopkeeper = Actor(
     name="Shopkeeper",
     ai_cls=ShopAI,
     equipment=Equipment(),
-    fighter=Fighter(hp=30, base_defense=1, base_melee=7),
+    fighter=Fighter(hp=30, base_defense=2, base_melee=7),
     inventory=Inventory(capacity=5),
-    level=Level(xp_given=200, gold_given=100),
+    level=Level(xp_given=200, gold_given=1000),
     attribute=Attribute()
 )
 # enemigos
@@ -40,7 +40,7 @@ minion = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=5, base_defense=0, base_melee=2),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=15, gold_given=5),
+    level=Level(xp_given=15, gold_given=0),
     attribute=Attribute()
 )
 master = Actor(
@@ -51,7 +51,7 @@ master = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=10, base_defense=0, base_melee=4),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=15, gold_given=5),
+    level=Level(xp_given=50, gold_given=30),
     master=True,
     attribute=Attribute()
 )
@@ -61,9 +61,31 @@ kobold = Actor(
     name="Kobold",
     ai_cls=HostileRangedEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=8, base_defense=0, base_melee=3),
+    fighter=Fighter(hp=8, base_defense=0, base_ranged=2),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=15, gold_given=5),
+    level=Level(xp_given=30, gold_given=5),
+    attribute=Attribute()
+)
+skeleton = Actor(
+    char="s",
+    colour=colour.white,
+    name="Skeleton",
+    ai_cls=HostileEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=15, base_defense=0, base_melee=4),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=80, gold_given=20),
+    attribute=Attribute()
+)
+skeleton_archer = Actor(
+    char="s",
+    colour=colour.white,
+    name="Skeleton Archer",
+    ai_cls=HostileRangedEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=12, base_defense=0, base_ranged=3),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=80, gold_given=20),
     attribute=Attribute()
 )
 hobbit = Actor(
@@ -72,7 +94,7 @@ hobbit = Actor(
     name="Hobbit",
     ai_cls=EvasiveEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=6, base_defense=0, base_melee=4, base_ranged=4),
+    fighter=Fighter(hp=6, base_defense=0, base_melee=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=30, gold_given=5),
     attribute=Attribute()
@@ -96,7 +118,7 @@ troll = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=16, base_defense=1, base_melee=5),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=100, gold_given=5),
+    level=Level(xp_given=100, gold_given=25),
     attribute=Attribute()
 )
 reaper = Actor(
@@ -107,7 +129,7 @@ reaper = Actor(
     equipment=Equipment(),
     fighter=Fighter(hp=50, base_defense=3, base_melee=9),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=500, gold_given=5),
+    level=Level(xp_given=500, gold_given=300),
     attribute=Attribute()
 )
 # items
@@ -254,7 +276,7 @@ plate_mail = Item(
 
 cursed_leather_armor = Item(
     char="[",
-    colour=colour.purple,
+    colour=colour.black,
     name="Cursed Leather Armor",
     equippable=equippable.CursedLeatherArmor(),
     price=20

@@ -229,10 +229,6 @@ class MovementAction(ActionWithDirection):
     def perform(self) -> None:
         dest_x, dest_y = self.dest_xy
 
-        if self.entity is self.engine.player:
-            print("x: " + str(self.entity.x) + "y: " + str(self.entity.y))
-            print(self.entity.attribute.traits[0].name)
-
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
             # Destination is out of bounds.
             raise exceptions.Impossible("That way is blocked.")
@@ -243,6 +239,9 @@ class MovementAction(ActionWithDirection):
             # Destination is blocked by an entity.
             raise exceptions.Impossible("That way is blocked.")
         self.entity.move(self.dx, self.dy)
+
+        if self.entity is self.engine.player:
+            print("x: " + str(self.entity.x) + " y: " + str(self.entity.y))
 
 
 class BumpAction(ActionWithDirection):

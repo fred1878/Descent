@@ -368,9 +368,9 @@ class LevelUpEventHandler(AskUserEventHandler):
 
         console.print(x=x + 1, y=4, string=f"a) Constitution (+20 HP, from {player.fighter.max_hp})")
         console.print(x=x + 1, y=5, string=f"b) Strength (+1 attack, from {player.fighter.melee_power})")
-        console.print(x=x + 1, y=6, string=f"b) Perception (+1 attack, from {player.fighter.ranged_power})")
-        console.print(x=x + 1, y=7, string=f"c) Agility (+1 defense, from {player.fighter.base_defense})")
-        console.print(x=x + 1, y=8, string=f"d) Magic (+1 magic, from {player.fighter.base_magic})")
+        console.print(x=x + 1, y=6, string=f"c) Perception (+1 attack, from {player.fighter.ranged_power})")
+        console.print(x=x + 1, y=7, string=f"d) Agility (+1 defense, from {player.fighter.base_defense})")
+        console.print(x=x + 1, y=8, string=f"e) Magic (+1 magic, from {player.fighter.base_magic})")
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         player = self.engine.player
