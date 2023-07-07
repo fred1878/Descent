@@ -50,6 +50,14 @@ wall = new_tile(
     dark=(ord(" "), colour.white, colour.dark_wall),
     light=(ord(" "), colour.white, colour.light_wall),
 )
+
+trap = new_tile(
+    walkable=True,
+    transparent=True,
+    dark=(ord(" "), colour.white, colour.purple),
+    light=(ord(" "), colour.white, colour.light_purple),
+)
+
 down_stairs = new_tile(
     walkable=True,
     transparent=True,

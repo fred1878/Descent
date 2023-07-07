@@ -116,11 +116,10 @@ class QuickHealAction(Action):
         for item in self.entity.inventory.items:
             if item.name == "Health Potion" and (self.entity.fighter.max_hp - self.entity.fighter.hp) >= 10:
                 item.consumable.activate(self)
-            if item.name == "Small Health Potion" and (self.entity.fighter.max_hp - self.entity.fighter.hp) >= 6:
+            if item.name == "Small Health Potion" and (self.entity.fighter.max_hp - self.entity.fighter.hp):
                 item.consumable.activate(self)
-        else:
-            for item in self.entity.inventory.items:
-                print(item.name)
+            else:
+                self.engine.message_log.add_message("You have no healing items", colour.player_atk_no_damage)
 
 
 class ActionWithDirection(Action):

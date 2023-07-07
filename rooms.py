@@ -1,10 +1,13 @@
 import copy
-from typing import Tuple
+import random
+from typing import Tuple, List
 
 import tcod  # type: ignore
 
 import game_map
 import entity_factories
+import tile_types
+from exceptions import Impossible
 
 
 class RectangularRoom:
@@ -35,10 +38,25 @@ class RectangularRoom:
                 and self.y2 >= other.y1
         )
 
+    def random_tiles(self, count: int) -> List[Tuple[int, int]]:
+        i = 0
+        random_tile_list = []
+        if count > (self.x1 + 1 - self.x2 - 1) * (self.y1 + 1 - self.y2 - 1):
+            raise Impossible(str(self.__name__) + "cannot get " + str(count) + " random tiles as room too small")
+        while i < count:
+            x = random.randint(self.x1 + 1, self.x2 - 1)
+            y = random.randint(self.y1 + 1, self.y2 - 1)
+            xy = x, y
+            if xy not in random_tile_list:
+                random_tile_list.append(xy)
+                i += 1
+        return random_tile_list
+
 
 class ShopRoom(RectangularRoom):
     def __init__(self, x: int, y: int, width: int, height: int, dungeon: game_map.GameMap):
         super().__init__(x, y, width, height)
+        dungeon.tiles[self.inner] = tile_types.floor
         self.entities = dungeon.entities
         (x_shop, y_shop) = self.center
         shopkeeper = entity_factories.shopkeeper.spawn(dungeon, x_shop, y_shop)
@@ -59,3 +77,11 @@ class ShopRoom(RectangularRoom):
         shopkeeper.inventory.items.append(steel_sword)
         shopkeeper.equipment.toggle_equip(steel_sword, add_message=False)
 
+
+class TrapRoom(RectangularRoom):
+    def __init__(self, x: int, y: int, width: int, height: int, dungeon: game_map.GameMap):
+        super().__init__(x, y, width, height)
+        dungeon.tiles[self.inner] = tile_types.floor
+        random_trap_tiles = self.random_tiles(5)
+        for tile in random_trap_tiles:
+            dungeon.tiles[tile] = tile_types.trap
