@@ -34,8 +34,6 @@ TODO:
 -more random damage\
 -environment effects\
 -move actor,item,gameworld to own files\
--add to procgen ability to make rooms in room_factories\
--add static rooms by floor\
 -separate root, map, message, stats console\
 -monsters sometimes have gear\
 -when monsters die they drop inventory\
@@ -73,3 +71,5 @@ TODO:
 -potion hotkey --done\
 -move MainMenu to input_handlers --done\
 -move main.py functionality to engine --done\
+-add static rooms by floor --done\
+-add to procgen ability to make rooms in room_factories --done
