@@ -40,7 +40,6 @@ TODO:
 -status bar has more info?\
 -sort inventory\
 -talk to the dead\
--track kills\
 -have monsters with different FOV/multi layer FOV\
 -random item descriptions?\
 -colours change as you DescentTM\
@@ -64,7 +63,7 @@ TODO:
 -shopkeeper --entity done, need to make actual shop interface\
 -more monsters\
 -more gruesome/twisted monsters\
--MOAR items inc magic items, explosives, potions, scrolls, ranged weapons, GUN, traps, rooms -- traps\
+-MOAR items inc magic items, explosives, potions, scrolls, ranged weapons, GUN, traps, rooms --traps done\
 -"friendly" NPCs i.e patches type friendly\
 
 ### Done pile
@@ -72,4 +71,5 @@ TODO:
 -move MainMenu to input_handlers --done\
 -move main.py functionality to engine --done\
 -add static rooms by floor --done\
--add to procgen ability to make rooms in room_factories --done
+-add to procgen ability to make rooms in room_factories --done\
+-track kills --done\

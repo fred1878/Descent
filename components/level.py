@@ -28,6 +28,7 @@ class Level(BaseComponent):
         self.xp_given = xp_given
         self.current_gold = current_gold
         self.gold_given = gold_given
+        self.kill_count = 0
 
     def change_gold(self, value: int) -> bool:
         if self.current_gold + value < 0:
