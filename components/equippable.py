@@ -84,6 +84,18 @@ class VampiricBlade(Equippable):
         self.engine.player.fighter.heal(2)
 
 
+class Bloodthirster(Equippable):
+    def __init__(self):
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=5)
+        self.kill_count = 0
+
+    def on_equipped_kill(self) -> None:
+        self.kill_count += 1
+        if self.kill_count % 5 == 0:
+            self.engine.player.level.increase_max_hp(1)
+            self.engine.player.attribute.change_insanity(1)
+
+
 class WoodenBow(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=1, weapon_range=4)

@@ -13,6 +13,7 @@ steel = (192, 192, 192)
 wood = (120, 70, 50)
 light_wood = (150, 90, 70)
 bronze = (205, 110, 60)
+blood = (255, 87, 51)
 
 player_atk = (0xE0, 0xE0, 0xE0)
 player_atk_no_damage = (0xB0, 0xB0, 0xB0)
