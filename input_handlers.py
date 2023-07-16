@@ -785,6 +785,8 @@ class MainGameEventHandler(EventHandler):
             action = actions.findQuickHeal(self.engine.player)
         elif key == tcod.event.KeySym.t:
             return TraitScreenEventHandler(self.engine)
+        elif key == tcod.event.KeySym.q:
+            action = actions.DebugAction(self.engine.player)
         elif key == tcod.event.KeySym.z:
             nearest_shop = None
             closest_distance = 3

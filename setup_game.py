@@ -41,6 +41,8 @@ def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettin
 
     engine.message_log.add_message("The walls shift around you...", colour.welcome_text)
 
+    # player starting gear
+
     dagger = copy.deepcopy(entity_factories.dagger)
     leather_armor = copy.deepcopy(entity_factories.leather_armor)
     wooden_bow = copy.deepcopy(entity_factories.wooden_bow)

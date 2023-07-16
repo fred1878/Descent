@@ -150,6 +150,15 @@ class ActionWithDirection(Action):
         raise NotImplementedError()
 
 
+class DebugAction(Action):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+
+    def perform(self) -> None:
+        self.entity.level.add_xp(50)
+        print("debug action")
+
+
 class TargetAction(Action):
     def __init__(self, entity: Actor, target_xy: Tuple[int, int]):
         super().__init__(entity)
