@@ -41,7 +41,6 @@ TODO:
 -when monsters die they drop inventory\
 -status bar has more info?\
 -sort inventory\
--move main.py functionality to engine\
 -talk to the dead\
 -track kills\
 -have monsters with different FOV/multi layer FOV\
@@ -67,9 +66,10 @@ TODO:
 -shopkeeper --entity done, need to make actual shop interface\
 -more monsters\
 -more gruesome/twisted monsters\
--MOAR items inc magic items, explosives, potions, scrolls, ranged weapons, GUN, traps, rooms\
+-MOAR items inc magic items, explosives, potions, scrolls, ranged weapons, GUN, traps, rooms -- traps\
 -"friendly" NPCs i.e patches type friendly\
 
 ### Done pile
 -potion hotkey --done\
 -move MainMenu to input_handlers --done\
+-move main.py functionality to engine --done\

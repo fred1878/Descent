@@ -64,7 +64,7 @@ class Attribute(BaseComponent):
                 bonus += trait.trait_magic_bonus
         return bonus
 
-    def change_corruption(self, amount: int, add_message: bool) -> None:
+    def change_corruption(self, amount: int, add_message: bool = True) -> None:
         self.parent.attribute.corruption += amount
         if add_message:
             if amount > 0:
@@ -72,7 +72,7 @@ class Attribute(BaseComponent):
             elif amount < 0:
                 self.engine.message_log.add_message("Your body is purified!")
 
-    def change_insanity(self, amount: int, add_message: bool) -> None:
+    def change_insanity(self, amount: int, add_message: bool = True) -> None:
         self.parent.attribute.corruption += amount
         if add_message:
             if amount > 0:

@@ -48,11 +48,12 @@ enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
 
 # room counts are set per floor
 room_count: Dict[int, List[Tuple[Type[RectangularRoom], int]]] = {
-    1: [(ShopRoom, 1), (TrapRoom, 30)],
+    1: [(ShopRoom, 1), (TrapRoom, 4)],
     2: [(ShopRoom, 2), (TrapRoom, 5)],
-    4: [(ShopRoom, 1), (TrapRoom, 5)],
-    5: [(ShopRoom, 1), (TrapRoom, 5)],
-    6: [(ShopRoom, 2), (TrapRoom, 5)]
+    3: [(ShopRoom, 2), (TrapRoom, 5)],
+    4: [(ShopRoom, 1), (TrapRoom, 6)],
+    5: [(ShopRoom, 1), (TrapRoom, 7)],
+    6: [(ShopRoom, 2), (TrapRoom, 8)]
 }
 
 shop_params: Dict[int, List[int]] = {

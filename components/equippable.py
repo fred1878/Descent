@@ -78,7 +78,9 @@ class VampiricBlade(Equippable):
         super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8)
 
     def on_equipped_kill(self) -> None:
-        self.engine.message_log.add_message("Your blade thirsts", colour.red)
+        self.engine.message_log.add_message("Your blade twists your mind and body", colour.red)
+        self.engine.player.attribute.change_corruption(3, add_message=False)
+        self.engine.player.attribute.change_insanity(2, add_message=False)
         self.engine.player.fighter.heal(2)
 
 
