@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import colour
 from components.base_component import BaseComponent
 from components.equipment_types import EquipmentType
 
@@ -37,6 +38,9 @@ class Equippable(BaseComponent):
     def on_pickup(self) -> None:
         pass
 
+    def on_equipped_kill(self) -> None:
+        pass
+
 
 class Dagger(Equippable):
     def __init__(self) -> None:
@@ -67,6 +71,15 @@ class DarkSword(Equippable):
 
     def on_unequip(self) -> None:
         self.engine.player.level.change_gold(-100)
+
+
+class VampiricBlade(Equippable):
+    def __init__(self):
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8)
+
+    def on_equipped_kill(self) -> None:
+        self.engine.message_log.add_message("Your blade thirsts", colour.red)
+        self.engine.player.fighter.heal(2)
 
 
 class WoodenBow(Equippable):
