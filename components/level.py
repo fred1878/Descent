@@ -69,10 +69,17 @@ class Level(BaseComponent):
 
         self.increase_level()
 
-    def increase_power(self, amount: int = 1) -> None:
-        self.parent.fighter.base_power += amount
+    def increase_melee(self, amount: int = 1) -> None:
+        self.parent.fighter.base_melee += amount
 
         self.engine.message_log.add_message("You feel stronger!")
+
+        self.increase_level()
+
+    def increase_ranged(self, amount: int = 1) -> None:
+        self.parent.fighter.base_ranged += amount
+
+        self.engine.message_log.add_message("You feel more aware!")
 
         self.increase_level()
 
@@ -83,7 +90,7 @@ class Level(BaseComponent):
 
         self.increase_level()
 
-    def increase_magic(self, amount: int = 1) -> None:
+    def increase_magic(self, amount: int = 3) -> None:
         self.parent.fighter.base_magic += amount
 
         self.engine.message_log.add_message("You feel the power coursing through you!")

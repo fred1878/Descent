@@ -367,22 +367,24 @@ class LevelUpEventHandler(AskUserEventHandler):
         console.print(x=x + 1, y=2, string="Select an attribute to increase.")
 
         console.print(x=x + 1, y=4, string=f"a) Constitution (+20 HP, from {player.fighter.max_hp})")
-        console.print(x=x + 1, y=5, string=f"b) Strength (+1 attack, from {player.fighter.melee_power})")
-        console.print(x=x + 1, y=6, string=f"c) Perception (+1 attack, from {player.fighter.ranged_power})")
+        console.print(x=x + 1, y=5, string=f"b) Strength (+1 melee attack, from {player.fighter.base_melee})")
+        console.print(x=x + 1, y=6, string=f"c) Perception (+1 ranged attack, from {player.fighter.base_ranged})")
         console.print(x=x + 1, y=7, string=f"d) Agility (+1 defense, from {player.fighter.base_defense})")
-        console.print(x=x + 1, y=8, string=f"e) Magic (+1 magic, from {player.fighter.base_magic})")
+        console.print(x=x + 1, y=8, string=f"e) Magic (+3 magic, from {player.fighter.base_magic})")
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         player = self.engine.player
         key = event.sym
         index = key - tcod.event.KeySym.a
 
-        if 0 <= index <= 3:
+        if 0 <= index <= 4:
             if index == 0:
                 player.level.increase_max_hp()
             elif index == 1:
-                player.level.increase_power()
+                player.level.increase_melee()
             elif index == 2:
+                player.level.increase_ranged()
+            elif index == 3:
                 player.level.increase_defense()
             else:
                 player.level.increase_magic()
