@@ -209,6 +209,22 @@ dark_sword = Item(
     price=1000
 )
 
+vampiric_blade = Item(
+    char="/",
+    colour=colour.blood,
+    name="Vampiric Blade",
+    equippable=equippable.VampiricBlade(),
+    price=1000
+)
+
+bloodthirster = Item(
+    char="/",
+    colour=colour.red,
+    name="Bloodthirster",
+    equippable=equippable.Bloodthirster(),
+    price=800
+)
+
 wooden_bow = Item(
     char="D",
     colour=colour.wood,

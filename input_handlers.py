@@ -333,7 +333,6 @@ class TraitScreenEventHandler(AskUserEventHandler):
 
         if len(traits) > 0:
             for i, trait in enumerate(traits):
-
                 trait_string = f"({trait.name}) - {trait.description}"
                 console.print(x + 1, y + i + 1, trait_string)
         else:
@@ -670,6 +669,8 @@ class TargetMeleeAttackHandler(SelectIndexHandler):
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         key = event.sym
+        if key == tcod.event.KeySym.ESCAPE:
+            return MainGameEventHandler(self.engine)
         if key in MOVE_KEYS:
             x, y = self.engine.mouse_location
             dx, dy = MOVE_KEYS[key]
@@ -679,8 +680,10 @@ class TargetMeleeAttackHandler(SelectIndexHandler):
             y = max(self.player.y - 1, min(y, self.player.y + 1))
             self.engine.mouse_location = x, y
             return None
-        elif key in CONFIRM_KEYS or tcod.event.KeySym.a:
+        elif key in CONFIRM_KEYS:
             x, y = self.engine.mouse_location
+            x = max(0, min(x, self.engine.game_map.width - 1))
+            y = max(0, min(y, self.engine.game_map.height - 1))
             dx = x - self.player.x
             dy = y - self.player.y
             return actions.MeleeAction(self.player, dx, dy)
@@ -689,7 +692,6 @@ class TargetMeleeAttackHandler(SelectIndexHandler):
         if self.player.x - 1 < x < self.player.x + 1 or self.player.y - 1 < y < self.player.y + 1:
             self.engine.message_log.add_message("Out of melee range")
         else:
-            x, y = self.engine.mouse_location
             dx = x - self.player.x
             dy = y - self.player.y
             return actions.MeleeAction(self.player, dx, dy)
@@ -785,6 +787,8 @@ class MainGameEventHandler(EventHandler):
             action = actions.findQuickHeal(self.engine.player)
         elif key == tcod.event.KeySym.t:
             return TraitScreenEventHandler(self.engine)
+        elif key == tcod.event.KeySym.q:
+            action = actions.DebugAction(self.engine.player)
         elif key == tcod.event.KeySym.z:
             nearest_shop = None
             closest_distance = 3

@@ -4,6 +4,7 @@ from itertools import repeat
 from typing import Dict, Iterator, List, Type
 import tcod  # type: ignore
 
+import entity_factories
 from exceptions import RoomNotFound
 from rooms import *
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \

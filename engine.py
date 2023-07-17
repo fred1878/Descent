@@ -60,6 +60,8 @@ class Engine:
             console=console, dungeon_level=self.game_world.current_floor, location=(0, self.game_world.map_height + 6))
         render_functions.render_gold(
             console=console, gold=self.player.level.current_gold, location=(0, self.game_world.map_height + 7))
+        render_functions.render_kill_count(
+            console=console, kill_count=self.player.level.kill_count, location=(0, self.game_world.map_height + 8))
 
     def save_as(self, filename: str) -> None:
         """Save this Engine instance as a compressed file."""

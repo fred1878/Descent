@@ -118,3 +118,7 @@ class Fighter(BaseComponent):
         self.engine.message_log.add_message(death_message, death_message_colour)
         self.engine.player.level.add_xp(self.parent.level.xp_given)
         self.engine.player.level.change_gold(self.parent.level.gold_given)
+        self.engine.player.level.kill_count += 1
+        for item in self.engine.player.inventory.items:
+            if self.engine.player.equipment.item_is_equipped(item):
+                item.equippable.on_equipped_kill()

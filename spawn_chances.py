@@ -23,13 +23,15 @@ max_monsters_by_floor = [
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
     0: [(entity_factories.small_health_potion, 35), (entity_factories.cursed_leather_armor, 10)],
     1: [(entity_factories.lightning_scroll, 10)],
-    2: [(entity_factories.confusion_scroll, 10), (entity_factories.health_potion, 10)],
-    3: [(entity_factories.lightning_scroll, 25), (entity_factories.bronze_sword, 5),
-        (entity_factories.health_potion, 20)],
-    4: [(entity_factories.wooden_wand, 5)],
-    5: [(entity_factories.fireball_scroll, 25), (entity_factories.chain_mail, 15), (entity_factories.bronze_sword, 25)],
-    6: [(entity_factories.iron_sword, 10), (entity_factories.golden_wand, 5)],
-    7: [(entity_factories.fireball_scroll, 35), (entity_factories.plate_mail, 15)],
+    2: [(entity_factories.confusion_scroll, 10), (entity_factories.health_potion, 10), (entity_factories.bronze_sword, 5)],
+    3: [(entity_factories.lightning_scroll, 25), (entity_factories.health_potion, 20)],
+    4: [(entity_factories.wooden_wand, 5), (entity_factories.bronze_sword, 10)],
+    5: [(entity_factories.fireball_scroll, 25), (entity_factories.chain_mail, 15), (entity_factories.iron_sword, 15),
+        (entity_factories.bronze_sword, 0)],
+    6: [(entity_factories.bloodthirster, 10), (entity_factories.golden_wand, 5),
+        (entity_factories.iron_sword, 0)],
+    7: [(entity_factories.fireball_scroll, 35), (entity_factories.plate_mail, 15),
+        (entity_factories.vampiric_blade, 10)],
 }
 
 enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
@@ -48,11 +50,12 @@ enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
 
 # room counts are set per floor
 room_count: Dict[int, List[Tuple[Type[RectangularRoom], int]]] = {
-    1: [(ShopRoom, 1), (TrapRoom, 5)],
+    1: [(ShopRoom, 1), (TrapRoom, 4)],
     2: [(ShopRoom, 2), (TrapRoom, 5)],
-    4: [(ShopRoom, 1), (TrapRoom, 5)],
-    5: [(ShopRoom, 1), (TrapRoom, 5)],
-    6: [(ShopRoom, 2), (TrapRoom, 5)]
+    3: [(ShopRoom, 2), (TrapRoom, 5)],
+    4: [(ShopRoom, 1), (TrapRoom, 6)],
+    5: [(ShopRoom, 1), (TrapRoom, 7)],
+    6: [(ShopRoom, 2), (TrapRoom, 8)]
 }
 
 shop_params: Dict[int, List[int]] = {

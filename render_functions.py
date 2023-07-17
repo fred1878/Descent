@@ -45,6 +45,14 @@ def render_gold(console: Console, gold: int, location: Tuple[int, int]) -> None:
     console.print(x, y, string=f"Gold: {gold}", fg=colour.gold)
 
 
+def render_kill_count(console: Console, kill_count: int, location: Tuple[int, int]) -> None:
+    """
+    Render the player's kill count
+    """
+    x, y = location
+    console.print(x, y, string=f"Kill Count: {kill_count}", fg=colour.gold)
+
+
 def render_corruption(console: Console, corruption: int, location: Tuple[int, int]) -> None:
     """
     Render the player's gold amount

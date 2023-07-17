@@ -4,6 +4,8 @@ import exceptions
 
 from typing import Optional, Tuple, TYPE_CHECKING
 
+from tile_types import trap
+
 if TYPE_CHECKING:
     from engine import Engine
     from entity import Actor, Entity, Item
@@ -148,6 +150,15 @@ class ActionWithDirection(Action):
         raise NotImplementedError()
 
 
+class DebugAction(Action):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+
+    def perform(self) -> None:
+        self.entity.level.add_xp(50)
+        print("debug action")
+
+
 class TargetAction(Action):
     def __init__(self, entity: Actor, target_xy: Tuple[int, int]):
         super().__init__(entity)
@@ -228,6 +239,11 @@ class MovementAction(ActionWithDirection):
 
     def perform(self) -> None:
         dest_x, dest_y = self.dest_xy
+
+        if self.engine.game_map.tiles[dest_x, dest_y] == trap:
+            if self.entity is self.engine.player:
+                self.engine.message_log.add_message("You walked over a trap")
+                self.engine.player.fighter.take_damage(5)
 
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
             # Destination is out of bounds.
