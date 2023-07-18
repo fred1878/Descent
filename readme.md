@@ -42,10 +42,9 @@ TODO:
 -mouse driven menus\
 -talk to the dead\
 -have monsters with different FOV/multi layer FOV\
--random item descriptions?\
+-random item descriptions? chat gipitty???\
 -colours change as you DescentTM\
 -key rebinding\
--make equipment match consumable entity factories\
 
 ## Endgame stuff
 -rexpaint graphics OR tcod graphical tiles\
