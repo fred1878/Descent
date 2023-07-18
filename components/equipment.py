@@ -135,4 +135,5 @@ class Equipment(BaseComponent):
                 self.equip_to_slot(slot, equippable_item, add_message)
                 equippable_item.equippable.on_equip()
         else:
-            self.engine.message_log.add_message("You do not have the stats to equip this item", colour.invalid)
+            if equipping_actor is self.engine.player:
+                self.engine.message_log.add_message("You do not have the stats to equip this item", colour.invalid)

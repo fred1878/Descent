@@ -610,12 +610,22 @@ class ShopEventHandler(AskUserEventHandler):
             console.print(x + 1, y + 1, "(Empty)")
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
+        player = self.engine.player
         key = event.sym
         index = key - tcod.event.KeySym.a
+        modifier = event.mod
 
-        if 0 <= index <= 26:
+        if 0 <= index <= 26 and not modifier:
             try:
                 selected_item = self.shopkeeper.inventory.items[index]
+            except IndexError:
+                self.engine.message_log.add_message("Invalid entry.", colour.invalid)
+                return None
+            return self.on_item_selected(selected_item)
+
+        if 0 <= index <= 26 and modifier:
+            try:
+                selected_item = player.inventory.items[index]
             except IndexError:
                 self.engine.message_log.add_message("Invalid entry.", colour.invalid)
                 return None
@@ -625,18 +635,32 @@ class ShopEventHandler(AskUserEventHandler):
     def on_item_selected(self, item: Item) -> None:
         player = self.engine.player
         """Called when the user selects a valid item."""
-        if item.price < player.level.current_gold and \
-                len(player.inventory.items) <= player.inventory.capacity:
-            if self.shopkeeper.equipment.item_is_equipped(item):
-                self.shopkeeper.equipment.toggle_equip(item, self.shopkeeper, add_message=False)
-            self.shopkeeper.inventory.items.remove(item)
-            player.inventory.items.append(item)
-            player.level.change_gold(-item.price)
-            self.engine.message_log.add_message(f"You bought the {item.name} for {item.price}!", colour.gold)
-        elif item.price > player.level.current_gold:
-            raise exceptions.Impossible("You do not have enough gold")
-        elif len(player.inventory.items) <= player.inventory.capacity:
-            raise exceptions.Impossible("Your inventory is full.")
+        if item in self.shopkeeper.inventory.items:
+            if item.price < player.level.current_gold and \
+                    len(player.inventory.items) <= player.inventory.capacity:
+                if self.shopkeeper.equipment.item_is_equipped(item):
+                    self.shopkeeper.equipment.toggle_equip(item, self.shopkeeper, add_message=False)
+                self.shopkeeper.inventory.items.remove(item)
+                player.inventory.items.append(item)
+                player.level.change_gold(-item.price)
+                self.engine.message_log.add_message(f"You bought the {item.name} for {item.price} gold!", colour.gold)
+            elif item.price > player.level.current_gold:
+                raise exceptions.Impossible("You do not have enough gold")
+            elif len(player.inventory.items) >= player.inventory.capacity:
+                raise exceptions.Impossible("Your inventory is full.")
+        elif item in player.inventory.items:
+            if len(self.shopkeeper.inventory.items) >= self.shopkeeper.inventory.capacity:
+                raise exceptions.Impossible("Shopkeeper inventory is full")
+            else:
+                if player.equipment.item_is_equipped(item):
+                    player.equipment.toggle_equip(item, player, add_message=False)
+                player.inventory.items.remove(item)
+                self.shopkeeper.inventory.items.append(item)
+                player.level.change_gold(item.price)
+                self.engine.message_log.add_message(f"You sold the {item.name} for {item.price} gold!", colour.gold)
+
+
+
 
 
 class SelectIndexHandler(AskUserEventHandler):
