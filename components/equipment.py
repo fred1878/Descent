@@ -113,11 +113,11 @@ class Equipment(BaseComponent):
 
         setattr(self, slot, None)
 
-    def toggle_equip(self, equippable_item: Item, add_message: bool = True) -> None:
-        if self.engine.player.fighter.base_melee >= equippable_item.equippable.required_melee and \
-                self.engine.player.fighter.base_ranged >= equippable_item.equippable.required_ranged and \
-                self.engine.player.fighter.base_defense >= equippable_item.equippable.required_defence and \
-                self.engine.player.fighter.magic >= equippable_item.equippable.required_magic:
+    def toggle_equip(self, equippable_item: Item, equipping_actor: Actor, add_message: bool = True) -> None:
+        if equipping_actor.fighter.base_melee >= equippable_item.equippable.required_melee and \
+                equipping_actor.fighter.base_ranged >= equippable_item.equippable.required_ranged and \
+                equipping_actor.fighter.base_defense >= equippable_item.equippable.required_defence and \
+                equipping_actor.fighter.magic >= equippable_item.equippable.required_magic:
             if equippable_item.equippable:
                 if equippable_item.equippable.equipment_type == EquipmentType.MELEE_WEAPON:
                     slot = "melee_weapon"

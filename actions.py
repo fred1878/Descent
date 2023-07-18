@@ -176,7 +176,7 @@ class TargetAction(Action):
 class DropItem(ItemAction):
     def perform(self) -> None:
         if self.entity.equipment.item_is_equipped(self.item):
-            self.entity.equipment.toggle_equip(self.item)
+            self.entity.equipment.toggle_equip(self.item, self.entity)
         self.entity.inventory.drop(self.item)
 
 
@@ -187,7 +187,7 @@ class EquipAction(Action):
         self.item = item
 
     def perform(self) -> None:
-        self.entity.equipment.toggle_equip(self.item)
+        self.entity.equipment.toggle_equip(self.item, self.entity)
 
 
 class RangedAction(TargetAction):

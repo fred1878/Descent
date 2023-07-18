@@ -75,7 +75,7 @@ class ShopRoom(RectangularRoom):
         steel_sword = copy.deepcopy(entity_factories.steel_sword)
         steel_sword.parent = shopkeeper.inventory
         shopkeeper.inventory.items.append(steel_sword)
-        shopkeeper.equipment.toggle_equip(steel_sword, add_message=False)
+        shopkeeper.equipment.toggle_equip(steel_sword, shopkeeper, add_message=False)
 
 
 class TrapRoom(RectangularRoom):

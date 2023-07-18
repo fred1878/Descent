@@ -54,13 +54,13 @@ def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettin
     small_health_potion.parent = player.inventory
 
     player.inventory.items.append(dagger)
-    player.equipment.toggle_equip(dagger, add_message=False)
+    player.equipment.toggle_equip(dagger, player, add_message=False)
 
     player.inventory.items.append(leather_armor)
-    player.equipment.toggle_equip(leather_armor, add_message=False)
+    player.equipment.toggle_equip(leather_armor, player, add_message=False)
 
     player.inventory.items.append(wooden_bow)
-    player.equipment.toggle_equip(wooden_bow, add_message=False)
+    player.equipment.toggle_equip(wooden_bow, player, add_message=False)
 
     player.inventory.items.append(small_health_potion)
     if difficulty == DifficultySettings.EASY:

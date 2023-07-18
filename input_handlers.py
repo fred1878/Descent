@@ -628,7 +628,7 @@ class ShopEventHandler(AskUserEventHandler):
         if item.price < player.level.current_gold and \
                 len(player.inventory.items) <= player.inventory.capacity:
             if self.shopkeeper.equipment.item_is_equipped(item):
-                self.shopkeeper.equipment.toggle_equip(item, add_message=False)
+                self.shopkeeper.equipment.toggle_equip(item, self.shopkeeper, add_message=False)
             self.shopkeeper.inventory.items.remove(item)
             player.inventory.items.append(item)
             player.level.change_gold(-item.price)
