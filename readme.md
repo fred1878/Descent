@@ -48,7 +48,7 @@ TODO:
 -make equipment match consumable entity factories\
 
 ## Endgame stuff
--rexpaint graphics\
+-rexpaint graphics OR tcod graphical tiles\
 -sound\
 -compile binary playable builds\ 
 
