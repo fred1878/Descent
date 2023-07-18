@@ -21,6 +21,10 @@ class Equippable(BaseComponent):
             defense_bonus: int = 0,
             magic_bonus: int = 0,
             weapon_range: int = 0,
+            required_melee: int = 0,
+            required_ranged: int = 0,
+            required_defence: int = 0,
+            required_magic: int = 0,
     ):
         self.equipment_type = equipment_type
         self.melee_bonus = melee_bonus
@@ -28,6 +32,10 @@ class Equippable(BaseComponent):
         self.equip_defense_bonus = defense_bonus
         self.magic_bonus = magic_bonus
         self.weapon_range = weapon_range
+        self.required_melee = required_melee
+        self.required_ranged = required_ranged
+        self.required_defence = required_defence
+        self.required_magic = required_magic
 
     def on_equip(self) -> None:
         pass
@@ -44,7 +52,7 @@ class Equippable(BaseComponent):
 
 class Dagger(Equippable):
     def __init__(self) -> None:
-        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=2)
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=2, required_melee=1)
 
 
 class BronzeSword(Equippable):
@@ -54,12 +62,12 @@ class BronzeSword(Equippable):
 
 class IronSword(Equippable):
     def __init__(self) -> None:
-        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=6)
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=6, required_melee=3)
 
 
 class SteelSword(Equippable):
     def __init__(self) -> None:
-        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8)
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8, required_melee=4)
 
 
 class DarkSword(Equippable):

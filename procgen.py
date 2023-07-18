@@ -238,6 +238,7 @@ def generate_dungeon(
     entity_factories.small_health_potion.spawn(dungeon, player.x, player.y + 1)
     entity_factories.small_health_potion.spawn(dungeon, player.x, player.y - 1)
     entity_factories.health_potion.spawn(dungeon, player.x, player.y - 2)
+    entity_factories.iron_sword.spawn(dungeon, player.x + 1, player.y)
     # dungeon.downstairs_location = (player.x - 1, player.y - 1)
 
     for entity in dungeon.entities:
