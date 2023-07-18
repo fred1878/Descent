@@ -34,6 +34,22 @@ class StatModifyingTrait(Trait):
         return self.magic_bonus
 
 
+class TimedStatModifyingTrait(StatModifyingTrait):
+    def __init__(self,
+                 duration: int,
+                 melee_bonus: int = 0,
+                 ranged_bonus: int = 0,
+                 defence_bonus: int = 0,
+                 magic_bonus: int = 0,
+                 name: str = "stat modifying trait",
+                 description: str = "stat modifying trait description",
+                 cost: int = 0
+                 ):
+        super().__init__(melee_bonus, ranged_bonus, defence_bonus, magic_bonus, name, description, cost)
+        self.current_duration = duration
+        self.max_duration = duration
+
+
 god_mode = StatModifyingTrait(
     melee_bonus=100,
     ranged_bonus=100,
@@ -43,4 +59,16 @@ god_mode = StatModifyingTrait(
     description="God Mode"
 )
 
+attack_down = TimedStatModifyingTrait(
+    duration=10,
+    melee_bonus=-1,
+    name="Attack Down",
+    description="Attack Down"
+)
 
+defence_down = TimedStatModifyingTrait(
+    duration=10,
+    ranged_bonus=-1,
+    name="Defence Down",
+    description="Defence Down"
+)

@@ -64,7 +64,6 @@ TODO:
 -corruption - items, scrolls and potions etc increase corruption\
 -traits tied to corruption and separate\
 -mutations\
--shopkeeper --entity done, need to make actual shop interface\
 -more monsters\
 -more gruesome/twisted monsters\
 -MOAR items inc magic items, explosives, potions, scrolls, ranged weapons, GUN, traps, rooms --traps done\
@@ -79,3 +78,4 @@ TODO:
 -track kills --done\
 -SAN meter --done\
 -req stats for items --done\
+-shopkeeper --done\

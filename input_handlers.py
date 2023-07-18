@@ -222,6 +222,8 @@ class EventHandler(BaseEventHandler):
 
         self.engine.handle_enemy_turns()
 
+        self.engine.handle_duration_events()
+
         self.engine.update_fov()
         return True
 
@@ -856,6 +858,8 @@ class MainGameEventHandler(EventHandler):
             return TraitScreenEventHandler(self.engine)
         elif key == tcod.event.KeySym.q:
             action = actions.DebugAction(self.engine.player)
+        elif key == tcod.event.KeySym.w:
+            action = actions.DebugAction2(self.engine.player)
         elif key == tcod.event.KeySym.z:
             nearest_shop = None
             closest_distance = 3

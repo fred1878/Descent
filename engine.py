@@ -2,6 +2,8 @@ from __future__ import annotations
 import lzma
 import pickle
 from typing import TYPE_CHECKING
+
+import colour
 import exceptions
 import render_functions
 from message_log import MessageLog
@@ -33,6 +35,17 @@ class Engine:
                     entity.ai.perform()
                 except exceptions.Impossible:
                     pass
+
+    def handle_duration_events(self) -> None:
+        for entity in set(self.game_map.actors):
+            if entity.attribute.traits:
+                for trait in entity.attribute.traits:
+                    if hasattr(trait, "max_duration"):
+                        trait.current_duration -= 1
+                        if trait.current_duration <= 0:
+                            entity.attribute.traits.remove(trait)
+                            self.engine.message_log.add_message(f"{trait.name} has worn off", colour.white)
+                            trait.current_duration = trait.max_duration
 
     def ev_mousemotion(self, event: tcod.event.MouseMotion) -> None:
         if self.engine.game_map.in_bounds(event.tile.x, event.tile.y):
