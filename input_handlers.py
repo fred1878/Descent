@@ -522,30 +522,29 @@ class ShopEventHandler(AskUserEventHandler):
         number_of_items_in_shop = len(self.shopkeeper.inventory.items)
         player = self.engine.player
 
-        height = number_of_items_in_shop + 2
+        shop_menu_height = number_of_items_in_shop + 2
 
-        if height <= 3:
-            height = 3
+        if shop_menu_height <= 3:
+            shop_menu_height = 3
 
         if player.x <= 30:
             x = 40
         else:
             x = 0
-
         y = 0
 
-        width = len(self.TITLE) + 4
+        shop_menu_width = len(self.TITLE) + 4
 
         for i, item in enumerate(self.shopkeeper.inventory.items):
             item_width = len(item.name) + len(str(item.price)) + 16
-            if item_width > width:
-                width = item_width
+            if item_width > shop_menu_width:
+                shop_menu_width = item_width
 
         console.draw_frame(
             x=x,
             y=y,
-            width=width,
-            height=height,
+            width=shop_menu_width,
+            height=shop_menu_height,
             title=self.TITLE,
             clear=True,
             fg=(255, 255, 255),
@@ -563,6 +562,50 @@ class ShopEventHandler(AskUserEventHandler):
                     item_string = f"{item_string} (E)"
 
                 console.print(x + 1, y + i + 1, item_string)
+        else:
+            console.print(x + 1, y + 1, "(Empty)")
+
+        number_of_items_in_inventory = len(player.inventory.items)
+        player_inventory_height = number_of_items_in_inventory + 2
+
+        if player_inventory_height <= 3:
+            player_inventory_height = 3
+
+        if player.x <= 30:
+            x = 70
+        else:
+            x = 30
+        y = 0
+
+        player_inventory_width = 0
+
+        for i, item in enumerate(player.inventory.items):
+            item_width = len(item.name) + len(str(item.price)) + 16
+            if item_width > player_inventory_width:
+                player_inventory_width = item_width
+
+        console.draw_frame(
+            x=x,
+            y=y,
+            width=player_inventory_width,
+            height=player_inventory_height + 1,
+            title="Sell Items",
+            clear=True,
+            fg=(255, 255, 255),
+            bg=(0, 0, 0),
+        )
+        console.print(x + 1, y + 1, "Hold SHIFT to sell items")
+        if number_of_items_in_inventory > 0:
+            for i, item in enumerate(player.inventory.items):
+                item_key = chr(ord("a") + i)
+                is_equipped = player.equipment.item_is_equipped(item)
+
+                item_string = f"({item_key}) {item.name}"
+
+                if is_equipped:
+                    item_string = f"{item_string} (E)"
+
+                console.print(x + 1, y + i + 2, item_string)
         else:
             console.print(x + 1, y + 1, "(Empty)")
 
