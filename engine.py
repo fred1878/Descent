@@ -42,9 +42,10 @@ class Engine:
                 for trait in entity.attribute.traits:
                     if hasattr(trait, "max_duration"):
                         trait.current_duration -= 1
+                        print(trait.current_duration)
                         if trait.current_duration <= 0:
                             entity.attribute.traits.remove(trait)
-                            self.engine.message_log.add_message(f"{trait.name} has worn off", colour.white)
+                            self.message_log.add_message(f"{trait.name} has worn off", colour.white)
                             trait.current_duration = trait.max_duration
 
     def ev_mousemotion(self, event: tcod.event.MouseMotion) -> None:

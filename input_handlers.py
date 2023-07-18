@@ -10,6 +10,7 @@ import exceptions
 import setup_game
 import traceback
 from difficulty_settings import DifficultySettings
+from util import number_of_digits
 
 if TYPE_CHECKING:
     from engine import Engine
@@ -319,6 +320,9 @@ class TraitScreenEventHandler(AskUserEventHandler):
         if len(traits) > 0:
             for i, trait in enumerate(traits):
                 trait_length = len(trait.name) + len(trait.description) + 7
+                if hasattr(trait, "max_duration"):
+                    trait_length = len(trait.name) + len(trait.description) + \
+                                   number_of_digits(trait.current_duration) + 10
                 if trait_length > width:
                     width = trait_length
 
@@ -336,6 +340,8 @@ class TraitScreenEventHandler(AskUserEventHandler):
         if len(traits) > 0:
             for i, trait in enumerate(traits):
                 trait_string = f"({trait.name}) - {trait.description}"
+                if hasattr(trait, "max_duration"):
+                    trait_string = trait_string + f" ({trait.current_duration})"
                 console.print(x + 1, y + i + 1, trait_string)
         else:
             console.print(x + 1, y + 1, "No Traits")
