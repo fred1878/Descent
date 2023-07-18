@@ -39,15 +39,21 @@ TODO:
 -when monsters die they drop inventory\
 -status bar has more info?\
 -sort inventory\
+-mouse driven menus\
 -talk to the dead\
 -have monsters with different FOV/multi layer FOV\
 -random item descriptions?\
 -colours change as you DescentTM\
 -key rebinding\
 -make equipment match consumable entity factories\
--trait system\
+
+## Endgame stuff
+-rexpaint graphics\
+-sound\
+-compile binary playable builds\ 
 
 ### ongoing
+-trait system --in progress\
 -rework level system\
 -rebalance\
 -pack monster spawning/better spans in general --monsters can spawn minions\
@@ -56,7 +62,6 @@ TODO:
 
 ## The Ideas Guy
 
--SAN meter\
 -corruption - items, scrolls and potions etc increase corruption\
 -traits tied to corruption and separate\
 -mutations\
@@ -73,3 +78,4 @@ TODO:
 -add static rooms by floor --done\
 -add to procgen ability to make rooms in room_factories --done\
 -track kills --done\
+-SAN meter --done\
