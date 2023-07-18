@@ -65,6 +65,7 @@ def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettin
     player.inventory.items.append(small_health_potion)
     if difficulty == DifficultySettings.EASY:
         player.attribute.traits.append(god_mode)
+        player.level.change_gold(1000)
 
     return engine
 

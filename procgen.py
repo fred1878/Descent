@@ -1,10 +1,9 @@
 from __future__ import annotations
-import random
 from itertools import repeat
-from typing import Dict, Iterator, List, Type
+from typing import Dict, Iterator, Type
 import tcod  # type: ignore
 
-import entity_factories
+import game_map
 from exceptions import RoomNotFound
 from rooms import *
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
@@ -127,7 +126,6 @@ def intersects(self, other: RectangularRoom) -> bool:
 
     return dungeon
 
-
 def get_custom_rooms(
         number_of_rooms_by_floor: Dict[int, List[Tuple[Type[RectangularRoom], int]]],
         floor: int
@@ -147,13 +145,7 @@ def generate_custom_rooms(
         floor: int) -> List[RectangularRoom]:
     rooms: List[RectangularRoom] = []
     room_types: List[Type[RectangularRoom]] = get_custom_rooms(room_count, floor)
-    center_of_last_room = (0, 0)
     for room in room_types:
-        if len(rooms) != 0:  # All rooms after the first.
-            # Dig out a tunnel between this room and the previous one.
-            for x, y in tunnel_between(rooms[-1].center, new_room.center):
-                dungeon.tiles[x, y] = tile_types.floor
-            center_of_last_room = new_room.center
         if room.__name__ == 'ShopRoom':
             for key, values in shop_params.items():
                 if key == floor:
@@ -162,6 +154,13 @@ def generate_custom_rooms(
                     x = random.randint(0, dungeon.width - room_width - 1)
                     y = random.randint(0, dungeon.height - room_height - 1)
                     new_room = room(x, y, room_width, room_height, dungeon)
+                    # Run through the other rooms and see if they intersect with this one.
+                    if any(new_room.intersects(other_room) for other_room in rooms):
+                        continue  # This room intersects, so go to the next attempt.
+                    if len(rooms) != 0:  # All rooms after the first.
+                        # Dig out a tunnel between this room and the previous one.
+                        for x, y in tunnel_between(rooms[-1].center, new_room.center):
+                            dungeon.tiles[x, y] = tile_types.floor
                     rooms.append(new_room)
         elif room.__name__ == "TrapRoom":
             for key, values in trap_params.items():
@@ -174,6 +173,10 @@ def generate_custom_rooms(
                     # Run through the other rooms and see if they intersect with this one.
                     if any(new_room.intersects(other_room) for other_room in rooms):
                         continue  # This room intersects, so go to the next attempt.
+                    if len(rooms) != 0:  # All rooms after the first.
+                        # Dig out a tunnel between this room and the previous one.
+                        for x, y in tunnel_between(rooms[-1].center, new_room.center):
+                            dungeon.tiles[x, y] = tile_types.floor
                     rooms.append(new_room)
         else:
             raise RoomNotFound(str(room.__name__) + " not in room generator")
