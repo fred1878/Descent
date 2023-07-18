@@ -28,17 +28,17 @@ TODO:
 ## The functionality
 
 -tidy history\
--req stats for items\
 -friendly NPCs\
 -reusable/learnable spells\
 -more random damage\
--environment effects\
+-environment effects --traps done\
 -move actor,item,gameworld to own files\
 -separate root, map, message, stats console\
 -monsters sometimes have gear\
 -when monsters die they drop inventory\
 -status bar has more info?\
 -sort inventory\
+-inspect items to see stats, description etc.\
 -mouse driven menus\
 -talk to the dead\
 -have monsters with different FOV/multi layer FOV\
@@ -50,7 +50,7 @@ TODO:
 ## Endgame stuff
 -rexpaint graphics OR tcod graphical tiles\
 -sound\
--compile binary playable builds\ 
+-compile binary playable builds\
 
 ### ongoing
 -trait system --in progress\
@@ -79,3 +79,4 @@ TODO:
 -add to procgen ability to make rooms in room_factories --done\
 -track kills --done\
 -SAN meter --done\
+-req stats for items --done\
