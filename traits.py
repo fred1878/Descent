@@ -9,9 +9,11 @@ class StatModifyingTrait(Trait):
                  magic_bonus: int = 0,
                  name: str = "stat modifying trait",
                  description: str = "stat modifying trait description",
-                 cost: int = 0
+                 cost: int = 0,
+                 duration: int = 1,
+                 has_duration: bool = False
                  ):
-        super().__init__(name, description, cost)
+        super().__init__(name, description, cost, has_duration, duration)
         self.melee_bonus = melee_bonus
         self.ranged_bonus = ranged_bonus
         self.defence_bonus = defence_bonus
@@ -36,18 +38,18 @@ class StatModifyingTrait(Trait):
 
 class TimedStatModifyingTrait(StatModifyingTrait):
     def __init__(self,
-                 duration: int,
                  melee_bonus: int = 0,
                  ranged_bonus: int = 0,
                  defence_bonus: int = 0,
                  magic_bonus: int = 0,
                  name: str = "stat modifying trait",
                  description: str = "stat modifying trait description",
-                 cost: int = 0
+                 cost: int = 0,
+                 has_duration: bool = True,
+                 duration: int = 1
                  ):
-        super().__init__(melee_bonus, ranged_bonus, defence_bonus, magic_bonus, name, description, cost)
-        self.current_duration = duration
-        self.max_duration = duration
+        super().__init__(melee_bonus, ranged_bonus, defence_bonus, magic_bonus, name, description, cost,
+                         duration, has_duration)
 
 
 god_mode = StatModifyingTrait(

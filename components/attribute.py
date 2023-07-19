@@ -10,11 +10,30 @@ class Trait(BaseComponent):
             self,
             name: str = "<unnamed trait>",
             description: str = "<undescribed trait>",
-            cost: int = 0
+            cost: int = 0,
+            has_duration: bool = False,
+            duration: int = 1
     ):
         self.cost = cost
         self.description = description
         self.name = name
+        self.has_duration = has_duration
+        self.duration = duration
+        self.current_duration = duration
+
+    def decrease_duration(self, amount: int = 1) -> bool:
+        if self.has_duration:
+            print(str(self.current_duration) + " " + str(self.name))
+            self.current_duration -= amount
+            if self.current_duration <= 0:
+                return False
+        return True
+
+    def refresh_duration(self):
+        self.current_duration = self.duration
+
+def add_trait(entity: Actor, trait):
+    entity.attribute.traits.append(trait)
 
 
 class Attribute(BaseComponent):

@@ -38,15 +38,11 @@ class Engine:
 
     def handle_duration_events(self) -> None:
         for entity in set(self.game_map.actors):
-            if entity.attribute.traits:
-                for trait in entity.attribute.traits:
-                    if hasattr(trait, "max_duration"):
-                        trait.current_duration -= 1
-                        print(trait.current_duration)
-                        if trait.current_duration <= 0:
-                            entity.attribute.traits.remove(trait)
-                            self.message_log.add_message(f"{trait.name} has worn off", colour.white)
-                            trait.current_duration = trait.max_duration
+            for trait in entity.attribute.traits:
+                if not trait.decrease_duration():
+                    print(str(trait) + "removed")
+                    self.player.attribute.traits.remove(trait)
+                    trait.refresh_duration()
 
     def ev_mousemotion(self, event: tcod.event.MouseMotion) -> None:
         if self.engine.game_map.in_bounds(event.tile.x, event.tile.y):

@@ -5,6 +5,7 @@ import exceptions
 from typing import Optional, Tuple, TYPE_CHECKING
 
 import traits
+from components import attribute
 from tile_types import trap
 
 if TYPE_CHECKING:
@@ -156,8 +157,8 @@ class DebugAction(Action):
         super().__init__(entity)
 
     def perform(self) -> None:
-        self.entity.attribute.traits.append(traits.attack_down)
-        print("debug action")
+        trait = traits.attack_down
+        attribute.add_trait(self.entity, trait)
 
 
 class DebugAction2(Action):
@@ -165,7 +166,7 @@ class DebugAction2(Action):
         super().__init__(entity)
 
     def perform(self) -> None:
-        self.entity.attribute.traits.append(traits.defence_down)
+        self.entity.attribute.add_trait(traits.defence_down)
         print("debug action2")
 
 
