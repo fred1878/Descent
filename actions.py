@@ -157,7 +157,12 @@ class DebugAction(Action):
         super().__init__(entity)
 
     def perform(self) -> None:
-        trait = traits.attack_down
+        trait = traits.StatModifyingTrait(
+            duration=10,
+            melee_bonus=-1,
+            name="Attack Down",
+            description="Attack Down"
+        )
         attribute.add_trait(self.entity, trait)
 
 
@@ -166,7 +171,7 @@ class DebugAction2(Action):
         super().__init__(entity)
 
     def perform(self) -> None:
-        self.entity.attribute.add_trait(traits.defence_down)
+        traits.attack_down.add_trait(self.entity)
         print("debug action2")
 
 

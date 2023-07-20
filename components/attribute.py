@@ -1,3 +1,5 @@
+import copy
+
 from components.base_component import BaseComponent
 
 from entity import Actor
@@ -21,6 +23,11 @@ class Trait(BaseComponent):
         self.duration = duration
         self.current_duration = duration
 
+    def add_trait(self, entity: Actor):
+        clone = copy.deepcopy(self)
+        clone.parent = entity
+        entity.attribute.traits.append(clone)
+
     def decrease_duration(self, amount: int = 1) -> bool:
         if self.has_duration:
             print(str(self.current_duration) + " " + str(self.name))
@@ -31,9 +38,6 @@ class Trait(BaseComponent):
 
     def refresh_duration(self):
         self.current_duration = self.duration
-
-def add_trait(entity: Actor, trait):
-    entity.attribute.traits.append(trait)
 
 
 class Attribute(BaseComponent):

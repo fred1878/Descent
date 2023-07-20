@@ -52,7 +52,7 @@ TODO:
 -compile binary playable builds\
 
 ### ongoing
--trait system --in progress\
+-trait system --in progress --fix stacking traits of same type\
 -rework level system\
 -rebalance\
 -pack monster spawning/better spans in general --monsters can spawn minions\
