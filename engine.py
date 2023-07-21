@@ -40,9 +40,7 @@ class Engine:
         for entity in set(self.game_map.actors):
             for trait in entity.attribute.traits:
                 if not trait.decrease_duration():
-                    print(str(trait) + "removed")
                     self.player.attribute.traits.remove(trait)
-                    trait.refresh_duration()
 
     def ev_mousemotion(self, event: tcod.event.MouseMotion) -> None:
         if self.engine.game_map.in_bounds(event.tile.x, event.tile.y):

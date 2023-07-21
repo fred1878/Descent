@@ -5,8 +5,6 @@ import exceptions
 from typing import Optional, Tuple, TYPE_CHECKING
 
 import traits
-from components import attribute
-from test import myfast, fast_test
 from tile_types import trap
 
 if TYPE_CHECKING:

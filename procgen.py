@@ -85,8 +85,6 @@ def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_numbe
 
     for monster in monsters:
         add_random_items_to_entities(item_equip_chances, monster, floor_number)
-        for item in monster.inventory.items:
-            print(item.name)
 
     items: List[ActorOrItem] = get_entities_at_random(
         item_chances, number_of_items, floor_number
@@ -268,7 +266,7 @@ def generate_dungeon(
     entity_factories.small_health_potion.spawn(dungeon, player.x, player.y + 1)
     entity_factories.small_health_potion.spawn(dungeon, player.x, player.y - 1)
     entity_factories.health_potion.spawn(dungeon, player.x, player.y - 2)
-    entity_factories.iron_sword.spawn(dungeon, player.x + 1, player.y)
+    entity_factories.cursed_leather_armor.spawn(dungeon, player.x + 1, player.y)
     # dungeon.downstairs_location = (player.x - 1, player.y - 1)
 
     for entity in dungeon.entities:

@@ -362,7 +362,7 @@ class LevelUpEventHandler(AskUserEventHandler):
         console.draw_frame(
             x=x,
             y=0,
-            width=35,
+            width=45,
             height=10,
             title=self.TITLE,
             clear=True,
@@ -441,6 +441,11 @@ class InventoryEventHandler(AskUserEventHandler):
         y = 0
 
         width = len(self.TITLE) + 4
+
+        for i, item in enumerate(player.inventory.items):
+            item_width = len(item.name) + len(str(item.price)) + 9
+            if item_width > width:
+                width = item_width
 
         console.draw_frame(
             x=x,
@@ -666,9 +671,6 @@ class ShopEventHandler(AskUserEventHandler):
                 self.shopkeeper.inventory.items.append(item)
                 player.level.change_gold(item.price)
                 self.engine.message_log.add_message(f"You sold the {item.name} for {item.price} gold!", colour.gold)
-
-
-
 
 
 class SelectIndexHandler(AskUserEventHandler):
