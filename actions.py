@@ -6,6 +6,7 @@ from typing import Optional, Tuple, TYPE_CHECKING
 
 import traits
 from components import attribute
+from test import myfast, fast_test
 from tile_types import trap
 
 if TYPE_CHECKING:
@@ -157,13 +158,7 @@ class DebugAction(Action):
         super().__init__(entity)
 
     def perform(self) -> None:
-        trait = traits.StatModifyingTrait(
-            duration=10,
-            melee_bonus=-1,
-            name="Attack Down",
-            description="Attack Down"
-        )
-        attribute.add_trait(self.entity, trait)
+        pass
 
 
 class DebugAction2(Action):

@@ -1,9 +1,9 @@
-from typing import Dict, List, Type
+from typing import Dict, Type
 import tcod  # type: ignore
 
-import entity_factories
 from rooms import *
-from entity import Entity
+from entity import Entity, Actor, Item
+
 
 max_items_by_floor = [
     (1, 1),
@@ -23,7 +23,8 @@ max_monsters_by_floor = [
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
     0: [(entity_factories.small_health_potion, 35), (entity_factories.cursed_leather_armor, 10)],
     1: [(entity_factories.lightning_scroll, 10)],
-    2: [(entity_factories.confusion_scroll, 10), (entity_factories.health_potion, 10), (entity_factories.bronze_sword, 5)],
+    2: [(entity_factories.confusion_scroll, 10), (entity_factories.health_potion, 10),
+        (entity_factories.bronze_sword, 5)],
     3: [(entity_factories.lightning_scroll, 25), (entity_factories.health_potion, 20)],
     4: [(entity_factories.wooden_wand, 5), (entity_factories.bronze_sword, 10)],
     5: [(entity_factories.fireball_scroll, 25), (entity_factories.chain_mail, 15), (entity_factories.iron_sword, 15),
@@ -46,6 +47,10 @@ enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
     5: [(entity_factories.orc, 10), (entity_factories.troll, 40)],
     6: [(entity_factories.hobbit, 0), (entity_factories.troll, 70)],
     7: [(entity_factories.troll, 60), (entity_factories.reaper, 30)],
+}
+
+item_equip_chances: Dict[int, List[Tuple[Entity, int]]] = {
+    0: [(entity_factories.small_health_potion, 50), (entity_factories.leather_armor, 50)],
 }
 
 # room counts are set per floor

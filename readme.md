@@ -34,8 +34,6 @@ TODO:
 -environment effects --traps done\
 -move actor,item,gameworld to own files\
 -separate root, map, message, stats console\
--monsters sometimes have gear\
--when monsters die they drop inventory\
 -status bar has more info?\
 -sort inventory\
 -inspect items to see stats, description etc.\
@@ -52,7 +50,7 @@ TODO:
 -compile binary playable builds\
 
 ### ongoing
--trait system --in progress --fix stacking traits of same type\
+-trait system --in progress\
 -rework level system\
 -rebalance\
 -pack monster spawning/better spans in general --monsters can spawn minions\
@@ -79,3 +77,5 @@ TODO:
 -SAN meter --done\
 -req stats for items --done\
 -shopkeeper --done\
+-monsters sometimes have gear --done\
+-when monsters die they drop inventory --done\

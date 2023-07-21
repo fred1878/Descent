@@ -1,15 +1,15 @@
 from __future__ import annotations
 from itertools import repeat
-from typing import Dict, Iterator, Type
+from typing import Dict, Iterator, Type, Union
 import tcod  # type: ignore
 
 import game_map
 from exceptions import RoomNotFound
 from rooms import *
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
-    shop_params, trap_params
+    shop_params, trap_params, item_equip_chances
 from engine import Engine
-from entity import Entity, Actor
+from entity import Entity, Actor, Item
 import tile_types
 
 
@@ -25,11 +25,14 @@ def get_max_value_for_floor(max_value_by_floor: List[Tuple[int, int]], floor: in
     return current_value
 
 
+ActorOrItem = Union[Actor, Item]
+
+
 def get_entities_at_random(
         weighted_chances_by_floor: Dict[int, List[Tuple[Entity, int]]],
         number_of_entities: int,
         floor: int,
-) -> List[Entity]:
+) -> List[ActorOrItem]:
     entity_weighted_chances = {}
 
     for key, values in weighted_chances_by_floor.items():
@@ -51,6 +54,23 @@ def get_entities_at_random(
     return chosen_entities
 
 
+def add_random_items_to_entities(
+        equip_chances: Dict[int, List[Tuple[Entity, int]]],
+        entity: Actor,
+        floor: int):
+    for key, values in equip_chances.items():
+        if key > floor:
+            break
+        else:
+            for value in values:
+                item = value[0]
+                weight = value[1]
+                if random.randint(0, 99) < weight:
+                    entity.inventory.items.append(item)
+                    if item.equippable:
+                        entity.equipment.toggle_equip(item, entity, add_message=False)
+
+
 def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_number: int) -> None:
     number_of_monsters = random.randint(
         0, get_max_value_for_floor(max_monsters_by_floor, floor_number)
@@ -59,10 +79,16 @@ def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_numbe
         0, get_max_value_for_floor(max_items_by_floor, floor_number)
     )
 
-    monsters: List[Entity] = get_entities_at_random(
+    monsters: List[ActorOrItem] = get_entities_at_random(
         enemy_chances, number_of_monsters, floor_number
     )
-    items: List[Entity] = get_entities_at_random(
+
+    for monster in monsters:
+        add_random_items_to_entities(item_equip_chances, monster, floor_number)
+        for item in monster.inventory.items:
+            print(item.name)
+
+    items: List[ActorOrItem] = get_entities_at_random(
         item_chances, number_of_items, floor_number
     )
 
@@ -125,6 +151,7 @@ def intersects(self, other: RectangularRoom) -> bool:
             and self.y2 >= other.y1)
 
     return dungeon
+
 
 def get_custom_rooms(
         number_of_rooms_by_floor: Dict[int, List[Tuple[Type[RectangularRoom], int]]],
