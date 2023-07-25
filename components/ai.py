@@ -6,7 +6,7 @@ import numpy as np  # type: ignore
 import tcod  # type: ignore
 
 import traits
-from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction, RangedAction, RangedBuffAction
+from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction, RangedAttackAction, RangedBuffAction
 
 from entity import Actor
 
@@ -110,7 +110,7 @@ class HostileRangedEnemy(BaseAI):
 
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
             if distance <= 3:
-                return RangedAction(self.entity, (target.x, target.y)).perform()  # Will attack player when in range
+                return RangedAttackAction(self.entity, (target.x, target.y)).perform()  # Will attack player when in range
 
             self.path = self.get_path_to(target.x, target.y)
 

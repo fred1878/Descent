@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Iterable, Iterator, Optional, TYPE_CHECKING
 
+import render_order
 from entity import Actor, Item
 
 import numpy as np  # type: ignore
@@ -78,6 +79,14 @@ class GameMap:
         for actor in self.actors:
             if actor.x == x and actor.y == y:
                 return actor
+
+        return None
+
+    def get_corpse_at_location(self, x: int, y: int) -> Optional[Entity]:
+        for entity in self.entities:
+            if entity.render_order == render_order.RenderOrder.CORPSE:
+                if entity.x == x and entity.y == y:
+                    return entity
 
         return None
 

@@ -111,7 +111,7 @@ class Fighter(BaseComponent):
                 self.parent.inventory.drop(item)
 
         self.parent.char = "%"
-        self.parent.colour = (190, 0, 0)
+        self.parent.colour = colour.dark_red
         self.parent.blocks_movement = False
         self.parent.ai = None
         self.parent.name = f"remains of {self.parent.name}"

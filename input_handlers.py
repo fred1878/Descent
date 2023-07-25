@@ -865,7 +865,10 @@ class MainGameEventHandler(EventHandler):
             return TargetMeleeAttackHandler(self.engine)
         elif key == tcod.event.KeySym.s:
             return SingleRangedAttackHandler(
-                self.engine, callback=lambda xy: actions.RangedAction(self.engine.player, xy))
+                self.engine, callback=lambda xy: actions.RangedAttackAction(self.engine.player, xy))
+        elif key == tcod.event.KeySym.e:
+            return SingleRangedAttackHandler(
+                self.engine, callback=lambda xy: actions.ResurrectAction(self.engine.player, xy))
         elif key == tcod.event.KeySym.p:
             action = actions.findQuickHeal(self.engine.player)
         elif key == tcod.event.KeySym.t:

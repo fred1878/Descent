@@ -6,6 +6,7 @@ from typing import Optional, Tuple, TYPE_CHECKING
 
 import traits
 from components.attribute import Trait
+from render_order import RenderOrder
 from tile_types import trap
 
 if TYPE_CHECKING:
@@ -200,7 +201,7 @@ class EquipAction(Action):
         self.entity.equipment.toggle_equip(self.item, self.entity)
 
 
-class RangedAction(TargetAction):
+class RangedAttackAction(TargetAction):
     def __init__(self, entity: Actor, target_xy: Tuple[int, int]):
         super().__init__(entity, target_xy)
 
@@ -244,6 +245,35 @@ class RangedBuffAction(TargetAction):
             attack_colour = colour.enemy_atk
 
         self.engine.message_log.add_message(action_desc, attack_colour)
+
+
+class ResurrectAction(TargetAction):
+
+    def __init__(self, entity: Actor, target_xy: Tuple[int, int]):
+        super().__init__(entity, target_xy)
+
+    @property
+    def target_corpse(self) -> Optional[Actor]:
+        """Return the corpse at this action's destination."""
+        return self.engine.game_map.get_corpse_at_location(*self.target_xy)
+
+    def perform(self) -> None:
+        from components.ai import HostileEnemy
+        target = self.target_corpse
+        if not target:
+            raise exceptions.Impossible("Nothing to target.")
+        if target.ai:
+            raise exceptions.Impossible("Target is not dead")
+
+        target.ai = HostileEnemy(target)
+        target.char = "z"
+        target.name = f"zombie of {target.name[11:]}"
+        target.render_order = RenderOrder.ACTOR
+        target.blocks_movement = True
+
+        action_desc = f"{self.entity.name.capitalize()} revives {target.name.capitalize()}"
+
+        self.engine.message_log.add_message(action_desc, colour.blood)
 
 
 class MeleeAction(ActionWithDirection):
