@@ -317,6 +317,7 @@ class TraitScreenEventHandler(AskUserEventHandler):
 
         width = len(self.TITLE) + 4
         traits = player.attribute.traits
+        number_of_traits = len(traits)
         if len(traits) > 0:
             for i, trait in enumerate(traits):
                 trait_length = len(trait.name) + len(trait.description) + 7
@@ -326,11 +327,16 @@ class TraitScreenEventHandler(AskUserEventHandler):
                 if trait_length > width:
                     width = trait_length
 
+        height = number_of_traits + 2
+
+        if height <= 3:
+            height = 3
+
         console.draw_frame(
             x=x,
             y=y,
             width=width,
-            height=9,
+            height=height,
             title=self.TITLE,
             clear=True,
             fg=(255, 255, 255),

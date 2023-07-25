@@ -7,7 +7,6 @@ import tcod  # type: ignore
 
 import traits
 from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction, RangedAction, RangedBuffAction
-from components.attribute import Trait
 
 from entity import Actor
 
