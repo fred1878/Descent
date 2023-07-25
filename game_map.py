@@ -34,6 +34,14 @@ class GameMap:
             if isinstance(entity, Actor) and entity.is_alive)
 
     @property
+    def corpses(self) -> Iterator[Actor]:
+        """Iterate over this map's dead actors."""
+        yield from (
+            entity
+            for entity in self.entities
+            if isinstance(entity, Actor) and not entity.is_alive)
+
+    @property
     def gamemap(self) -> GameMap:
         return self
 
@@ -83,10 +91,9 @@ class GameMap:
         return None
 
     def get_corpse_at_location(self, x: int, y: int) -> Optional[Entity]:
-        for entity in self.entities:
-            if entity.render_order == render_order.RenderOrder.CORPSE:
-                if entity.x == x and entity.y == y:
-                    return entity
+        for entity in self.corpses:
+            if entity.x == x and entity.y == y:
+                return entity
 
         return None
 

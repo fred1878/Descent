@@ -6,7 +6,8 @@ import numpy as np  # type: ignore
 import tcod  # type: ignore
 
 import traits
-from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction, RangedAttackAction, RangedBuffAction
+from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction, RangedAttackAction, RangedBuffAction, \
+    ResurrectAction
 
 from entity import Actor
 
@@ -110,7 +111,8 @@ class HostileRangedEnemy(BaseAI):
 
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
             if distance <= 3:
-                return RangedAttackAction(self.entity, (target.x, target.y)).perform()  # Will attack player when in range
+                return RangedAttackAction(self.entity,
+                                          (target.x, target.y)).perform()  # Will attack player when in range
 
             self.path = self.get_path_to(target.x, target.y)
 
@@ -157,6 +159,61 @@ class HostileAttackDebufferEnemy(BaseAI):
         return WaitAction(self.entity).perform()
 
 
+class NecromancerEnemy(BaseAI):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+        self.path_to_player: List[Tuple[int, int]] = []
+        self.path_to_corpse: List[Tuple[int, int]] = []
+
+    def perform(self) -> None:
+        target = self.engine.player
+        dx_player = target.x - self.entity.x
+        dy_player = target.y - self.entity.y
+        distance_to_player = max(abs(dx_player), abs(dy_player))  # distance to player
+        corpse_search_range = 6  # how far the enemy will go to find corpses
+
+        corpse_list: List[Actor] = []
+        for corpse in self.entity.gamemap.corpses:
+            if -corpse_search_range < corpse.x - self.entity.x < corpse_search_range \
+                    and -corpse_search_range < corpse.y - self.entity.y < corpse_search_range and corpse.master:
+                corpse_list.append(corpse)
+
+        if corpse_list:
+            nearest_corpse = corpse_list[0]
+            dx_corpse = nearest_corpse.x - self.entity.x
+            dy_corpse = nearest_corpse.y - self.entity.y
+            for corpse in corpse_list:
+                distance = abs(corpse.x - self.entity.x) + abs(corpse.y - self.entity.y)
+                if distance < abs(dx_corpse) + abs(dy_corpse):
+                    nearest_corpse = corpse
+            self.path_to_corpse = self.get_path_to(nearest_corpse.x, nearest_corpse.y)
+        else:
+            nearest_corpse = None
+
+        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+            if distance_to_player <= 1:
+                return MeleeAction(self.entity, dx_player, dy_player).perform()  # Will attack player when adjacent
+
+            self.path_to_player = self.get_path_to(target.x, target.y)
+
+        if self.path_to_player:
+            if nearest_corpse:
+                dx_corpse = nearest_corpse.x - self.entity.x
+                dy_corpse = nearest_corpse.y - self.entity.y
+                distance_to_corpse = max(abs(dx_corpse), abs(dy_corpse))  # distance to master
+                if distance_to_corpse <= 2:
+                    target_xy = (nearest_corpse.x, nearest_corpse.y)
+                    return ResurrectAction(self.entity, target_xy).perform()
+                else:
+                    dest_x, dest_y = self.path_to_corpse.pop(0)
+                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+            else:
+                dest_x, dest_y = self.path_to_player.pop(0)
+                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+
+        return WaitAction(self.entity).perform()
+
+
 class MinionEnemy(BaseAI):
     def __init__(self, entity: Actor):
         super().__init__(entity)
@@ -168,10 +225,12 @@ class MinionEnemy(BaseAI):
         dx_player = target.x - self.entity.x
         dy_player = target.y - self.entity.y
         distance_to_player = max(abs(dx_player), abs(dy_player))  # distance to player
+        master_search_range = 8  # how far the enemy will go to find master
 
         master_list: List[Actor] = []
         for actor in self.entity.gamemap.actors:
-            if -8 < actor.x - self.entity.x < 8 and -8 < actor.y - self.entity.y < 8 and actor.master:
+            if -master_search_range < actor.x - self.entity.x < master_search_range \
+                    and -master_search_range < actor.y - self.entity.y < master_search_range and actor.master:
                 master_list.append(actor)
 
         if master_list:

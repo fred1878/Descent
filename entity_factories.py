@@ -110,6 +110,17 @@ wizard = Actor(
     level=Level(xp_given=50, gold_given=10),
     attribute=Attribute()
 )
+necromancer = Actor(
+    char="n",
+    colour=colour.reaper,
+    name="Necromancer",
+    ai_cls=NecromancerEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=10, base_defense=0, base_melee=3),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=100, gold_given=10),
+    attribute=Attribute()
+)
 orc = Actor(
     char="o",
     colour=(63, 127, 63),

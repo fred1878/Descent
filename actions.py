@@ -267,9 +267,12 @@ class ResurrectAction(TargetAction):
 
         target.ai = HostileEnemy(target)
         target.char = "z"
-        target.name = f"zombie of {target.name[11:]}"
         target.render_order = RenderOrder.ACTOR
         target.blocks_movement = True
+        target.level.xp_given = 0
+        target.level.gold_given = 0
+        if not target.name[:6] == "zombie":
+            target.name = f"zombie of {target.name[11:]}"
 
         action_desc = f"{self.entity.name.capitalize()} revives {target.name.capitalize()}"
 
