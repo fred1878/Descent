@@ -4,7 +4,10 @@ from typing import List, Optional, Tuple
 import random
 import numpy as np  # type: ignore
 import tcod  # type: ignore
-from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction, RangedAction
+
+import traits
+from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction, RangedAction, RangedBuffAction
+from components.attribute import Trait
 
 from entity import Actor
 
@@ -109,6 +112,42 @@ class HostileRangedEnemy(BaseAI):
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
             if distance <= 3:
                 return RangedAction(self.entity, (target.x, target.y)).perform()  # Will attack player when in range
+
+            self.path = self.get_path_to(target.x, target.y)
+
+        if self.path:
+            dest_x, dest_y = self.path.pop(0)
+            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+
+        return WaitAction(self.entity).perform()
+
+
+class HostileAttackDebufferEnemy(BaseAI):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+        self.path: List[Tuple[int, int]] = []
+
+    trait = traits.attack_down_wizard
+
+    def perform(self) -> None:
+        target = self.engine.player
+        dx = target.x - self.entity.x
+        dy = target.y - self.entity.y
+        distance = max(abs(dx), abs(dy))  # distance to player
+
+        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+            if distance <= 4:
+                target_traits = []
+                for trait in target.attribute.traits:
+                    target_traits.append(trait.description)
+                if self.trait.description in target_traits:
+                    pass
+                else:
+                    return RangedBuffAction(self.entity, (target.x, target.y), self.trait).perform()
+                # Will be debuff when in range
+
+            if distance <= 1:
+                return MeleeAction(self.entity, dx, dy).perform()  # Will attack player when adjacent
 
             self.path = self.get_path_to(target.x, target.y)
 

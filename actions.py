@@ -5,6 +5,7 @@ import exceptions
 from typing import Optional, Tuple, TYPE_CHECKING
 
 import traits
+from components.attribute import Trait
 from tile_types import trap
 
 if TYPE_CHECKING:
@@ -221,6 +222,28 @@ class RangedAction(TargetAction):
             target.fighter.hp -= damage
         else:
             self.engine.message_log.add_message(f"{attack_desc} but does no damage.", colour.player_atk_no_damage)
+
+
+class RangedBuffAction(TargetAction):
+    def __init__(self, entity: Actor, target_xy: Tuple[int, int], trait: Trait):
+        super().__init__(entity, target_xy)
+        self.trait = trait
+
+    def perform(self) -> None:
+        target = self.target_actor
+        if not target:
+            raise exceptions.Impossible("Nothing to target.")
+
+        self.trait.add_trait(target)
+
+        action_desc = f"{self.entity.name.capitalize()} casts " \
+                      f"{self.trait.name.capitalize()} on {target.name.capitalize()}"
+        if self.entity is self.engine.player:
+            attack_colour = colour.player_atk
+        else:
+            attack_colour = colour.enemy_atk
+
+        self.engine.message_log.add_message(action_desc, attack_colour)
 
 
 class MeleeAction(ActionWithDirection):

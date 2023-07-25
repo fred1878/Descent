@@ -1,6 +1,7 @@
 from typing import Dict, Type
 import tcod  # type: ignore
 
+import entity_factories
 from rooms import *
 from entity import Entity, Actor, Item
 
@@ -37,16 +38,18 @@ item_chances: Dict[int, List[Tuple[Entity, int]]] = {
 
 enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
     0: [(entity_factories.orc, 40), (entity_factories.hobbit, 30),
-        (entity_factories.kobold, 30), (entity_factories.master, 20)],
+        (entity_factories.kobold, 30), (entity_factories.master, 20),
+        (entity_factories.wizard, 20)],
     1: [(entity_factories.master, 30), (entity_factories.orc, 50)],
     2: [(entity_factories.master, 40), (entity_factories.troll, 5)],
     3: [(entity_factories.troll, 15), (entity_factories.skeleton_archer, 15),
         (entity_factories.skeleton, 15), (entity_factories.kobold, 0)],
     4: [(entity_factories.hobbit, 20), (entity_factories.troll, 40),
-        (entity_factories.orc, 30)],
+        (entity_factories.orc, 30), (entity_factories.wizard, 30)],
     5: [(entity_factories.orc, 10), (entity_factories.troll, 40)],
     6: [(entity_factories.hobbit, 0), (entity_factories.troll, 70)],
-    7: [(entity_factories.troll, 60), (entity_factories.reaper, 30)],
+    7: [(entity_factories.troll, 60), (entity_factories.reaper, 30),
+        (entity_factories.skeleton, 25)],
 }
 
 item_equip_chances: Dict[int, List[Tuple[Entity, int]]] = {

@@ -99,6 +99,17 @@ hobbit = Actor(
     level=Level(xp_given=30, gold_given=5),
     attribute=Attribute()
 )
+wizard = Actor(
+    char="w",
+    colour=colour.white,
+    name="Wizard",
+    ai_cls=HostileAttackDebufferEnemy,
+    equipment=Equipment(),
+    fighter=Fighter(hp=10, base_defense=0, base_melee=3),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=50, gold_given=10),
+    attribute=Attribute()
+)
 orc = Actor(
     char="o",
     colour=(63, 127, 63),
