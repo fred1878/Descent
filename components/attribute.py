@@ -28,9 +28,11 @@ class Trait(BaseComponent):
         clone.parent = entity
         entity.attribute.traits.append(clone)
 
+    def remove_trait(self):
+        self.parent.attribute.traits.remove(self)
+
     def decrease_duration(self, amount: int = 1) -> bool:
         if self.has_duration:
-            print(str(self.current_duration) + " " + str(self.name))
             self.current_duration -= amount
             if self.current_duration <= 0:
                 return False
