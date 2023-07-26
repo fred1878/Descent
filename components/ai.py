@@ -174,7 +174,6 @@ class NecromancerEnemy(BaseAI):
 
         corpse_list: List[Actor] = []
         for corpse in self.entity.gamemap.corpses:
-            print(corpse.x, corpse.y)
             if -corpse_search_range < corpse.x - self.entity.x < corpse_search_range \
                     and -corpse_search_range < corpse.y - self.entity.y < corpse_search_range:
                 corpse_list.append(corpse)
