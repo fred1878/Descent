@@ -174,8 +174,9 @@ class NecromancerEnemy(BaseAI):
 
         corpse_list: List[Actor] = []
         for corpse in self.entity.gamemap.corpses:
+            print(corpse.x, corpse.y)
             if -corpse_search_range < corpse.x - self.entity.x < corpse_search_range \
-                    and -corpse_search_range < corpse.y - self.entity.y < corpse_search_range and corpse.master:
+                    and -corpse_search_range < corpse.y - self.entity.y < corpse_search_range:
                 corpse_list.append(corpse)
 
         if corpse_list:
@@ -197,11 +198,12 @@ class NecromancerEnemy(BaseAI):
             self.path_to_player = self.get_path_to(target.x, target.y)
 
         if self.path_to_player:
+            print(nearest_corpse)
             if nearest_corpse:
                 dx_corpse = nearest_corpse.x - self.entity.x
                 dy_corpse = nearest_corpse.y - self.entity.y
                 distance_to_corpse = max(abs(dx_corpse), abs(dy_corpse))  # distance to master
-                if distance_to_corpse <= 2:
+                if distance_to_corpse <= 3:
                     target_xy = (nearest_corpse.x, nearest_corpse.y)
                     return ResurrectAction(self.entity, target_xy).perform()
                 else:
