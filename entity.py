@@ -100,7 +100,8 @@ class Actor(Entity):
             inventory: Inventory,
             level: Level,
             master: bool = False,
-            attribute: Attribute
+            attribute: Attribute,
+            friendly: bool = False
     ):
         super().__init__(
             x=x,
@@ -127,6 +128,7 @@ class Actor(Entity):
         self.master = master
         self.attribute = attribute
         self.attribute.parent = self
+        self.friendly = friendly
 
     @property
     def is_alive(self) -> bool:

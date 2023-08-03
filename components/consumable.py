@@ -86,7 +86,7 @@ class ConfusionConsumable(Consumable):
         self.engine.message_log.add_message("Select a target location.", colour.needs_target)
         return input_handlers.SingleRangedAttackHandler(self.engine,
                                                         callback=lambda xy: actions.ItemAction(consumer, self.parent,
-                                                                                               xy), )
+                                                                                               xy))
 
     def activate(self, action: actions.ItemAction) -> None:
         consumer = action.entity
@@ -103,7 +103,7 @@ class ConfusionConsumable(Consumable):
             f"The {target.name} stumbles around swinging!",
             colour.status_effect_applied, )
         target.ai = components.ai.ConfusedEnemy(
-            entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns, )
+            entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns)
         self.consume()
 
 
@@ -117,7 +117,7 @@ class FireballDamageConsumable(Consumable):
         return input_handlers.AreaRangedAttackHandler(
             self.engine,
             radius=self.radius,
-            callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
+            callback=lambda xy: actions.ItemAction(consumer, self.parent, xy)
         )
 
     def activate(self, action: actions.ItemAction) -> None:
@@ -137,4 +137,30 @@ class FireballDamageConsumable(Consumable):
 
         if not targets_hit:
             raise Impossible("There are no targets in the radius.")
+        self.consume()
+
+
+class ResurrectConsumable(Consumable):
+
+    def get_action(self, consumer: Actor) -> input_handlers.SingleRangedAttackHandler:
+        self.engine.message_log.add_message("Select a target location.", colour.needs_target)
+        return input_handlers.SingleRangedAttackHandler(
+            self.engine, callback=lambda xy: actions.ResurrectAction(consumer, xy))
+
+    def activate(self, action: actions.ResurrectAction) -> None:
+        consumer = action.entity
+        target = action.target_corpse
+
+        if not self.engine.game_map.visible[action.target_xy]:
+            raise Impossible("You cannot target an area that you cannot see.")
+        if not target:
+            raise Impossible("You must select an enemy to target.")
+        if target is consumer:
+            raise Impossible("You cannot resurrect yourself!")
+
+        self.engine.message_log.add_message(
+            f"The {target.name} is resurrected!",
+            colour.status_effect_applied)
+        target.ai = components.ai.AllyAI(entity=target)
+        target.friendly = True
         self.consume()

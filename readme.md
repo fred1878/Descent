@@ -61,7 +61,7 @@ TODO:
 
 -corruption - items, scrolls and potions etc increase corruption\
 -traits tied to corruption and separate\
--mutations\§
+-mutations\
 -necromancer enemy and spell scroll\
 -more monsters\
 -more gruesome/twisted monsters\

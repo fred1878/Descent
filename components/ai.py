@@ -74,6 +74,55 @@ class ShopAI(BaseAI):
             return WaitAction(self.entity).perform()
 
 
+class AllyAI(BaseAI):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+        self.path_to_player: List[Tuple[int, int]] = []
+        self.path_to_enemy: List[Tuple[int, int]] = []
+
+    def perform(self) -> None:
+        player = self.engine.player
+        enemy_search_range = 8  # how far the enemy will go to find corpses
+
+        enemy_list: List[Actor] = []
+        for actor in self.entity.gamemap.actors:
+            if -enemy_search_range < actor.x - self.entity.x < enemy_search_range \
+                    and -enemy_search_range < actor.y - self.entity.y < enemy_search_range \
+                    and actor.friendly is not True:
+                enemy_list.append(actor)
+
+        if enemy_list:
+            nearest_enemy = enemy_list[0]
+            dx_enemy = nearest_enemy.x - self.entity.x
+            dy_enemy = nearest_enemy.y - self.entity.y
+            for actor in enemy_list:
+                distance = abs(actor.x - self.entity.x) + abs(actor.y - self.entity.y)
+                if distance < abs(dx_enemy) + abs(dy_enemy):
+                    nearest_enemy = actor
+            self.path_to_enemy = self.get_path_to(nearest_enemy.x, nearest_enemy.y)
+        else:
+            nearest_enemy = None
+
+        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+            self.path_to_player = self.get_path_to(player.x, player.y)
+
+        if self.path_to_player:
+            if nearest_enemy:
+                dx_enemy = nearest_enemy.x - self.entity.x
+                dy_enemy = nearest_enemy.y - self.entity.y
+                distance_to_enemy = max(abs(dx_enemy), abs(dy_enemy))  # distance to enemy
+                if distance_to_enemy <= 1:
+                    return MeleeAction(self.entity, dx_enemy, dy_enemy).perform()
+                else:
+                    dest_x, dest_y = self.path_to_enemy.pop(0)
+                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+            else:
+                dest_x, dest_y = self.path_to_player.pop(0)
+                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+
+        return WaitAction(self.entity).perform()
+
+
 class HostileEnemy(BaseAI):
     def __init__(self, entity: Actor):
         super().__init__(entity)
@@ -197,7 +246,6 @@ class NecromancerEnemy(BaseAI):
             self.path_to_player = self.get_path_to(target.x, target.y)
 
         if self.path_to_player:
-            print(nearest_corpse)
             if nearest_corpse:
                 dx_corpse = nearest_corpse.x - self.entity.x
                 dy_corpse = nearest_corpse.y - self.entity.y

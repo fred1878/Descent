@@ -17,7 +17,8 @@ player = Actor(
     fighter=Fighter(hp=30, base_defense=0, base_melee=2, base_magic=0),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=50, current_gold=0),
-    attribute=Attribute()
+    attribute=Attribute(),
+    friendly=True
 )
 # fren
 shopkeeper = Actor(
@@ -30,6 +31,18 @@ shopkeeper = Actor(
     inventory=Inventory(capacity=20),
     level=Level(xp_given=200, gold_given=1000),
     attribute=Attribute()
+)
+ally = Actor(
+    char="A",
+    colour=(240, 210, 207),
+    name="Ally",
+    ai_cls=AllyAI,
+    equipment=Equipment(),
+    fighter=Fighter(hp=30, base_defense=2, base_melee=7),
+    inventory=Inventory(capacity=20),
+    level=Level(xp_given=200, gold_given=1000),
+    attribute=Attribute(),
+    friendly=True
 )
 # enemigos
 minion = Actor(
@@ -188,6 +201,13 @@ fireball_scroll = Item(
     colour=colour.red,
     name="Fireball Scroll",
     consumable=consumable.FireballDamageConsumable(damage=12, radius=3),
+    price=30
+)
+resurrect_scroll = Item(
+    char="~",
+    colour=colour.black,
+    name="Resurrect Scroll",
+    consumable=consumable.ResurrectConsumable(),
     price=30
 )
 # equipment
