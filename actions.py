@@ -259,13 +259,18 @@ class ResurrectAction(TargetAction):
 
     def perform(self) -> None:
         from components.ai import HostileEnemy
+        from components.ai import AllyAI
         target = self.target_corpse
         if not target:
             raise exceptions.Impossible("Nothing to target.")
         if target.ai:
             raise exceptions.Impossible("Target is not dead")
+        if self.entity == self.engine.player:
+            target.ai = AllyAI(target)
+            target.friendly = True
+        else:
+            target.ai = HostileEnemy(target)
 
-        target.ai = HostileEnemy(target)
         target.char = "z"
         target.render_order = RenderOrder.ACTOR
         target.blocks_movement = True

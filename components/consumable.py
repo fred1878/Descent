@@ -161,6 +161,4 @@ class ResurrectConsumable(Consumable):
         self.engine.message_log.add_message(
             f"The {target.name} is resurrected!",
             colour.status_effect_applied)
-        target.ai = components.ai.AllyAI(entity=target)
-        target.friendly = True
         self.consume()
