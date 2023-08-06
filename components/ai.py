@@ -55,6 +55,7 @@ class ShopAI(BaseAI):
     def perform(self) -> None:
         if self.entity.fighter.hp < self.entity.fighter.max_hp:
             self.hostile = True
+            self.entity.friendly = False
         if not self.hostile:
             return WaitAction(self.entity).perform()
         else:

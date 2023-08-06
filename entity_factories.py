@@ -30,7 +30,8 @@ shopkeeper = Actor(
     fighter=Fighter(hp=30, base_defense=2, base_melee=7),
     inventory=Inventory(capacity=20),
     level=Level(xp_given=200, gold_given=1000),
-    attribute=Attribute()
+    attribute=Attribute(),
+    friendly=True
 )
 ally = Actor(
     char="A",
