@@ -128,6 +128,11 @@ class ActionWithDirection(Action):
         """Return the actor at this action's destination."""
         return self.engine.game_map.get_actor_at_location(*self.dest_xy)
 
+    @property
+    def target_tile(self):
+        dest_x, dest_y = self.dest_xy
+        return self.engine.game_map.tiles[dest_x, dest_y]
+
     def perform(self) -> None:
         raise NotImplementedError()
 
@@ -289,11 +294,6 @@ class MovementAction(ActionWithDirection):
     def perform(self) -> None:
         dest_x, dest_y = self.dest_xy
 
-        if self.engine.game_map.tiles[dest_x, dest_y] == trap:
-            if self.entity is self.engine.player:
-                self.engine.message_log.add_message("You walked over a trap")
-                self.engine.player.fighter.take_damage(5)
-
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
             # Destination is out of bounds.
             raise exceptions.Impossible("That way is blocked.")
@@ -303,6 +303,12 @@ class MovementAction(ActionWithDirection):
         if self.engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
             # Destination is blocked by an entity.
             raise exceptions.Impossible("That way is blocked.")
+
+        if self.target_tile == trap:
+            if self.entity is self.engine.player:
+                self.engine.message_log.add_message("You walked over a trap")
+                self.engine.player.fighter.take_damage(5)
+
         self.entity.move(self.dx, self.dy)
 
         if self.entity is self.engine.player:
@@ -312,7 +318,8 @@ class MovementAction(ActionWithDirection):
 class BumpAction(ActionWithDirection):
     def perform(self) -> None:
         if self.target_actor:
-            if self.target_actor.name == 'Shopkeeper':
+            if self.target_actor.name == 'Shopkeeper' and self.target_actor.friendly \
+                    and self.entity is self.engine.player:
                 self.engine.message_log.add_message("Buy my stuff!", colour.gold)
             elif self.entity is self.engine.player and self.target_actor.friendly:
                 return SwapLocationAction(self.entity, self.dx, self.dy).perform()
@@ -325,5 +332,9 @@ class BumpAction(ActionWithDirection):
 
 class SwapLocationAction(ActionWithDirection):
     def perform(self) -> None:
+        if self.target_tile == trap:
+            if self.entity is self.engine.player:
+                self.engine.message_log.add_message("You walked over a trap")
+                self.engine.player.fighter.take_damage(5)
         self.target_actor.move(-self.dx, -self.dy)
         self.entity.move(self.dx, self.dy)
