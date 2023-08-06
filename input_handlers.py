@@ -4,7 +4,7 @@ import os
 import tcod.event  # type: ignore
 from tcod import libtcodpy
 import actions
-from actions import Action, BumpAction, WaitAction, PickupAction, QuickHealAction
+from actions import Action, BumpAction, WaitAction, PickupAction
 import colour
 import exceptions
 import setup_game
@@ -870,7 +870,7 @@ class MainGameEventHandler(EventHandler):
             return SingleRangedAttackHandler(
                 self.engine, callback=lambda xy: actions.ResurrectAction(self.engine.player, xy))
         elif key == tcod.event.KeySym.p:
-            action = actions.findQuickHeal(self.engine.player)
+            action = actions.find_quick_heal(self.engine.player)
         elif key == tcod.event.KeySym.t:
             return TraitScreenEventHandler(self.engine)
         elif key == tcod.event.KeySym.q:
