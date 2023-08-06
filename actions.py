@@ -335,8 +335,16 @@ class BumpAction(ActionWithDirection):
         if self.target_actor:
             if self.target_actor.name == 'Shopkeeper':
                 self.engine.message_log.add_message("Buy my stuff!", colour.gold)
+            elif self.entity is self.engine.player and self.target_actor.friendly:
+                return SwapLocationAction(self.entity, self.dx, self.dy).perform()
             else:
                 return MeleeAction(self.entity, self.dx, self.dy).perform()
 
         else:
             return MovementAction(self.entity, self.dx, self.dy).perform()
+
+
+class SwapLocationAction(ActionWithDirection):
+    def perform(self) -> None:
+        self.target_actor.move(-self.dx, -self.dy)
+        self.entity.move(self.dx, self.dy)
