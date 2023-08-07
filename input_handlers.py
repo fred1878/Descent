@@ -90,7 +90,7 @@ class MainMenu(BaseEventHandler):
                       alignment=libtcodpy.CENTER)
 
         menu_width = 24
-        for i, text in enumerate([" Play a [N]ew game", "[C]ontinue last game", "[Q]uit"]):
+        for i, text in enumerate([" Play a [N]ew game", "[C]ontinue last game", "[O]ptions", "[Q]uit"]):
             console.print(
                 console.width // 2,
                 console.height // 2 - 2 + i,
@@ -116,8 +116,50 @@ class MainMenu(BaseEventHandler):
                 return PopupMessage(self, f"Failed to load save:\n{exc}")
         elif event.sym == tcod.event.KeySym.n:
             return DifficultySelect(self.screen_width, self.screen_height)
+        elif event.sym == tcod.event.KeySym.o:
+            return OptionsMenu(self.screen_width, self.screen_height)
 
         return None
+
+
+class OptionsMenu(BaseEventHandler):
+    """Displays the options menu"""
+
+    def __init__(self, screen_width: int, screen_height: int):
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+
+    def on_render(self, console: tcod.Console) -> None:
+        console.draw_semigraphics(setup_game.background_image, 0, 0)
+        console.print(console.width // 2, console.height // 2 - 4, "Options", fg=colour.menu_title,
+                      alignment=libtcodpy.CENTER)
+        menu_width = 8
+        for i, text in enumerate(["[K]eybinds"]):
+            console.print(
+                console.width // 2,
+                console.height // 2 - 2 + i,
+                text.ljust(menu_width),
+                fg=colour.menu_text,
+                bg=colour.black,
+                alignment=libtcodpy.CENTER,
+                bg_blend=libtcodpy.BKGND_ALPHA(64),
+            )
+
+    def ev_keydown(
+            self, event: tcod.event.KeyDown
+    ) -> Optional[BaseEventHandler]:
+        if event.sym == tcod.event.KeySym.ESCAPE:
+            raise SystemExit()
+        elif event.sym == tcod.event.KeySym.k:
+            return KeybindingsMenu(self.screen_width, self.screen_height)
+
+        return None
+
+
+class KeybindingsMenu(BaseEventHandler):
+    def __init__(self, screen_width: int, screen_height: int):
+        self.screen_width = screen_width
+        self.screen_height = screen_height
 
 
 class DifficultySelect(BaseEventHandler):

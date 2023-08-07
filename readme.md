@@ -32,17 +32,17 @@ TODO:
 -reusable/learnable spells\
 -more random damage\
 -environment effects --traps done\
--move actor,item,gameworld to own files\
 -separate root, map, message, stats console\
 -status bar has more info?\
 -sort inventory\
 -inspect items to see stats, description etc.\
--mouse driven menus\
 -talk to the dead\
 -have monsters with different FOV/multi layer FOV\
 -random item descriptions? chat gipitty???\
 -colours change as you DescentTM\
 -key rebinding\
+-mouse driven menus\
+-onscreen controls
 
 ## Endgame stuff
 -rexpaint graphics OR tcod graphical tiles\
