@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union
+from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union, List
 import os
 import tcod.event  # type: ignore
 from tcod import libtcodpy
@@ -21,21 +21,21 @@ MOVE_KEYS = {
     # Arrow keys.
     tcod.event.KeySym.UP: (0, -1),
     tcod.event.KeySym.DOWN: (0, 1),
-    tcod.event.KeySym.LEFT: (-1, 0),
     tcod.event.KeySym.RIGHT: (1, 0),
-    tcod.event.KeySym.HOME: (-1, -1),
-    tcod.event.KeySym.END: (-1, 1),
+    tcod.event.KeySym.LEFT: (-1, 0),
     tcod.event.KeySym.PAGEUP: (1, -1),
+    tcod.event.KeySym.HOME: (-1, -1),
     tcod.event.KeySym.PAGEDOWN: (1, 1),
+    tcod.event.KeySym.END: (-1, 1),
     # Numpad keys.
-    tcod.event.KeySym.KP_1: (-1, 1),
-    tcod.event.KeySym.KP_2: (0, 1),
-    tcod.event.KeySym.KP_3: (1, 1),
-    tcod.event.KeySym.KP_4: (-1, 0),
-    tcod.event.KeySym.KP_6: (1, 0),
-    tcod.event.KeySym.KP_7: (-1, -1),
     tcod.event.KeySym.KP_8: (0, -1),
+    tcod.event.KeySym.KP_2: (0, 1),
+    tcod.event.KeySym.KP_6: (1, 0),
+    tcod.event.KeySym.KP_4: (-1, 0),
     tcod.event.KeySym.KP_9: (1, -1),
+    tcod.event.KeySym.KP_7: (-1, -1),
+    tcod.event.KeySym.KP_3: (1, 1),
+    tcod.event.KeySym.KP_1: (-1, 1),
 }
 
 WAIT_KEYS = {
@@ -72,9 +72,6 @@ class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
 
     def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
         raise SystemExit()
-
-    def ev_mousemotion(self, event: tcod.event.MouseMotion) -> None:
-        print(event.tile)
 
 
 def mouse_in_menu_width(screen_width: int, menu_width: int, event_x: int):
@@ -166,7 +163,7 @@ class OptionsMenu(BaseEventHandler):
             console.print(
                 console.width // 2,
                 console.height // 2 - 2 + i,
-                text.ljust(self.menu_width),
+                str(text).ljust(self.menu_width),
                 fg=colour.menu_text,
                 bg=colour.black,
                 alignment=libtcodpy.CENTER,
@@ -193,27 +190,60 @@ class KeybindingsMenu(BaseEventHandler):
     def __init__(self, screen_width: int, screen_height: int):
         self.screen_width = screen_width
         self.screen_height = screen_height
-        config = ConfigParser()
-        config.read('config.ini')
-        for (key, value) in config.items('keybindings'):
-            print(key + " " + value)
+        self.menu_width = 8
+
+    config = ConfigParser()
+    config.read('config.ini')
+    keybindings = config.items('keybindings')
+
+    keybindings_y = []
+    for i, key in enumerate(keybindings):
+        item = (key[0], i)
+        keybindings_y.append(item)
+
 
     def on_render(self, console: tcod.Console) -> None:
         console.draw_semigraphics(setup_game.background_image, 0, 0)
         console.print(console.width // 2, console.height // 2 - 4, "Keybindings", fg=colour.menu_title,
                       alignment=libtcodpy.CENTER)
 
-        menu_width = 8
-        for i, text in enumerate(["[K]eybinds"]):
+        for i, entry in enumerate(self.keybindings):
+            key, value = entry
             console.print(
-                console.width // 2,
+                console.width // 2 - 10,
                 console.height // 2 - 2 + i,
-                text.ljust(menu_width),
+                str(key).ljust(self.menu_width),
                 fg=colour.menu_text,
                 bg=colour.black,
                 alignment=libtcodpy.CENTER,
                 bg_blend=libtcodpy.BKGND_ALPHA(64),
             )
+            console.print(
+                console.width // 2 + 10,
+                console.height // 2 - 2 + i,
+                str(value).ljust(self.menu_width),
+                fg=colour.menu_text,
+                bg=colour.black,
+                alignment=libtcodpy.CENTER,
+                bg_blend=libtcodpy.BKGND_ALPHA(64),
+            )
+
+    def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[BaseEventHandler]:
+        print(self.screen_height // 2 - 2 + self.keybindings_y[0][1])
+        print(event.tile.y)
+        if event.tile.y == self.screen_height // 2 - 2 + self.keybindings_y[0][1]:
+                # and mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
+            print('top item')
+
+        return None
+
+    def ev_keydown(
+            self, event: tcod.event.KeyDown
+    ) -> Optional[BaseEventHandler]:
+        if event.sym == tcod.event.KeySym.ESCAPE:
+            raise SystemExit()
+
+        return None
 
 
 class DifficultySelect(BaseEventHandler):
