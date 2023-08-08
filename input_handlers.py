@@ -11,6 +11,7 @@ import setup_game
 import traceback
 from difficulty_settings import DifficultySettings
 from util import number_of_digits
+from configparser import ConfigParser
 
 if TYPE_CHECKING:
     from engine import Engine
@@ -72,6 +73,13 @@ class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
     def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
         raise SystemExit()
 
+    def ev_mousemotion(self, event: tcod.event.MouseMotion) -> None:
+        print(event.tile)
+
+
+def mouse_in_menu_width(screen_width: int, menu_width: int, event_x: int):
+    return screen_width // 2 - (menu_width // 2) < event_x < screen_width // 2 + (menu_width // 2)
+
 
 class MainMenu(BaseEventHandler):
     """Handle the main menu rendering and input."""
@@ -79,6 +87,7 @@ class MainMenu(BaseEventHandler):
     def __init__(self, screen_width: int, screen_height: int):
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.menu_width = 24
 
     def on_render(self, console: tcod.Console) -> None:
         """Render the main menu on a background image."""
@@ -89,12 +98,11 @@ class MainMenu(BaseEventHandler):
         console.print(console.width // 2, console.height - 2, "By fred1878", fg=colour.menu_title,
                       alignment=libtcodpy.CENTER)
 
-        menu_width = 24
         for i, text in enumerate([" Play a [N]ew game", "[C]ontinue last game", "[O]ptions", "[Q]uit"]):
             console.print(
                 console.width // 2,
                 console.height // 2 - 2 + i,
-                text.ljust(menu_width),
+                text.ljust(self.menu_width),
                 fg=colour.menu_text,
                 bg=colour.black,
                 alignment=libtcodpy.CENTER,
@@ -121,6 +129,26 @@ class MainMenu(BaseEventHandler):
 
         return None
 
+    def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[BaseEventHandler]:
+        if event.tile.y == self.screen_height // 2 - 2 \
+                and mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
+            return DifficultySelect(self.screen_width, self.screen_height)
+        elif event.tile.y == self.screen_height // 2 - 1 \
+                and mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
+            try:
+                return MainGameEventHandler(setup_game.load_game("savegame.sav"))
+            except FileNotFoundError:
+                return PopupMessage(self, "No saved game to load.")
+            except Exception as exc:
+                traceback.print_exc()  # Print to stderr.
+                return PopupMessage(self, f"Failed to load save:\n{exc}")
+        elif event.tile.y == self.screen_height // 2 \
+                and mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
+            return OptionsMenu(self.screen_width, self.screen_height)
+        elif event.tile.y == self.screen_height // 2 + 1 \
+                and mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
+            raise SystemExit()
+
 
 class OptionsMenu(BaseEventHandler):
     """Displays the options menu"""
@@ -128,17 +156,17 @@ class OptionsMenu(BaseEventHandler):
     def __init__(self, screen_width: int, screen_height: int):
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.menu_width = 8
 
     def on_render(self, console: tcod.Console) -> None:
         console.draw_semigraphics(setup_game.background_image, 0, 0)
         console.print(console.width // 2, console.height // 2 - 4, "Options", fg=colour.menu_title,
                       alignment=libtcodpy.CENTER)
-        menu_width = 8
         for i, text in enumerate(["[K]eybinds"]):
             console.print(
                 console.width // 2,
                 console.height // 2 - 2 + i,
-                text.ljust(menu_width),
+                text.ljust(self.menu_width),
                 fg=colour.menu_text,
                 bg=colour.black,
                 alignment=libtcodpy.CENTER,
@@ -155,11 +183,37 @@ class OptionsMenu(BaseEventHandler):
 
         return None
 
+    def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[BaseEventHandler]:
+        if event.tile.y == self.screen_height // 2 - 2 \
+                and mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
+            return KeybindingsMenu(self.screen_width, self.screen_height)
+
 
 class KeybindingsMenu(BaseEventHandler):
     def __init__(self, screen_width: int, screen_height: int):
         self.screen_width = screen_width
         self.screen_height = screen_height
+        config = ConfigParser()
+        config.read('config.ini')
+        for (key, value) in config.items('keybindings'):
+            print(key + " " + value)
+
+    def on_render(self, console: tcod.Console) -> None:
+        console.draw_semigraphics(setup_game.background_image, 0, 0)
+        console.print(console.width // 2, console.height // 2 - 4, "Keybindings", fg=colour.menu_title,
+                      alignment=libtcodpy.CENTER)
+
+        menu_width = 8
+        for i, text in enumerate(["[K]eybinds"]):
+            console.print(
+                console.width // 2,
+                console.height // 2 - 2 + i,
+                text.ljust(menu_width),
+                fg=colour.menu_text,
+                bg=colour.black,
+                alignment=libtcodpy.CENTER,
+                bg_blend=libtcodpy.BKGND_ALPHA(64),
+            )
 
 
 class DifficultySelect(BaseEventHandler):
