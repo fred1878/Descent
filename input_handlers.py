@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union, List
+from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union
 import os
 import tcod.event  # type: ignore
 from tcod import libtcodpy
@@ -190,28 +190,26 @@ class KeybindingsMenu(BaseEventHandler):
     def __init__(self, screen_width: int, screen_height: int):
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.menu_width = 8
-
-    config = ConfigParser()
-    config.read('config.ini')
-    keybindings = config.items('keybindings')
-
-    keybindings_y = []
-    for i, key in enumerate(keybindings):
-        item = (key[0], i)
-        keybindings_y.append(item)
-
+        self.menu_width = 40
+        self.config = ConfigParser()
+        self.config.read('config.ini')
+        self.keybindings = self.config.items('keybindings')
+        self.keybindings_y = []
+        for i, key in enumerate(self.keybindings):
+            item = (key[0], i)
+            self.keybindings_y.append(item)
+        self.menu_top_y = self.screen_height // 2 - 2
 
     def on_render(self, console: tcod.Console) -> None:
         console.draw_semigraphics(setup_game.background_image, 0, 0)
-        console.print(console.width // 2, console.height // 2 - 4, "Keybindings", fg=colour.menu_title,
+        console.print(console.width // 2, self.menu_top_y - 2, "Keybindings", fg=colour.menu_title,
                       alignment=libtcodpy.CENTER)
 
         for i, entry in enumerate(self.keybindings):
             key, value = entry
             console.print(
                 console.width // 2 - 10,
-                console.height // 2 - 2 + i,
+                self.menu_top_y + i,
                 str(key).ljust(self.menu_width),
                 fg=colour.menu_text,
                 bg=colour.black,
@@ -220,7 +218,7 @@ class KeybindingsMenu(BaseEventHandler):
             )
             console.print(
                 console.width // 2 + 10,
-                console.height // 2 - 2 + i,
+                self.menu_top_y + i,
                 str(value).ljust(self.menu_width),
                 fg=colour.menu_text,
                 bg=colour.black,
@@ -229,11 +227,9 @@ class KeybindingsMenu(BaseEventHandler):
             )
 
     def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[BaseEventHandler]:
-        print(self.screen_height // 2 - 2 + self.keybindings_y[0][1])
-        print(event.tile.y)
-        if event.tile.y == self.screen_height // 2 - 2 + self.keybindings_y[0][1]:
-                # and mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
-            print('top item')
+        if mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
+            return RebindKeyMenu(self.screen_width, self.screen_height,
+                                 self.keybindings[-self.menu_top_y + event.tile.y], self.config)
 
         return None
 
@@ -244,6 +240,33 @@ class KeybindingsMenu(BaseEventHandler):
             raise SystemExit()
 
         return None
+
+
+class RebindKeyMenu(BaseEventHandler):
+    def __init__(self, screen_width: int, screen_height: int, key: Tuple[str, str], config: ConfigParser):
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.key = key
+        self.menu_width = 40
+        self.config = config
+
+    def on_render(self, console: tcod.Console) -> None:
+        console.draw_semigraphics(setup_game.background_image, 0, 0)
+        console.print(console.width // 2, console.height // 2 - 5, f"Rebind {self.key[0]}", fg=colour.menu_title,
+                      alignment=libtcodpy.CENTER)
+        console.print(console.width // 2, console.height // 2 - 4, "Press the key you would like to use",
+                      fg=colour.menu_title, alignment=libtcodpy.CENTER)
+
+    def ev_keydown(
+            self, event: tcod.event.KeyDown
+    ) -> Optional[BaseEventHandler]:
+        if event.sym == tcod.event.KeySym.ESCAPE:
+            raise SystemExit()
+        else:
+            self.config.set(section='keybindings', option=self.key[0], value=event.sym.name)
+            with open('config.ini', 'w') as configfile:  # save
+                self.config.write(configfile)
+            return KeybindingsMenu(self.screen_width, self.screen_height)
 
 
 class DifficultySelect(BaseEventHandler):
@@ -958,6 +981,7 @@ class MainGameEventHandler(EventHandler):
         action: Optional[Action] = None
 
         key = event.sym
+        print(key.name)
         modifier = event.mod
 
         player = self.engine.player
