@@ -5,23 +5,7 @@ requires tcod
 
 arrow keys + home,end,page_up,page_down OR numpad to move
 
-5 or . to wait
-
-esc to save and exit
-
 to descend >
-
-v to view history
-
-, to pickup
-
-i for inv
-
-c for char screen
-
-d for drop
-
-ctrl+/ to look around
 
 TODO: 
 

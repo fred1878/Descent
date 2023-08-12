@@ -1046,7 +1046,6 @@ class MainGameEventHandler(EventHandler):
         action: Optional[Action] = None
 
         key = event.sym
-        print(key.name)
         modifier = event.mod
 
         player = self.engine.player
