@@ -58,7 +58,6 @@ TODO:
 -different AIs --in progress\
 
 ### bugs
--necromancer zombie is friendly\
 
 ## The Ideas Guy
 

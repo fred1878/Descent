@@ -22,8 +22,8 @@ max_monsters_by_floor = [
 
 # entity chances override previous floors
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.small_health_potion, 35), (entity_factories.cursed_leather_armor, 10)],
-    1: [(entity_factories.lightning_scroll, 10)],
+    1: [(entity_factories.lightning_scroll, 10),(entity_factories.small_health_potion, 35),
+        (entity_factories.cursed_leather_armor, 10)],
     2: [(entity_factories.confusion_scroll, 10), (entity_factories.health_potion, 10),
         (entity_factories.bronze_sword, 5)],
     3: [(entity_factories.lightning_scroll, 25), (entity_factories.health_potion, 20)],
@@ -37,11 +37,9 @@ item_chances: Dict[int, List[Tuple[Entity, int]]] = {
 }
 
 enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.orc, 40), (entity_factories.hobbit, 30),
-        (entity_factories.kobold, 30), (entity_factories.master, 20),
-        (entity_factories.wizard, 20)],
     1: [(entity_factories.master, 30), (entity_factories.orc, 50),
-        (entity_factories.necromancer, 15)],
+        (entity_factories.necromancer, 15), (entity_factories.hobbit, 30),
+        (entity_factories.kobold, 30), (entity_factories.wizard, 20)],
     2: [(entity_factories.master, 40), (entity_factories.troll, 5)],
     3: [(entity_factories.troll, 15), (entity_factories.skeleton_archer, 15),
         (entity_factories.skeleton, 15), (entity_factories.kobold, 0)],
