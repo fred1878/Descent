@@ -17,37 +17,33 @@ if TYPE_CHECKING:
     from engine import Engine
     from entity import Item, Actor
 
-MOVE_KEYS = {
-    # Arrow keys.
-    tcod.event.KeySym.UP: (0, -1),
-    tcod.event.KeySym.DOWN: (0, 1),
-    tcod.event.KeySym.RIGHT: (1, 0),
-    tcod.event.KeySym.LEFT: (-1, 0),
-    tcod.event.KeySym.PAGEUP: (1, -1),
-    tcod.event.KeySym.HOME: (-1, -1),
-    tcod.event.KeySym.PAGEDOWN: (1, 1),
-    tcod.event.KeySym.END: (-1, 1),
-    # Numpad keys.
-    tcod.event.KeySym.KP_8: (0, -1),
-    tcod.event.KeySym.KP_2: (0, 1),
-    tcod.event.KeySym.KP_6: (1, 0),
-    tcod.event.KeySym.KP_4: (-1, 0),
-    tcod.event.KeySym.KP_9: (1, -1),
-    tcod.event.KeySym.KP_7: (-1, -1),
-    tcod.event.KeySym.KP_3: (1, 1),
-    tcod.event.KeySym.KP_1: (-1, 1),
+MOVE_KEYS = {}
+
+MOVE_KEY_MAP = {
+    'move_north': (0, -1),
+    'move_south': (0, 1),
+    'move_east': (1, 0),
+    'move_west': (-1, 0),
+    'move_northeast': (1, -1),
+    'move_northwest': (-1, -1),
+    'move_southeast': (1, 1),
+    'move_southwest': (-1, 1),
+    # Numpad keys by default
+    'alt_move_north': (0, -1),
+    'alt_move_south': (0, 1),
+    'alt_move_east': (1, 0),
+    'alt_move_west': (-1, 0),
+    'alt_move_northeast': (1, -1),
+    'alt_move_northwest': (-1, -1),
+    'alt_move_southeast': (1, 1),
+    'alt_move_southwest': (-1, 1),
 }
 
-WAIT_KEYS = {
-    tcod.event.KeySym.PERIOD,
-    tcod.event.KeySym.KP_5,
-    tcod.event.KeySym.CLEAR,
-}
+WAIT_KEYS = []
 
-CONFIRM_KEYS = {
-    tcod.event.KeySym.RETURN,
-    tcod.event.KeySym.KP_ENTER,
-}
+CONFIRM_KEYS = []
+
+ACTION_KEYS = {}
 
 ActionOrHandler = Union[Action, "BaseEventHandler"]
 """An event handler return value which can trigger an action or switch active handlers.
@@ -85,6 +81,19 @@ class MainMenu(BaseEventHandler):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.menu_width = 24
+        self.config = ConfigParser()
+        self.config.read('config.ini')
+        self.movement_keys = self.config.items('movement_keys')
+        self.action_keys = self.config.items('action_keys')
+        for key in self.movement_keys:
+            MOVE_KEYS[eval(f"tcod.event.KeySym.{key[1]}")] = MOVE_KEY_MAP[key[0]]
+        for key in self.action_keys:
+            if key[0] == 'wait_key' or key[0] == 'alt_wait_key':
+                WAIT_KEYS.append(eval(f"tcod.event.KeySym.{key[1]}"))
+            if key[0] == 'confirm_key' or key[0] == 'alt_confirm_key':
+                CONFIRM_KEYS.append(eval(f"tcod.event.KeySym.{key[1]}"))
+            else:
+                ACTION_KEYS[key[0]] = eval(f"tcod.event.KeySym.{key[1]}")
 
     def on_render(self, console: tcod.Console) -> None:
         """Render the main menu on a background image."""
@@ -159,7 +168,7 @@ class OptionsMenu(BaseEventHandler):
         console.draw_semigraphics(setup_game.background_image, 0, 0)
         console.print(console.width // 2, console.height // 2 - 4, "Options", fg=colour.menu_title,
                       alignment=libtcodpy.CENTER)
-        for i, text in enumerate(["[K]eybinds"]):
+        for i, text in enumerate(["[M]ovement keys", "[A]ction keys"]):
             console.print(
                 console.width // 2,
                 console.height // 2 - 2 + i,
@@ -175,37 +184,35 @@ class OptionsMenu(BaseEventHandler):
     ) -> Optional[BaseEventHandler]:
         if event.sym == tcod.event.KeySym.ESCAPE:
             raise SystemExit()
-        elif event.sym == tcod.event.KeySym.k:
-            return KeybindingsMenu(self.screen_width, self.screen_height)
+        elif event.sym == tcod.event.KeySym.m:
+            return MovementKeybindingsMenu(self.screen_width, self.screen_height)
+        elif event.sym == tcod.event.KeySym.a:
+            return ActionKeybindingsMenu(self.screen_width, self.screen_height)
 
         return None
 
     def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[BaseEventHandler]:
         if event.tile.y == self.screen_height // 2 - 2 \
                 and mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
-            return KeybindingsMenu(self.screen_width, self.screen_height)
+            return MovementKeybindingsMenu(self.screen_width, self.screen_height)
 
 
-class KeybindingsMenu(BaseEventHandler):
+class MovementKeybindingsMenu(BaseEventHandler):
     def __init__(self, screen_width: int, screen_height: int):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.menu_width = 40
         self.config = ConfigParser()
         self.config.read('config.ini')
-        self.keybindings = self.config.items('keybindings')
-        self.keybindings_y = []
-        for i, key in enumerate(self.keybindings):
-            item = (key[0], i)
-            self.keybindings_y.append(item)
+        self.movement_keys = self.config.items('movement_keys')
         self.menu_top_y = self.screen_height // 2 - 2
 
     def on_render(self, console: tcod.Console) -> None:
         console.draw_semigraphics(setup_game.background_image, 0, 0)
-        console.print(console.width // 2, self.menu_top_y - 2, "Keybindings", fg=colour.menu_title,
+        console.print(console.width // 2, self.menu_top_y - 2, "Movement Keybindings", fg=colour.menu_title,
                       alignment=libtcodpy.CENTER)
 
-        for i, entry in enumerate(self.keybindings):
+        for i, entry in enumerate(self.movement_keys):
             key, value = entry
             console.print(
                 console.width // 2 - 10,
@@ -227,9 +234,63 @@ class KeybindingsMenu(BaseEventHandler):
             )
 
     def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[BaseEventHandler]:
-        if mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x):
+        if mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x) and \
+                len(self.movement_keys) > (-self.menu_top_y + event.tile.y) > 0:
             return RebindKeyMenu(self.screen_width, self.screen_height,
-                                 self.keybindings[-self.menu_top_y + event.tile.y], self.config)
+                                 self.movement_keys[-self.menu_top_y + event.tile.y], self.config, 'movement_keys')
+
+        return None
+
+    def ev_keydown(
+            self, event: tcod.event.KeyDown
+    ) -> Optional[BaseEventHandler]:
+        if event.sym == tcod.event.KeySym.ESCAPE:
+            raise SystemExit()
+
+        return None
+
+
+class ActionKeybindingsMenu(BaseEventHandler):
+    def __init__(self, screen_width: int, screen_height: int):
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.menu_width = 40
+        self.config = ConfigParser()
+        self.config.read('config.ini')
+        self.action_keys = self.config.items('action_keys')
+        self.menu_top_y = self.screen_height // 2 - 2
+
+    def on_render(self, console: tcod.Console) -> None:
+        console.draw_semigraphics(setup_game.background_image, 0, 0)
+        console.print(console.width // 2, self.menu_top_y - 2, "Action Keybindings", fg=colour.menu_title,
+                      alignment=libtcodpy.CENTER)
+
+        for i, entry in enumerate(self.action_keys):
+            key, value = entry
+            console.print(
+                console.width // 2 - 10,
+                self.menu_top_y + i,
+                str(key).ljust(self.menu_width),
+                fg=colour.menu_text,
+                bg=colour.black,
+                alignment=libtcodpy.CENTER,
+                bg_blend=libtcodpy.BKGND_ALPHA(64),
+            )
+            console.print(
+                console.width // 2 + 10,
+                self.menu_top_y + i,
+                str(value).ljust(self.menu_width),
+                fg=colour.menu_text,
+                bg=colour.black,
+                alignment=libtcodpy.CENTER,
+                bg_blend=libtcodpy.BKGND_ALPHA(64),
+            )
+
+    def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[BaseEventHandler]:
+        if mouse_in_menu_width(self.screen_width, self.menu_width, event.tile.x) and \
+                len(self.action_keys) > (-self.menu_top_y + event.tile.y) > 0:
+            return RebindKeyMenu(self.screen_width, self.screen_height,
+                                 self.action_keys[-self.menu_top_y + event.tile.y], self.config, 'action_keys')
 
         return None
 
@@ -243,12 +304,13 @@ class KeybindingsMenu(BaseEventHandler):
 
 
 class RebindKeyMenu(BaseEventHandler):
-    def __init__(self, screen_width: int, screen_height: int, key: Tuple[str, str], config: ConfigParser):
+    def __init__(self, screen_width: int, screen_height: int, key: Tuple[str, str], config: ConfigParser, section: str):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.key = key
         self.menu_width = 40
         self.config = config
+        self.section = section
 
     def on_render(self, console: tcod.Console) -> None:
         console.draw_semigraphics(setup_game.background_image, 0, 0)
@@ -263,10 +325,13 @@ class RebindKeyMenu(BaseEventHandler):
         if event.sym == tcod.event.KeySym.ESCAPE:
             raise SystemExit()
         else:
-            self.config.set(section='keybindings', option=self.key[0], value=event.sym.name)
+            self.config.set(section=self.section, option=self.key[0], value=event.sym.name)
             with open('config.ini', 'w') as configfile:  # save
                 self.config.write(configfile)
-            return KeybindingsMenu(self.screen_width, self.screen_height)
+            if self.section == 'movement_keys':
+                return MovementKeybindingsMenu(self.screen_width, self.screen_height)
+            elif self.section == 'action_keys':
+                return ActionKeybindingsMenu(self.screen_width, self.screen_height)
 
 
 class DifficultySelect(BaseEventHandler):
@@ -999,35 +1064,35 @@ class MainGameEventHandler(EventHandler):
 
         elif key == tcod.event.KeySym.ESCAPE:
             raise SystemExit()
-        elif key == tcod.event.KeySym.v:
+        elif key == ACTION_KEYS['view_history']:
             return HistoryViewer(self.engine)
-        elif key == tcod.event.KeySym.COMMA:
+        elif key == ACTION_KEYS['pick_up_item']:
             action = PickupAction(player)
-        elif key == tcod.event.KeySym.i:
+        elif key == ACTION_KEYS['inventory']:
             return InventoryActivateHandler(self.engine)
-        elif key == tcod.event.KeySym.d:
+        elif key == ACTION_KEYS['drop_item']:
             return InventoryDropHandler(self.engine)
-        elif key == tcod.event.KeySym.SLASH:
+        elif key == ACTION_KEYS['inspect_map']:
             return LookHandler(self.engine)
-        elif key == tcod.event.KeySym.c:
+        elif key == ACTION_KEYS['character_screen']:
             return CharacterScreenEventHandler(self.engine)
-        elif key == tcod.event.KeySym.a:
+        elif key == ACTION_KEYS['melee_attack']:
             return TargetMeleeAttackHandler(self.engine)
-        elif key == tcod.event.KeySym.s:
+        elif key == ACTION_KEYS['ranged_attack']:
             return SingleRangedAttackHandler(
                 self.engine, callback=lambda xy: actions.RangedAttackAction(self.engine.player, xy))
         elif key == tcod.event.KeySym.e:
             return SingleRangedAttackHandler(
                 self.engine, callback=lambda xy: actions.ResurrectAction(self.engine.player, xy))
-        elif key == tcod.event.KeySym.p:
+        elif key == ACTION_KEYS['quick_heal']:
             action = actions.find_quick_heal(self.engine.player)
-        elif key == tcod.event.KeySym.t:
+        elif key == ACTION_KEYS['trait_screen']:
             return TraitScreenEventHandler(self.engine)
         elif key == tcod.event.KeySym.q:
             action = actions.DebugAction(self.engine.player)
         elif key == tcod.event.KeySym.w:
             action = actions.DebugAction2(self.engine.player)
-        elif key == tcod.event.KeySym.z:
+        elif key == ACTION_KEYS['use_shop']:
             nearest_shop = None
             closest_distance = 3
             for actor in self.engine.game_map.actors:

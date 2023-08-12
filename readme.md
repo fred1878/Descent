@@ -57,6 +57,9 @@ TODO:
 -difficulty settings that can set params for items monsters etc --menu implemented\
 -different AIs --in progress\
 
+### bugs
+-necromancer zombie is friendly\
+
 ## The Ideas Guy
 
 -corruption - items, scrolls and potions etc increase corruption\
