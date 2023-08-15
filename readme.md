@@ -35,7 +35,7 @@ TODO:
 
 ### ongoing
 -trait system --in progress\
--rework level system\
+-rework level system, gain traits on level up\
 -rebalance\
 -pack monster spawning/better spans in general --monsters can spawn minions\
 -difficulty settings that can set params for items monsters etc --menu implemented\

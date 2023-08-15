@@ -7,7 +7,6 @@ from components.level import Level
 from components.equipment import Equipment
 from render_order import RenderOrder
 
-
 if TYPE_CHECKING:
     from components.ai import BaseAI
     from components.fighter import Fighter
@@ -170,3 +169,26 @@ class Item(Entity):
             self.equippable.parent = self
 
         self.price = price
+
+
+class Chest(Entity):
+    def __init__(
+            self,
+            *,
+            x: int = 0,
+            y: int = 0,
+            char: str = "(",
+            colour: Tuple[int, int, int] = (255, 255, 255),
+            name: str = 'unknown chest',
+            inventory: Inventory
+    ):
+        super().__init__(
+            x=x,
+            y=y,
+            char=char,
+            colour=colour,
+            name=name,
+            blocks_movement=True,
+            render_order=RenderOrder.ACTOR
+        )
+        self.inventory = inventory
