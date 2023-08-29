@@ -11,7 +11,7 @@ from tile_types import trap
 
 if TYPE_CHECKING:
     from engine import Engine
-    from entity import Actor, Entity, Item
+    from entity import Actor, Entity, Item, Chest
 
 
 class Action:
@@ -127,6 +127,11 @@ class ActionWithDirection(Action):
     def target_actor(self) -> Optional[Actor]:
         """Return the actor at this action's destination."""
         return self.engine.game_map.get_actor_at_location(*self.dest_xy)
+
+    @property
+    def target_chest(self) -> Optional[Chest]:
+        """Return the actor at this action's destination."""
+        return self.engine.game_map.get_chest_at_location(*self.dest_xy)
 
     @property
     def target_tile(self):
@@ -325,7 +330,8 @@ class BumpAction(ActionWithDirection):
                 return SwapLocationAction(self.entity, self.dx, self.dy).perform()
             else:
                 return MeleeAction(self.entity, self.dx, self.dy).perform()
-
+        if self.target_chest:
+            print('large chest ahead')
         else:
             return MovementAction(self.entity, self.dx, self.dy).perform()
 

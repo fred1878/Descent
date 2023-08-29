@@ -85,3 +85,13 @@ class TrapRoom(RectangularRoom):
         random_trap_tiles = self.random_tiles(5)
         for tile in random_trap_tiles:
             dungeon.tiles[tile] = tile_types.trap
+
+
+class ChestRoom(RectangularRoom):
+    def __init__(self, x: int, y: int, width: int, height: int, dungeon: game_map.GameMap):
+        super().__init__(x, y, width, height)
+        dungeon.tiles[self.inner] = tile_types.floor
+        random_chest_tiles = self.random_tiles(1)
+        for tile in random_chest_tiles:
+            chest_x, chest_y = tile
+            entity_factories.chest.spawn(dungeon, chest_x, chest_y)

@@ -1,7 +1,7 @@
 from components.ai import *
 from components.fighter import Fighter
 from components.attribute import Attribute
-from entity import Actor, Item
+from entity import Actor, Item, Chest
 from components.inventory import Inventory
 from components import consumable, equippable
 from components.level import Level
@@ -167,6 +167,10 @@ reaper = Actor(
     inventory=Inventory(capacity=0),
     level=Level(xp_given=500, gold_given=300),
     attribute=Attribute()
+)
+# dungeon objects
+chest = Chest(
+    inventory=Inventory(capacity=5)
 )
 # items
 small_health_potion = Item(

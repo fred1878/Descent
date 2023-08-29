@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Iterable, Iterator, Optional, TYPE_CHECKING
 
 import render_order
-from entity import Actor, Item
+from entity import Actor, Item, Chest
 
 import numpy as np  # type: ignore
 from tcod.console import Console  # type: ignore
@@ -40,6 +40,14 @@ class GameMap:
             entity
             for entity in self.entities
             if isinstance(entity, Actor) and not entity.is_alive)
+
+    @property
+    def closed_chests(self) -> Iterator[Chest]:
+        """Iterate over this map's closed chests."""
+        yield from (
+            entity
+            for entity in self.entities
+            if isinstance(entity, Chest) and not entity.opened)
 
     @property
     def gamemap(self) -> GameMap:
@@ -94,6 +102,13 @@ class GameMap:
         for entity in self.corpses:
             if entity.x == x and entity.y == y:
                 return entity
+
+        return None
+
+    def get_chest_at_location(self, x: int, y: int) -> Optional[Entity]:
+        for chest in self.closed_chests:
+            if chest.x == x and chest.y == y:
+                return chest
 
         return None
 

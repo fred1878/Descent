@@ -7,7 +7,7 @@ import game_map
 from exceptions import RoomNotFound
 from rooms import *
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
-    shop_params, trap_params, item_equip_chances
+    shop_params, trap_params, item_equip_chances, chest_params
 from engine import Engine
 from entity import Entity, Actor, Item
 import tile_types
@@ -189,6 +189,22 @@ def generate_custom_rooms(
                     rooms.append(new_room)
         elif room.__name__ == "TrapRoom":
             for key, values in trap_params.items():
+                if key == floor:
+                    room_width = values[0]
+                    room_height = values[1]
+                    x = random.randint(0, dungeon.width - room_width - 1)
+                    y = random.randint(0, dungeon.height - room_height - 1)
+                    new_room = room(x, y, room_width, room_height, dungeon)
+                    # Run through the other rooms and see if they intersect with this one.
+                    if any(new_room.intersects(other_room) for other_room in rooms):
+                        continue  # This room intersects, so go to the next attempt.
+                    if len(rooms) != 0:  # All rooms after the first.
+                        # Dig out a tunnel between this room and the previous one.
+                        for x, y in tunnel_between(rooms[-1].center, new_room.center):
+                            dungeon.tiles[x, y] = tile_types.floor
+                    rooms.append(new_room)
+        elif room.__name__ == "ChestRoom":
+            for key, values in chest_params.items():
                 if key == floor:
                     room_width = values[0]
                     room_height = values[1]

@@ -180,6 +180,7 @@ class Chest(Entity):
             char: str = "(",
             colour: Tuple[int, int, int] = (255, 255, 255),
             name: str = 'unknown chest',
+            opened: bool = False,
             inventory: Inventory
     ):
         super().__init__(
@@ -192,3 +193,4 @@ class Chest(Entity):
             render_order=RenderOrder.ACTOR
         )
         self.inventory = inventory
+        self.opened = opened
