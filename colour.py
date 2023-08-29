@@ -15,6 +15,8 @@ light_wood = (150, 90, 70)
 bronze = (205, 110, 60)
 blood = (255, 87, 51)
 dark_red = (190, 0, 0)
+sandy_brown = (240, 160, 100)
+saddle_brown = (140, 70, 20)
 
 player_atk = (0xE0, 0xE0, 0xE0)
 player_atk_no_damage = (0xB0, 0xB0, 0xB0)

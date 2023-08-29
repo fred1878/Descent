@@ -170,6 +170,8 @@ reaper = Actor(
 )
 # dungeon objects
 chest = Chest(
+    colour=colour.sandy_brown,
+    opened_colour=colour.saddle_brown,
     inventory=Inventory(capacity=5)
 )
 # items

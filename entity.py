@@ -181,6 +181,7 @@ class Chest(Entity):
             colour: Tuple[int, int, int] = (255, 255, 255),
             name: str = 'unknown chest',
             opened: bool = False,
+            opened_colour: Tuple[int, int, int] = (30, 30, 30),
             inventory: Inventory
     ):
         super().__init__(
@@ -195,8 +196,11 @@ class Chest(Entity):
         self.inventory = inventory
         self.inventory.parent = self
         self.opened = opened
+        self.opened_colour = opened_colour
 
     def open_chest(self):
         self.opened = True
+        self.blocks_movement = False
+        self.colour = self.opened_colour
         for item in self.inventory.items:
             self.inventory.scatter(item)

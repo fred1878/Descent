@@ -2,8 +2,6 @@ from __future__ import annotations
 from itertools import repeat
 from typing import Dict, Iterator, Type, Union
 import tcod  # type: ignore
-
-import game_map
 from exceptions import RoomNotFound
 from rooms import *
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
