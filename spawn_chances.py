@@ -58,7 +58,7 @@ item_equip_chances: Dict[int, List[Tuple[Entity, int]]] = {
 
 # room counts are set per floor
 room_count: Dict[int, List[Tuple[Type[RectangularRoom], int]]] = {
-    1: [(ShopRoom, 1), (TrapRoom, 4), (ChestRoom, 10)],
+    1: [(ShopRoom, 1), (TrapRoom, 4), (ChestRoom, 15)],
     2: [(ShopRoom, 2), (TrapRoom, 5)],
     3: [(ShopRoom, 2), (TrapRoom, 5)],
     4: [(ShopRoom, 1), (TrapRoom, 6)],

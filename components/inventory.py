@@ -1,5 +1,9 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+
+import random
+from typing import List, TYPE_CHECKING, Tuple
+
+import game_map
 from components.base_component import BaseComponent
 
 if TYPE_CHECKING:
@@ -23,3 +27,34 @@ class Inventory(BaseComponent):
             self.engine.message_log.add_message(f"You dropped {item.name}.")
         else:
             self.engine.message_log.add_message(f"{self.parent.name} dropped {item.name}.")
+
+    def scatter(self, item: Item) -> None:
+        self.items.remove(item)
+        x = self.parent.x
+        y = self.parent.y
+        drop_locations = (
+            [
+                (x + 1, y + 1),
+                (x + 1, y),
+                (x + 1, y - 1),
+                (x, y + 1),
+                (x, y - 1),
+                (x - 1, y + 1),
+                (x - 1, y),
+                (x - 1, y - 1),
+            ]
+        )
+        valid_locations = list(filter(lambda s: valid_drop_location(self.gamemap, s), drop_locations))
+
+        drop_x, drop_y = random.choice(valid_locations)
+        item.place(drop_x, drop_y, self.gamemap)
+
+        if self.parent is self.engine.player:
+            self.engine.message_log.add_message(f"You dropped {item.name}.")
+        else:
+            self.engine.message_log.add_message(f"{self.parent.name} dropped {item.name}.")
+
+
+def valid_drop_location(dungeon: game_map.GameMap, xy: Tuple[int, int]) -> bool:
+    x, y = xy
+    return dungeon.tiles["walkable"][x, y]

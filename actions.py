@@ -331,7 +331,13 @@ class BumpAction(ActionWithDirection):
             else:
                 return MeleeAction(self.entity, self.dx, self.dy).perform()
         if self.target_chest:
-            print('large chest ahead')
+            if not self.target_chest.opened:
+                print('opened chest')
+                self.engine.message_log.add_message("You opened the chest")
+                self.target_chest.open_chest()
+            else:
+                print('chest opened')
+                return MovementAction(self.entity, self.dx, self.dy).perform()
         else:
             return MovementAction(self.entity, self.dx, self.dy).perform()
 

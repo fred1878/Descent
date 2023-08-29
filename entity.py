@@ -193,4 +193,10 @@ class Chest(Entity):
             render_order=RenderOrder.ACTOR
         )
         self.inventory = inventory
+        self.inventory.parent = self
         self.opened = opened
+
+    def open_chest(self):
+        self.opened = True
+        for item in self.inventory.items:
+            self.inventory.scatter(item)
