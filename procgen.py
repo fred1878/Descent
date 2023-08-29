@@ -180,6 +180,7 @@ def generate_custom_rooms(
                     y = random.randint(0, dungeon.height - room_height - 1)
                     new_room = room(x, y, room_width, room_height, dungeon)
                     # Run through the other rooms and see if they intersect with this one.
+                    # GET THIS TO RETRY FOR CORRECT PLACEMENT
                     if any(new_room.intersects(other_room) for other_room in rooms):
                         continue  # This room intersects, so go to the next attempt.
                     if len(rooms) != 0:  # All rooms after the first.
@@ -195,11 +196,10 @@ def generate_custom_rooms(
                     x = random.randint(0, dungeon.width - room_width - 1)
                     y = random.randint(0, dungeon.height - room_height - 1)
                     new_room = room(x, y, room_width, room_height, dungeon)
-                    # Run through the other rooms and see if they intersect with this one.
                     if any(new_room.intersects(other_room) for other_room in rooms):
-                        continue  # This room intersects, so go to the next attempt.
-                    if len(rooms) != 0:  # All rooms after the first.
-                        # Dig out a tunnel between this room and the previous one.
+                        continue
+                    new_room.setup_room()
+                    if len(rooms) != 0:
                         for x, y in tunnel_between(rooms[-1].center, new_room.center):
                             dungeon.tiles[x, y] = tile_types.floor
                     rooms.append(new_room)
@@ -213,9 +213,9 @@ def generate_custom_rooms(
                     new_room = room(x, y, room_width, room_height, dungeon)
                     # Run through the other rooms and see if they intersect with this one.
                     if any(new_room.intersects(other_room) for other_room in rooms):
-                        continue  # This room intersects, so go to the next attempt.
-                    if len(rooms) != 0:  # All rooms after the first.
-                        # Dig out a tunnel between this room and the previous one.
+                        continue
+                    new_room.setup_room()
+                    if len(rooms) != 0:
                         for x, y in tunnel_between(rooms[-1].center, new_room.center):
                             dungeon.tiles[x, y] = tile_types.floor
                     rooms.append(new_room)

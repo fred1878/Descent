@@ -11,11 +11,12 @@ from exceptions import Impossible
 
 
 class RectangularRoom:
-    def __init__(self, x: int, y: int, width: int, height: int):
+    def __init__(self, x: int, y: int, width: int, height: int, dungeon: game_map.GameMap):
         self.x1 = x
         self.y1 = y
         self.x2 = x + width
         self.y2 = y + height
+        self.dungeon = dungeon
 
     @property
     def center(self) -> Tuple[int, int]:
@@ -52,19 +53,22 @@ class RectangularRoom:
                 i += 1
         return random_tile_list
 
+    def setup_room(self) -> None:
+        NotImplementedError()
+
 
 class ShopRoom(RectangularRoom):
     def __init__(self, x: int, y: int, width: int, height: int, dungeon: game_map.GameMap):
-        super().__init__(x, y, width, height)
-        dungeon.tiles[self.inner] = tile_types.floor
-        self.entities = dungeon.entities
+        super().__init__(x, y, width, height, dungeon)
+
+    def setup_room(self) -> None:
+        self.dungeon.tiles[self.inner] = tile_types.floor
         (x_shop, y_shop) = self.center
-        shopkeeper = entity_factories.shopkeeper.spawn(dungeon, x_shop, y_shop)
+        shopkeeper = entity_factories.shopkeeper.spawn(self.dungeon, x_shop, y_shop)
 
         iron_sword = copy.deepcopy(entity_factories.iron_sword)
         chain_mail = copy.deepcopy(entity_factories.chain_mail)
         golden_wand = copy.deepcopy(entity_factories.golden_wand)
-
         iron_sword.parent = shopkeeper.inventory
         chain_mail.parent = shopkeeper.inventory
         golden_wand.parent = shopkeeper.inventory
@@ -80,18 +84,22 @@ class ShopRoom(RectangularRoom):
 
 class TrapRoom(RectangularRoom):
     def __init__(self, x: int, y: int, width: int, height: int, dungeon: game_map.GameMap):
-        super().__init__(x, y, width, height)
-        dungeon.tiles[self.inner] = tile_types.floor
+        super().__init__(x, y, width, height, dungeon)
+
+    def setup_room(self) -> None:
+        self.dungeon.tiles[self.inner] = tile_types.floor
         random_trap_tiles = self.random_tiles(5)
         for tile in random_trap_tiles:
-            dungeon.tiles[tile] = tile_types.trap
+            self.dungeon.tiles[tile] = tile_types.trap
 
 
 class ChestRoom(RectangularRoom):
     def __init__(self, x: int, y: int, width: int, height: int, dungeon: game_map.GameMap):
-        super().__init__(x, y, width, height)
-        dungeon.tiles[self.inner] = tile_types.floor
+        super().__init__(x, y, width, height, dungeon)
+
+    def setup_room(self) -> None:
+        self.dungeon.tiles[self.inner] = tile_types.floor
         random_chest_tiles = self.random_tiles(1)
         for tile in random_chest_tiles:
             chest_x, chest_y = tile
-            entity_factories.chest.spawn(dungeon, chest_x, chest_y)
+            entity_factories.chest.spawn(self.dungeon, chest_x, chest_y)

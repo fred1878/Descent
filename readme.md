@@ -26,7 +26,8 @@ TODO:
 -colours change as you DescentTM\
 -key rebinding\
 -mouse driven menus\
--onscreen controls
+-onscreen controls\
+-BSP map generation
 
 ## Endgame stuff
 -rexpaint graphics OR tcod graphical tiles\
