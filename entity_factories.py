@@ -217,6 +217,13 @@ resurrect_scroll = Item(
     consumable=consumable.ResurrectConsumable(),
     price=30
 )
+attack_debuff_scroll = Item(
+    char="~",
+    colour=colour.dark_red,
+    name="Attack Debuff Scroll",
+    consumable=consumable.AttackDebuffConsumable(radius=3.5),
+    price=30
+)
 # equipment
 dagger = Item(
     char="/",

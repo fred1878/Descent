@@ -4,13 +4,14 @@ import os
 import tcod.event  # type: ignore
 from tcod import libtcodpy
 import actions
+import tile_types
 from actions import Action, BumpAction, WaitAction, PickupAction
 import colour
 import exceptions
 import setup_game
 import traceback
 from difficulty_settings import DifficultySettings
-from util import number_of_digits
+from util import number_of_digits, tiles_in_circle
 from configparser import ConfigParser
 
 if TYPE_CHECKING:
@@ -1035,6 +1036,34 @@ class AreaRangedAttackHandler(SelectIndexHandler):
             fg=colour.red,
             clear=False,
         )
+
+    def on_index_selected(self, x: int, y: int) -> Optional[Action]:
+        return self.callback((x, y))
+
+
+class CircularAreaRangedAttackHandler(SelectIndexHandler):
+    """Handles targeting an area within a given radius. Any entity within the area will be affected."""
+
+    def __init__(
+            self,
+            engine: Engine,
+            radius: float,
+            callback: Callable[[Tuple[int, int]], Optional[Action]],
+    ):
+        super().__init__(engine)
+
+        self.radius = radius
+        self.callback = callback
+
+    def on_render(self, console: tcod.Console) -> None:
+        """Highlight the tile under the cursor."""
+        super().on_render(console)
+
+        x, y = self.engine.mouse_location
+
+        tile_list = tiles_in_circle(x + 0.5, y + 0.5, self.radius)
+        for tile in tile_list:
+            console.tiles_rgb[tile] = (ord(" "), colour.white, colour.red)
 
     def on_index_selected(self, x: int, y: int) -> Optional[Action]:
         return self.callback((x, y))

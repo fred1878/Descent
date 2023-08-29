@@ -64,3 +64,10 @@ down_stairs = new_tile(
     dark=(ord(">"), colour.white, colour.dark_floor),
     light=(ord(">"), colour.white, colour.light_floor),
 )
+
+spell_select_tile = new_tile(
+    walkable=True,
+    transparent=True,
+    dark=(ord(" "), colour.white, colour.dark_red),
+    light=(ord(" "), colour.white, colour.red),
+)

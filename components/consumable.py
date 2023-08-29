@@ -162,3 +162,26 @@ class ResurrectConsumable(Consumable):
             f"The {target.name} is resurrected!",
             colour.status_effect_applied)
         self.consume()
+
+
+class AttackDebuffConsumable(Consumable):
+    def __init__(self, radius: float):
+        self.radius = radius
+
+    def get_action(self, consumer: Actor) -> input_handlers.CircularAreaRangedAttackHandler:
+        self.engine.message_log.add_message("Select a target location.", colour.needs_target)
+        return input_handlers.CircularAreaRangedAttackHandler(
+            self.engine,
+            radius=self.radius,
+            callback=lambda xy: actions.ItemAction(consumer, self.parent, xy)
+        )
+
+    def activate(self, action: actions.ItemAction) -> None:
+        consumer = action.entity
+
+        for actor in self.engine.game_map.actors:
+            if actor is not consumer and self.parent.gamemap.visible[actor.x, actor.y]:
+                print(actor.name)
+
+
+
