@@ -1006,6 +1006,41 @@ class SingleRangedAttackHandler(SelectIndexHandler):
         return self.callback((x, y))
 
 
+class SingleRangedWeaponAttackHandler(SelectIndexHandler):
+    """Handles targeting a single enemy. Only the enemy selected will be affected."""
+
+    def __init__(self, engine: Engine, callback: Callable[[Tuple[int, int]], Optional[Action]]):
+        super().__init__(engine)
+        self.player = self.engine.player
+        self.callback = callback
+
+    def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
+        key = event.sym
+        if key == tcod.event.KeySym.ESCAPE:
+            return MainGameEventHandler(self.engine)
+        if key in MOVE_KEYS:
+            x, y = self.engine.mouse_location
+            dx, dy = MOVE_KEYS[key]
+            x += dx
+            y += dy
+            x = max(self.player.x - self.player.equipment.range, min(x, self.player.x + self.player.equipment.range))
+            y = max(self.player.y - self.player.equipment.range, min(y, self.player.y + self.player.equipment.range))
+            self.engine.mouse_location = x, y
+            return None
+        elif key in CONFIRM_KEYS:
+            x, y = self.engine.mouse_location
+            x = max(0, min(x, self.engine.game_map.width - 1))
+            y = max(0, min(y, self.engine.game_map.height - 1))
+            return self.callback((x, y))
+
+    def on_index_selected(self, x: int, y: int) -> Optional[Action]:
+        if self.player.x - self.player.equipment.range > x < self.player.x + self.player.equipment.range \
+                or self.player.y - self.player.equipment.range > y < self.player.y + self.player.equipment.range:
+            self.engine.message_log.add_message("Out of range")
+        else:
+            return self.callback((x, y))
+
+
 class AreaRangedAttackHandler(SelectIndexHandler):
     """Handles targeting an area within a given radius. Any entity within the area will be affected."""
 
@@ -1063,7 +1098,7 @@ class CircularAreaRangedAttackHandler(SelectIndexHandler):
         tile_list = tiles_in_circle(x + 0.5, y + 0.5, self.radius)
         for tile in tile_list:
             tile_x, tile_y = tile
-            if self.engine.game_map.in_bounds(tile_x, tile_y) and self.engine.game_map.tiles[tile][0]\
+            if self.engine.game_map.in_bounds(tile_x, tile_y) and self.engine.game_map.tiles[tile][0] \
                     and self.engine.game_map.visible[tile]:
                 console.tiles_rgb[tile] = (ord(" "), colour.white, colour.red)
 
@@ -1111,7 +1146,7 @@ class MainGameEventHandler(EventHandler):
         elif key == ACTION_KEYS['melee_attack']:
             return TargetMeleeAttackHandler(self.engine)
         elif key == ACTION_KEYS['ranged_attack']:
-            return SingleRangedAttackHandler(
+            return SingleRangedWeaponAttackHandler(
                 self.engine, callback=lambda xy: actions.RangedAttackAction(self.engine.player, xy))
         elif key == tcod.event.KeySym.e:
             return SingleRangedAttackHandler(
