@@ -70,17 +70,33 @@ class GameMap:
 
     def render(self, console: Console) -> None:
         """
+        Renders the map then renders the entities
+        """
+        self.render_map(console)
+        self.render_entities(console)
+
+
+    def render_map(self, console: Console):
+        """
         Renders the map.
 
         If a tile is in the "visible" array, then draw it with the "light" colours.
         If it isn't, but it's in the "explored" array, then draw it with the "dark" colours.
         Otherwise, the default is "SHROUD".
         """
+
         console.tiles_rgb[0:self.width, 0:self.height] = np.select(
             condlist=[self.visible, self.explored],
             choicelist=[self.tiles["light"], self.tiles["dark"]],
             default=tile_types.SHROUD
         )
+
+    def render_entities(self, console: Console):
+        """
+        Render the entities.
+
+        Sort the list of entities by render order and render entities in the player's FOV
+        """
 
         entities_sorted_for_rendering = sorted(
             self.entities, key=lambda x: x.render_order.value

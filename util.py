@@ -24,7 +24,6 @@ def tiles_in_circle(center_x: float, center_y: float, radius: float) -> List[Tup
         for x in range(left, right):
             if inside_circle(center_x, center_y, x, y, radius):
                 tile_list.append((x, y))
-    print(tile_list)
     return tile_list
 
 
