@@ -1063,7 +1063,9 @@ class CircularAreaRangedAttackHandler(SelectIndexHandler):
 
         tile_list = tiles_in_circle(x + 0.5, y + 0.5, self.radius)
         for tile in tile_list:
-            console.tiles_rgb[tile] = (ord(" "), colour.white, colour.red)
+            tile_x, tile_y = tile
+            if self.engine.game_map.in_bounds(tile_x, tile_y):
+                console.tiles_rgb[tile] = (ord(" "), colour.white, colour.red)
 
     def on_index_selected(self, x: int, y: int) -> Optional[Action]:
         return self.callback((x, y))

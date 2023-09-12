@@ -5,9 +5,11 @@ import components.inventory
 import actions
 import colour
 import components.ai
+import traits
 from components.base_component import BaseComponent
 from exceptions import Impossible
 import input_handlers
+from util import tiles_in_circle
 
 if TYPE_CHECKING:
     from entity import Actor, Item
@@ -177,11 +179,24 @@ class AttackDebuffConsumable(Consumable):
         )
 
     def activate(self, action: actions.ItemAction) -> None:
+        target_xy = action.target_xy
         consumer = action.entity
 
+        if not self.engine.game_map.visible[target_xy]:
+            raise Impossible("You cannot target an area that you cannot see.")
+
+        targets_hit = False
+        x, y = target_xy
+        tile_list = tiles_in_circle(x + 0.5, y + 0.5, self.radius)
         for actor in self.engine.game_map.actors:
-            if actor is not consumer and self.parent.gamemap.visible[actor.x, actor.y]:
-                print(actor.name)
+            if actor is not consumer and (actor.x, actor.y) in tile_list:
+                print([actor.x, actor.y])
+                self.engine.message_log.add_message(
+                    f"The {actor.name} has it's attack debuffed"
+                )
+                traits.attack_down.add_trait(actor)
+                targets_hit = True
 
-
-
+        if not targets_hit:
+            raise Impossible("There are no targets in the radius.")
+        self.consume()
