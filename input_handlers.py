@@ -4,7 +4,6 @@ import os
 import tcod.event  # type: ignore
 from tcod import libtcodpy
 import actions
-import tile_types
 from actions import Action, BumpAction, WaitAction, PickupAction
 import colour
 import exceptions
@@ -1064,7 +1063,8 @@ class CircularAreaRangedAttackHandler(SelectIndexHandler):
         tile_list = tiles_in_circle(x + 0.5, y + 0.5, self.radius)
         for tile in tile_list:
             tile_x, tile_y = tile
-            if self.engine.game_map.in_bounds(tile_x, tile_y) and self.engine.game_map.tiles[tile][0]:
+            if self.engine.game_map.in_bounds(tile_x, tile_y) and self.engine.game_map.tiles[tile][0]\
+                    and self.engine.game_map.visible[tile]:
                 console.tiles_rgb[tile] = (ord(" "), colour.white, colour.red)
 
         self.engine.game_map.render_entities(console)
