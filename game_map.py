@@ -75,7 +75,6 @@ class GameMap:
         self.render_map(console)
         self.render_entities(console)
 
-
     def render_map(self, console: Console):
         """
         Renders the map.

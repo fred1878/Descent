@@ -13,7 +13,7 @@ def save_game(handler: input_handlers.BaseEventHandler, filename: str) -> None:
 
 
 def main() -> None:
-    screen_width = 100
+    screen_width = 120
     screen_height = 80
 
     tileset = tcod.tileset.load_tilesheet("spritesheet.png", 32, 8, tcod.tileset.CHARMAP_TCOD)

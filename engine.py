@@ -7,6 +7,7 @@ import colour
 import exceptions
 import render_functions
 from message_log import MessageLog
+from side_bar import SideBar
 
 from tcod.context import Context  # type: ignore
 from tcod.console import Console  # type: ignore
@@ -23,9 +24,10 @@ class Engine:
     game_world: GameWorld
     engine: Engine
 
-    def __init__(self, player: Actor):
+    def __init__(self, player: Actor, screen_width: int, screen_height: int, map_width: int):
         self.player = player
         self.message_log = MessageLog()
+        self.sidebar = SideBar(map_width, screen_width, screen_height)
         self.mouse_location = (0, 0)
 
     def handle_enemy_turns(self) -> None:
@@ -55,6 +57,7 @@ class Engine:
     def render(self, console: Console) -> None:
         self.game_map.render(console)
         self.message_log.render(console=console, x=21, y=self.game_world.map_height + 2, width=40, height=7)
+        self.sidebar.render(console)
         render_functions.render_bar(
             console=console, current_value=self.player.fighter.hp,
             maximum_value=self.player.fighter.max_hp, total_width=20, y=self.game_world.map_height + 2)

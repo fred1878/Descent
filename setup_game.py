@@ -12,12 +12,12 @@ from game_map import GameWorld
 from difficulty_settings import DifficultySettings
 from traits import god_mode
 
-background_image = tcod.image.load("background.png")[:, :, :3]
+background_image = tcod.image.load("resources/background.png")[:, :, :3]
 
 
 def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettings) -> Engine:
     """Return a brand new game session as an Engine instance."""
-    map_width = screen_width
+    map_width = screen_width - 30
     map_height = screen_height - 9
 
     room_max_size = 10
@@ -26,7 +26,7 @@ def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettin
 
     player = copy.deepcopy(entity_factories.player)
 
-    engine = Engine(player=player)
+    engine = Engine(player=player, screen_width=screen_width, screen_height=screen_height, map_width=map_width)
 
     engine.game_world = GameWorld(
         engine=engine,
