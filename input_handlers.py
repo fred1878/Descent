@@ -1110,6 +1110,35 @@ class CircularAreaRangedAttackHandler(SelectIndexHandler):
 
 class MainGameEventHandler(EventHandler):
 
+    def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[ActionOrHandler]:
+        action: Optional[Action] = None
+        player = self.engine.player
+
+        move_button_x, move_button_y = self.engine.sidebar.movement_buttons_origin
+        if move_button_x < event.tile.x < move_button_x + 12 and move_button_y < event.tile.y < move_button_y + 12:
+            dx, dy = (0, 0)
+            if move_button_x < event.tile.x < move_button_x + 4 and move_button_y < event.tile.y < move_button_y + 4:
+                dx, dy = MOVE_KEY_MAP['move_northwest']
+            elif move_button_x + 4 < event.tile.x < move_button_x + 8 and move_button_y < event.tile.y < move_button_y + 4:
+                dx, dy = MOVE_KEY_MAP['move_north']
+            elif move_button_x + 8 < event.tile.x < move_button_x + 12 and move_button_y < event.tile.y < move_button_y + 4:
+                dx, dy = MOVE_KEY_MAP['move_northeast']
+            elif move_button_x < event.tile.x < move_button_x + 4 and move_button_y + 4 < event.tile.y < move_button_y + 8:
+                dx, dy = MOVE_KEY_MAP['move_west']
+            elif move_button_x + 4 < event.tile.x < move_button_x + 8 and move_button_y + 4 < event.tile.y < move_button_y + 8:
+                return WaitAction(player)
+            elif move_button_x + 8 < event.tile.x < move_button_x + 12 and move_button_y + 4 < event.tile.y < move_button_y + 8:
+                dx, dy = MOVE_KEY_MAP['move_east']
+            elif move_button_x < event.tile.x < move_button_x + 4 and move_button_y + 8 < event.tile.y < move_button_y + 12:
+                dx, dy = MOVE_KEY_MAP['move_southwest']
+            elif move_button_x + 4 < event.tile.x < move_button_x + 8 and move_button_y + 8 < event.tile.y < move_button_y + 12:
+                dx, dy = MOVE_KEY_MAP['move_south']
+            elif move_button_x + 8 < event.tile.x < move_button_x + 12 and move_button_y + 8 < event.tile.y < move_button_y + 12:
+                dx, dy = MOVE_KEY_MAP['move_southeast']
+            action = BumpAction(player, dx, dy)
+
+        return action
+
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         action: Optional[Action] = None
 
