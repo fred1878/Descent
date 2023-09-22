@@ -568,19 +568,23 @@ class TraitScreenEventHandler(AskUserEventHandler):
 
 
 class LevelUpEventHandler(AskUserEventHandler):
+
+    def __init__(self, engine: Engine):
+        super().__init__(engine)
+        self.player = self.engine.player
+
+        if self.player.x <= 30:
+            self.x = 40
+        else:
+            self.x = 0
+
     TITLE = "Level Up"
 
     def on_render(self, console: tcod.Console) -> None:
         super().on_render(console)
-        player = self.engine.player
-
-        if player.x <= 30:
-            x = 40
-        else:
-            x = 0
 
         console.draw_frame(
-            x=x,
+            x=self.x,
             y=0,
             width=45,
             height=10,
@@ -590,31 +594,30 @@ class LevelUpEventHandler(AskUserEventHandler):
             bg=(0, 0, 0),
         )
 
-        console.print(x=x + 1, y=1, string="Congratulations! You level up!")
-        console.print(x=x + 1, y=2, string="Select an attribute to increase.")
+        console.print(x=self.x + 1, y=1, string="Congratulations! You level up!")
+        console.print(x=self.x + 1, y=2, string="Select an attribute to increase.")
 
-        console.print(x=x + 1, y=4, string=f"a) Constitution (+20 HP, from {player.fighter.max_hp})")
-        console.print(x=x + 1, y=5, string=f"b) Strength (+1 melee attack, from {player.fighter.base_melee})")
-        console.print(x=x + 1, y=6, string=f"c) Perception (+1 ranged attack, from {player.fighter.base_ranged})")
-        console.print(x=x + 1, y=7, string=f"d) Agility (+1 defense, from {player.fighter.base_defense})")
-        console.print(x=x + 1, y=8, string=f"e) Magic (+3 magic, from {player.fighter.base_magic})")
+        console.print(x=self.x + 1, y=4, string=f"a) Constitution (+20 HP, from {self.player.fighter.max_hp})")
+        console.print(x=self.x + 1, y=5, string=f"b) Strength (+1 melee attack, from {self.player.fighter.base_melee})")
+        console.print(x=self.x + 1, y=6, string=f"c) Perception (+1 ranged attack, from {self.player.fighter.base_ranged})")
+        console.print(x=self.x + 1, y=7, string=f"d) Agility (+1 defense, from {self.player.fighter.base_defense})")
+        console.print(x=self.x + 1, y=8, string=f"e) Magic (+3 magic, from {self.player.fighter.base_magic})")
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
-        player = self.engine.player
         key = event.sym
         index = key - tcod.event.KeySym.a
 
         if 0 <= index <= 4:
             if index == 0:
-                player.level.increase_max_hp()
+                self.player.level.increase_max_hp()
             elif index == 1:
-                player.level.increase_melee()
+                self.player.level.increase_melee()
             elif index == 2:
-                player.level.increase_ranged()
+                self.player.level.increase_ranged()
             elif index == 3:
-                player.level.increase_defense()
+                self.player.level.increase_defense()
             else:
-                player.level.increase_magic()
+                self.player.level.increase_magic()
         else:
             self.engine.message_log.add_message("Invalid entry.", colour.invalid)
 
@@ -628,7 +631,23 @@ class LevelUpEventHandler(AskUserEventHandler):
         """
         Don't allow the player to click to exit the menu, like normal.
         """
-        return None
+        index = event.tile.y - 4
+        if 0 <= index <= 4 and self.x < event.tile.x < self.x + 44:
+            if index == 0:
+                self.player.level.increase_max_hp()
+            elif index == 1:
+                self.player.level.increase_melee()
+            elif index == 2:
+                self.player.level.increase_ranged()
+            elif index == 3:
+                self.player.level.increase_defense()
+            else:
+                self.player.level.increase_magic()
+        else:
+            self.engine.message_log.add_message("Select a power.", colour.invalid)
+            return None
+
+        return super().ev_mousebuttondown(event)
 
 
 class InventoryEventHandler(AskUserEventHandler):

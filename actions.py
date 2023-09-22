@@ -147,7 +147,7 @@ class DebugAction(Action):
         super().__init__(entity)
 
     def perform(self) -> None:
-        pass
+        self.engine.player.level.add_xp(100)
 
 
 class DebugAction2(Action):
