@@ -632,8 +632,32 @@ class LevelUpEventHandler(AskUserEventHandler):
 
 
 class InventoryEventHandler(AskUserEventHandler):
-    """This handler lets the user select an item.
 
+    def __init__(self, engine: Engine):
+        super().__init__(engine)
+        self.player = self.engine.player
+        self.number_of_items_in_inventory = len(self.player.inventory.items)
+        self.height = self.number_of_items_in_inventory + 2
+
+        if self.height <= 3:
+            self.height = 3
+
+        if self.player.x <= 30:
+            self.x = 40
+        else:
+            self.x = 0
+
+        self.y = 0
+
+        self.width = len(self.TITLE) + 4
+
+        for i, item in enumerate(self.player.inventory.items):
+            item_width = len(item.name) + len(str(item.price)) + 9
+            if item_width > self.width:
+                self.width = item_width
+
+    """
+    This handler lets the user select an item.
     What happens then depends on the subclass.
     """
 
@@ -645,52 +669,31 @@ class InventoryEventHandler(AskUserEventHandler):
         they are.
         """
         super().on_render(console)
-        player = self.engine.player
-        number_of_items_in_inventory = len(player.inventory.items)
-
-        height = number_of_items_in_inventory + 2
-
-        if height <= 3:
-            height = 3
-
-        if player.x <= 30:
-            x = 40
-        else:
-            x = 0
-
-        y = 0
-
-        width = len(self.TITLE) + 4
-
-        for i, item in enumerate(player.inventory.items):
-            item_width = len(item.name) + len(str(item.price)) + 9
-            if item_width > width:
-                width = item_width
 
         console.draw_frame(
-            x=x,
-            y=y,
-            width=width,
-            height=height,
+            x=self.x,
+            y=self.y,
+            width=self.width,
+            height=self.height,
             title=self.TITLE,
             clear=True,
             fg=(255, 255, 255),
             bg=(0, 0, 0),
         )
 
-        if number_of_items_in_inventory > 0:
-            for i, item in enumerate(player.inventory.items):
+        if self.number_of_items_in_inventory > 0:
+            for i, item in enumerate(self.player.inventory.items):
                 item_key = chr(ord("a") + i)
-                is_equipped = player.equipment.item_is_equipped(item)
+                is_equipped = self.player.equipment.item_is_equipped(item)
 
                 item_string = f"({item_key}) {item.name}"
 
                 if is_equipped:
                     item_string = f"{item_string} (E)"
 
-                console.print(x + 1, y + i + 1, item_string)
+                console.print(self.x + 1, self.y + i + 1, item_string)
         else:
-            console.print(x + 1, y + 1, "(Empty)")
+            console.print(self.x + 1, self.y + 1, "(Empty)")
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         player = self.engine.player
@@ -705,6 +708,17 @@ class InventoryEventHandler(AskUserEventHandler):
                 return None
             return self.on_item_selected(selected_item)
         return super().ev_keydown(event)
+
+    def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[ActionOrHandler]:
+        if self.x < event.tile.x < self.x + self.width - 1 and self.y < event.tile.y < self.y + self.height - 1:
+            try:
+                selected_item = self.player.inventory.items[event.tile.y - 1]
+            except IndexError:
+                self.engine.message_log.add_message("Invalid entry.", colour.invalid)
+                return None
+            return self.on_item_selected(selected_item)
+        else:
+            return self.on_exit()
 
     def on_item_selected(self, item: Item) -> Optional[ActionOrHandler]:
         """Called when the user selects a valid item."""
