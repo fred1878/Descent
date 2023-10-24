@@ -9,6 +9,8 @@ import colour
 import exceptions
 import setup_game
 import traceback
+
+from components.ability import Skill
 from difficulty_settings import DifficultySettings
 from util import number_of_digits, tiles_in_circle
 from configparser import ConfigParser
@@ -567,6 +569,84 @@ class TraitScreenEventHandler(AskUserEventHandler):
             console.print(x + 1, y + 1, "No Traits")
 
 
+class SkillScreenEventHandler(AskUserEventHandler):
+
+    def __init__(self, engine: Engine):
+        super().__init__(engine)
+        self.player = self.engine.player
+        if self.player.x <= 30:
+            self.x = 40
+        else:
+            self.x = 0
+        self.y = 0
+
+        self.width = len(self.TITLE) + 4
+        self.skills = self.player.ability.skills
+        self.number_of_skills = len(self.skills)
+        if len(self.skills) > 0:
+            for i, skill in enumerate(self.skills):
+                skill_length = len(skill.name) + len(skill.description) + 10
+                if skill_length > self.width:
+                    self.width = skill_length
+
+        self.height = self.number_of_skills + 2
+
+        if self.height <= 3:
+            self.height = 3
+
+    TITLE = "Skills"
+
+    def on_render(self, console: tcod.Console) -> None:
+        super().on_render(console)
+
+        console.draw_frame(
+            x=self.x,
+            y=self.y,
+            width=self.width,
+            height=self.height,
+            title=self.TITLE,
+            clear=True,
+            fg=(255, 255, 255),
+            bg=(0, 0, 0),
+        )
+
+        if len(self.skills) > 0:
+            for i, skill in enumerate(self.skills):
+                skill_key = chr(ord("a") + i)
+                skill_string = f"{skill_key}) ({skill.name}) - {skill.description}"
+                console.print(self.x + 1, self.y + i + 1, skill_string)
+        else:
+            console.print(self.x + 1, self.y + 1, "No Skill")
+
+    def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
+        key = event.sym
+        index = key - tcod.event.KeySym.a
+
+        if 0 <= index <= 26:
+            try:
+                selected_skill = self.player.ability.skills[index]
+            except IndexError:
+                self.engine.message_log.add_message("Invalid entry.", colour.invalid)
+                return None
+            return self.on_item_selected(selected_skill)
+        return super().ev_keydown(event)
+
+    def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[ActionOrHandler]:
+        if self.x < event.tile.x < self.x + self.width - 1 and self.y < event.tile.y < self.y + self.height - 1:
+            try:
+                selected_skill = self.player.ability.skills[event.tile.y - 1]
+            except IndexError:
+                self.engine.message_log.add_message("Invalid entry.", colour.invalid)
+                return None
+            return self.on_item_selected(selected_skill)
+        else:
+            return self.on_exit()
+
+    def on_item_selected(self, skill: Skill) -> Optional[ActionOrHandler]:
+        """Called when the user selects a valid item."""
+        return actions.SkillAction(self.player, skill)
+
+
 class LevelUpEventHandler(AskUserEventHandler):
 
     def __init__(self, engine: Engine):
@@ -599,7 +679,8 @@ class LevelUpEventHandler(AskUserEventHandler):
 
         console.print(x=self.x + 1, y=4, string=f"a) Constitution (+20 HP, from {self.player.fighter.max_hp})")
         console.print(x=self.x + 1, y=5, string=f"b) Strength (+1 melee attack, from {self.player.fighter.base_melee})")
-        console.print(x=self.x + 1, y=6, string=f"c) Perception (+1 ranged attack, from {self.player.fighter.base_ranged})")
+        console.print(x=self.x + 1, y=6,
+                      string=f"c) Perception (+1 ranged attack, from {self.player.fighter.base_ranged})")
         console.print(x=self.x + 1, y=7, string=f"d) Agility (+1 defense, from {self.player.fighter.base_defense})")
         console.print(x=self.x + 1, y=8, string=f"e) Magic (+3 magic, from {self.player.fighter.base_magic})")
 
@@ -1217,6 +1298,8 @@ class MainGameEventHandler(EventHandler):
             action = actions.find_quick_heal(self.engine.player)
         elif key == ACTION_KEYS['trait_screen']:
             return TraitScreenEventHandler(self.engine)
+        elif key == ACTION_KEYS['skill_screen']:
+            return SkillScreenEventHandler(self.engine)
         elif key == tcod.event.KeySym.q:
             action = actions.DebugAction(self.engine.player)
         elif key == tcod.event.KeySym.w:

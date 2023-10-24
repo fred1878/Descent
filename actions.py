@@ -12,6 +12,7 @@ from tile_types import trap
 if TYPE_CHECKING:
     from engine import Engine
     from entity import Actor, Entity, Item, Chest
+    from components.ability import Skill
 
 
 class Action:
@@ -104,6 +105,24 @@ def find_quick_heal(player: Actor) -> ItemAction:
             return ItemAction(player, item)
         if item.name == "Small Health Potion" and (player.fighter.max_hp - player.fighter.hp) >= 6:
             return ItemAction(player, item)
+
+
+class SkillAction(Action):
+    def __init__(self, entity: Actor, skill: Skill, target_xy: Optional[Tuple[int, int]] = None):
+        super().__init__(entity)
+        self.skill = skill
+        if not target_xy:
+            target_xy = entity.x, entity.y
+        self.target_xy = target_xy
+
+    @property
+    def target_actor(self) -> Optional[Actor]:
+        """Return the actor at this action's destination."""
+        return self.engine.game_map.get_actor_at_location(*self.target_xy)
+
+    def perform(self) -> None:
+        """Invoke the skill, this action will be given to provide context."""
+        self.skill.use(self)
 
 
 class ActionWithDirection(Action):

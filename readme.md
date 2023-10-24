@@ -13,7 +13,10 @@ TODO:
 
 -tidy history\
 -friendly NPCs\
--reusable/learnable spells\
+-reusable/learnable spells, spells affect san, corruption\
+-spellbook/abilities\
+-ability trees, random choices?, random corruptions\
+-item modifications\
 -more random damage\
 -environment effects --traps done\
 -separate root, map, message, stats console\
@@ -25,7 +28,6 @@ TODO:
 -random item descriptions? chat gipitty???\
 -colours change as you DescentTM\
 -key rebinding\
--mouse driven menus\
 -onscreen controls\
 -BSP map generation
 
@@ -67,3 +69,4 @@ TODO:
 -shopkeeper --done\
 -monsters sometimes have gear --done\
 -when monsters die they drop inventory --done\
+-mouse driven menus --done\

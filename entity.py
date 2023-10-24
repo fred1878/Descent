@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from components.inventory import Inventory
     from components.equippable import Equippable
     from components.attribute import Attribute
+    from components.ability import Ability
 
 T = TypeVar("T", bound="Entity")
 
@@ -100,7 +101,8 @@ class Actor(Entity):
             level: Level,
             master: bool = False,
             attribute: Attribute,
-            friendly: bool = False
+            friendly: bool = False,
+            ability: Ability
     ):
         super().__init__(
             x=x,
@@ -128,6 +130,9 @@ class Actor(Entity):
         self.attribute = attribute
         self.attribute.parent = self
         self.friendly = friendly
+
+        self.ability = ability
+        self.ability.parent = self
 
     @property
     def is_alive(self) -> bool:

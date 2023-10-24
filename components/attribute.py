@@ -47,12 +47,12 @@ class Attribute(BaseComponent):
 
     def __init__(
             self,
-            trait_list=None,
+            traits=None,
             insanity: int = 0,
             corruption: int = 0,
     ):
-        self.traits = trait_list
-        if trait_list is None:
+        self.traits = traits
+        if traits is None:
             self.traits = []
         self.insanity = insanity
         self.corruption = corruption

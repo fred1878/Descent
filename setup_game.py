@@ -6,6 +6,7 @@ import tcod  # type:ignore
 import lzma
 import pickle
 import colour
+from components import skills
 from engine import Engine
 import entity_factories
 from game_map import GameWorld
@@ -61,6 +62,8 @@ def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettin
 
     player.inventory.items.append(wooden_bow)
     player.equipment.toggle_equip(wooden_bow, player, add_message=False)
+
+    skills.add_text.add_skill(player)
 
     player.inventory.items.append(small_health_potion)
     if difficulty == DifficultySettings.EASY:

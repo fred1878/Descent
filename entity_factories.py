@@ -1,3 +1,4 @@
+from components.ability import Ability
 from components.ai import *
 from components.fighter import Fighter
 from components.attribute import Attribute
@@ -18,7 +19,8 @@ player = Actor(
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=50, current_gold=0),
     attribute=Attribute(),
-    friendly=True
+    friendly=True,
+    ability=Ability()
 )
 # fren
 shopkeeper = Actor(
@@ -31,7 +33,8 @@ shopkeeper = Actor(
     inventory=Inventory(capacity=20),
     level=Level(xp_given=200, gold_given=1000),
     attribute=Attribute(),
-    friendly=True
+    friendly=True,
+    ability=Ability()
 )
 ally = Actor(
     char="A",
@@ -43,7 +46,8 @@ ally = Actor(
     inventory=Inventory(capacity=20),
     level=Level(xp_given=200, gold_given=1000),
     attribute=Attribute(),
-    friendly=True
+    friendly=True,
+    ability=Ability()
 )
 # enemigos
 minion = Actor(
@@ -55,7 +59,8 @@ minion = Actor(
     fighter=Fighter(hp=5, base_defense=0, base_melee=2),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15, gold_given=0),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 master = Actor(
     char="M",
@@ -67,7 +72,8 @@ master = Actor(
     inventory=Inventory(capacity=0),
     level=Level(xp_given=50, gold_given=30),
     master=True,
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 kobold = Actor(
     char="k",
@@ -78,7 +84,8 @@ kobold = Actor(
     fighter=Fighter(hp=8, base_defense=0, base_ranged=2),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=30, gold_given=5),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 skeleton = Actor(
     char="s",
@@ -89,7 +96,8 @@ skeleton = Actor(
     fighter=Fighter(hp=15, base_defense=0, base_melee=4),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=80, gold_given=20),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 skeleton_archer = Actor(
     char="s",
@@ -100,7 +108,8 @@ skeleton_archer = Actor(
     fighter=Fighter(hp=12, base_defense=0, base_ranged=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=80, gold_given=20),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 hobbit = Actor(
     char="h",
@@ -111,7 +120,8 @@ hobbit = Actor(
     fighter=Fighter(hp=6, base_defense=0, base_melee=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=30, gold_given=5),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 wizard = Actor(
     char="w",
@@ -122,7 +132,8 @@ wizard = Actor(
     fighter=Fighter(hp=10, base_defense=0, base_melee=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=50, gold_given=10),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 necromancer = Actor(
     char="n",
@@ -133,7 +144,8 @@ necromancer = Actor(
     fighter=Fighter(hp=10, base_defense=0, base_melee=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100, gold_given=10),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 orc = Actor(
     char="o",
@@ -144,7 +156,8 @@ orc = Actor(
     fighter=Fighter(hp=10, base_defense=0, base_melee=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=35, gold_given=5),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 troll = Actor(
     char="T",
@@ -155,7 +168,8 @@ troll = Actor(
     fighter=Fighter(hp=16, base_defense=1, base_melee=5),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100, gold_given=25),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 reaper = Actor(
     char="R",
@@ -166,7 +180,8 @@ reaper = Actor(
     fighter=Fighter(hp=50, base_defense=3, base_melee=9),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=500, gold_given=300),
-    attribute=Attribute()
+    attribute=Attribute(),
+    ability=Ability()
 )
 # dungeon objects
 chest = Chest(
