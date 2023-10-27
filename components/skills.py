@@ -2,7 +2,7 @@ from components.ability import *
 import actions
 
 
-class TextTrait(Skill):
+class TextSkill(Skill):
     def __init__(self,
                  name: str = "<unnamed skill>",
                  description: str = "<undescribed skill>",
@@ -16,4 +16,12 @@ class TextTrait(Skill):
         self.engine.message_log.add_message("used skill")
 
 
-add_text = TextTrait("Conjure Text", "Add text to message log")
+add_text = TextSkill("Conjure Text", "Add text to message log")
+
+
+class PushSkill(Skill):
+    def __init__(self, name, description, cost):
+        super().__init__(name, description, cost)
+
+    def use(self, action: actions.SkillAction) -> None:
+        
