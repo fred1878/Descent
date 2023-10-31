@@ -1,11 +1,18 @@
 import copy
+from typing import Optional, Union
 
+import actions
 from components.base_component import *
 from entity import Actor
 
+if TYPE_CHECKING:
+    from actions import SkillAction
+
+ActionOrHandler = Union[actions.Action, "BaseEventHandler"]
+
 
 class Skill(BaseComponent):
-    from actions import SkillAction
+    parent: Actor
 
     def __init__(
             self,
@@ -22,7 +29,11 @@ class Skill(BaseComponent):
         clone.parent = entity
         entity.ability.skills.append(clone)
 
-    def use(self, action: SkillAction) -> None:
+    def get_skill(self, user: Actor) -> Optional[ActionOrHandler]:
+        """Try to return the action for this skill."""
+        return actions.SkillAction(user, self)
+
+    def use(self, action: actions.SkillAction) -> None:
         """Use this skill 'action' is the context for this activation."""
         raise NotImplementedError()
 

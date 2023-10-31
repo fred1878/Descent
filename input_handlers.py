@@ -644,7 +644,7 @@ class SkillScreenEventHandler(AskUserEventHandler):
 
     def on_item_selected(self, skill: Skill) -> Optional[ActionOrHandler]:
         """Called when the user selects a valid item."""
-        return actions.SkillAction(self.player, skill)
+        return skill.get_skill(self.player)
 
 
 class LevelUpEventHandler(AskUserEventHandler):
