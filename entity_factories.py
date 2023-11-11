@@ -49,6 +49,19 @@ ally = Actor(
     friendly=True,
     ability=Ability()
 )
+tentacle_ally = Actor(
+    char="T",
+    colour=colour.black,
+    name="Tentacle",
+    ai_cls=StationaryAllyAI,
+    equipment=Equipment(),
+    fighter=Fighter(hp=10, base_defense=0,  base_range=2, base_ranged=3),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=0, gold_given=0),
+    attribute=Attribute(),
+    friendly=True,
+    ability=Ability()
+)
 # enemigos
 minion = Actor(
     char="m",
@@ -81,7 +94,7 @@ kobold = Actor(
     name="Kobold",
     ai_cls=HostileRangedEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=8, base_defense=0, base_ranged=2),
+    fighter=Fighter(hp=8, base_defense=0, base_ranged=2, base_range=2),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=30, gold_given=5),
     attribute=Attribute(),
@@ -105,7 +118,7 @@ skeleton_archer = Actor(
     name="Skeleton Archer",
     ai_cls=HostileRangedEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=12, base_defense=0, base_ranged=3),
+    fighter=Fighter(hp=12, base_defense=0, base_ranged=3, base_range=4),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=80, gold_given=20),
     attribute=Attribute(),

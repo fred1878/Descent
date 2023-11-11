@@ -1137,8 +1137,8 @@ class SingleRangedWeaponAttackHandler(SelectIndexHandler):
             dx, dy = MOVE_KEYS[key]
             x += dx
             y += dy
-            x = max(self.player.x - self.player.equipment.range, min(x, self.player.x + self.player.equipment.range))
-            y = max(self.player.y - self.player.equipment.range, min(y, self.player.y + self.player.equipment.range))
+            x = max(self.player.x - self.player.fighter.range, min(x, self.player.x + self.player.fighter.range))
+            y = max(self.player.y - self.player.fighter.range, min(y, self.player.y + self.player.fighter.range))
             self.engine.mouse_location = x, y
             return None
         elif key in CONFIRM_KEYS:
@@ -1148,8 +1148,8 @@ class SingleRangedWeaponAttackHandler(SelectIndexHandler):
             return self.callback((x, y))
 
     def on_index_selected(self, x: int, y: int) -> Optional[Action]:
-        if self.player.x - self.player.equipment.range > x < self.player.x + self.player.equipment.range \
-                or self.player.y - self.player.equipment.range > y < self.player.y + self.player.equipment.range:
+        if self.player.x - self.player.fighter.range > x < self.player.x + self.player.fighter.range \
+                or self.player.y - self.player.fighter.range > y < self.player.y + self.player.fighter.range:
             self.engine.message_log.add_message("Out of range")
         else:
             return self.callback((x, y))

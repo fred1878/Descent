@@ -1,5 +1,6 @@
 import copy
 
+import entity_factories
 import exceptions
 import input_handlers
 from tile_types import *
@@ -148,3 +149,25 @@ class PushSkill(Skill):
 
 
 push_skill = PushSkill("Push", "Push target away", 0)
+
+
+class SummonTentacleSkill(Skill):
+
+    def __init__(self, name, description, cost):
+        super().__init__(name, description, cost)
+
+    def get_skill(self, action: SkillAction) -> input_handlers.SingleRangedAttackHandler:
+        skill_user = self.parent
+        self.engine.message_log.add_message("Select a target location.", colour.needs_target)
+        return input_handlers.SingleRangedAttackHandler(self.engine,
+                                                        callback=lambda xy: SkillAction(skill_user, self,
+                                                                                        xy))
+
+    def use(self, action: SkillAction) -> None:
+        if action.target_actor or self.engine.game_map.tiles[action.target_xy] == wall:
+            raise exceptions.Impossible("Must target empty space.")
+        x, y = action.target_xy
+        entity_factories.tentacle_ally.spawn(self.engine.game_map, x, y)
+
+
+spawn_tentacle = SummonTentacleSkill("Summon Tentacle", "Summon an allies tentacle that will fight for you", 0)

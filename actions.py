@@ -341,6 +341,7 @@ class MovementAction(ActionWithDirection):
 
 class BumpAction(ActionWithDirection):
     def perform(self) -> None:
+        print(self.engine.player.equipment.equip_defence_bonus)
         if self.target_actor:
             if self.target_actor.name == 'Shopkeeper' and self.target_actor.friendly \
                     and self.entity is self.engine.player:

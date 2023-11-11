@@ -5,6 +5,7 @@ class StatModifyingTrait(Trait):
     def __init__(self,
                  melee_bonus: int = 0,
                  ranged_bonus: int = 0,
+                 range_bonus: int = 0,
                  defence_bonus: int = 0,
                  magic_bonus: int = 0,
                  name: str = "stat modifying trait",
@@ -16,6 +17,7 @@ class StatModifyingTrait(Trait):
         super().__init__(name, description, cost, has_duration, duration)
         self.melee_bonus = melee_bonus
         self.ranged_bonus = ranged_bonus
+        self.range_bonus = range_bonus
         self.defence_bonus = defence_bonus
         self.magic_bonus = magic_bonus
 
@@ -26,6 +28,10 @@ class StatModifyingTrait(Trait):
     @property
     def trait_ranged_bonus(self) -> int:
         return self.ranged_bonus
+
+    @property
+    def trait_range_bonus(self) -> int:
+        return self.range_bonus
 
     @property
     def trait_defence_bonus(self) -> int:

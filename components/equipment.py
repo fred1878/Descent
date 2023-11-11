@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, List
 
 import colour
 from components.base_component import BaseComponent
@@ -20,68 +20,51 @@ class Equipment(BaseComponent):
         self.armor = armor
 
     @property
+    def equipped_items(self) -> List[Item]:
+        items = []
+        if self.melee_weapon is not None and self.melee_weapon.equippable is not None:
+            items.append(self.melee_weapon)
+        if self.ranged_weapon is not None and self.ranged_weapon.equippable is not None:
+            items.append(self.ranged_weapon)
+        if self.armor is not None and self.armor.equippable is not None:
+            items.append(self.armor)
+        return items
+
+    @property
     def equip_defence_bonus(self) -> int:
         bonus = 0
-
-        if self.melee_weapon is not None and self.melee_weapon.equippable is not None:
-            bonus += self.melee_weapon.equippable.equip_defense_bonus
-
-        if self.ranged_weapon is not None and self.ranged_weapon.equippable is not None:
-            bonus += self.ranged_weapon.equippable.equip_defense_bonus
-
-        if self.armor is not None and self.armor.equippable is not None:
-            bonus += self.armor.equippable.equip_defense_bonus
-
+        for item in self.equipped_items:
+            bonus += item.equippable.defense_bonus
         return bonus
 
     @property
     def equip_melee_bonus(self) -> int:
         bonus = 0
-
-        if self.melee_weapon is not None and self.melee_weapon.equippable is not None:
-            bonus += self.melee_weapon.equippable.melee_bonus
-
-        if self.ranged_weapon is not None and self.ranged_weapon.equippable is not None:
-            bonus += self.ranged_weapon.equippable.melee_bonus
-
-        if self.armor is not None and self.armor.equippable is not None:
-            bonus += self.armor.equippable.melee_bonus
-
+        for item in self.equipped_items:
+            bonus += item.equippable.melee_bonus
         return bonus
 
     @property
     def equip_ranged_bonus(self) -> int:
         bonus = 0
-
-        if self.melee_weapon is not None and self.melee_weapon.equippable is not None:
-            bonus += self.melee_weapon.equippable.ranged_bonus
-
-        if self.ranged_weapon is not None and self.ranged_weapon.equippable is not None:
-            bonus += self.ranged_weapon.equippable.ranged_bonus
-
-        if self.armor is not None and self.armor.equippable is not None:
-            bonus += self.armor.equippable.ranged_bonus
-
+        for item in self.equipped_items:
+            bonus += item.equippable.ranged_bonus
         return bonus
 
     @property
     def equip_magic_bonus(self) -> int:
         bonus = 0
-
-        if self.melee_weapon is not None and self.melee_weapon.equippable is not None:
-            bonus += self.melee_weapon.equippable.magic_bonus
-
-        if self.ranged_weapon is not None and self.ranged_weapon.equippable is not None:
-            bonus += self.ranged_weapon.equippable.magic_bonus
-
-        if self.armor is not None and self.armor.equippable is not None:
-            bonus += self.armor.equippable.magic_bonus
-
+        for item in self.equipped_items:
+            bonus += item.equippable.magic_bonus
         return bonus
 
     @property
-    def range(self) -> int:
-        return self.ranged_weapon.equippable.weapon_range
+    def equip_range_bonus(self) -> int:
+        bonus = 0
+        for item in self.equipped_items:
+            bonus += item.equippable.weapon_range
+            bonus += item.equippable.range_bonus
+        return bonus
 
     def item_is_equipped(self, item: Item) -> bool:
         return self.melee_weapon == item or self.armor == item or self.ranged_weapon == item

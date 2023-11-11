@@ -74,6 +74,14 @@ class Attribute(BaseComponent):
         return bonus
 
     @property
+    def trait_range_bonus(self) -> int:
+        bonus = 0
+        for trait in self.traits:
+            if hasattr(trait, "trait_range_bonus"):
+                bonus += trait.trait_range_bonus
+        return bonus
+
+    @property
     def trait_defence_bonus(self) -> int:
         bonus = 0
         for trait in self.traits:

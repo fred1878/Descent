@@ -83,7 +83,7 @@ class AllyAI(BaseAI):
 
     def perform(self) -> None:
         player = self.engine.player
-        enemy_search_range = 8  # how far the enemy will go to find corpses
+        enemy_search_range = 8  # how far the enemy will go to find other enemies
 
         enemy_list: List[Actor] = []
         for actor in self.entity.gamemap.actors:
@@ -124,6 +124,36 @@ class AllyAI(BaseAI):
         return WaitAction(self.entity).perform()
 
 
+class StationaryAllyAI(BaseAI):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+
+    def perform(self) -> None:
+        attack_range = self.entity.fighter.range  # how far the enemy will go to find enemies
+
+        enemy_list: List[Actor] = []
+        for actor in self.entity.gamemap.actors:
+            print(actor.x - self.entity.x)
+            print(actor.y - self.entity.y)
+            print(self.entity.fighter.range)
+            if -attack_range < actor.x - self.entity.x < attack_range \
+                    and -attack_range < actor.y - self.entity.y < attack_range:
+                    # and actor.friendly is not True:
+                print("enemy in range")
+                enemy_list.append(actor)
+
+        print(enemy_list)
+
+        if enemy_list:
+            random_enemy = random.choice(enemy_list)
+            distance = abs(random_enemy.x - self.entity.x) + abs(random_enemy.y - self.entity.y)
+            if distance <= attack_range:
+                return RangedAttackAction(self.entity,
+                                          (random_enemy.x, random_enemy.y)).perform()  # Will attack a random enemy when in range
+
+        return WaitAction(self.entity).perform()
+
+
 class HostileEnemy(BaseAI):
     def __init__(self, entity: Actor):
         super().__init__(entity)
@@ -160,7 +190,7 @@ class HostileRangedEnemy(BaseAI):
         distance = max(abs(dx), abs(dy))  # distance to player
 
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
-            if distance <= 3:
+            if distance <= self.entity.fighter.range:
                 return RangedAttackAction(self.entity,
                                           (target.x, target.y)).perform()  # Will attack player when in range
 
