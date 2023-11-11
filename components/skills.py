@@ -1,14 +1,16 @@
 import copy
 
-import colour
+import exceptions
 import input_handlers
+from tile_types import *
 from actions import SkillAction, Action
-from typing import TYPE_CHECKING, Optional, Union
+from typing import Optional, Union
 
 from components.base_component import BaseComponent
 from entity import Actor
 
 ActionOrHandler = Union[Action, "BaseEventHandler"]
+
 
 class Skill(BaseComponent):
     parent: Actor
@@ -63,35 +65,86 @@ class PushSkill(Skill):
         self.engine.message_log.add_message("Select a target location.", colour.needs_target)
         return input_handlers.SingleRangedAttackHandler(self.engine,
                                                         callback=lambda xy: SkillAction(skill_user, self,
-                                                                                                      xy))
+                                                                                        xy))
 
     def use(self, action: SkillAction) -> None:
         target = action.target_actor
-        dx = self.parent.x - target.x
-        dy = self.parent.y - target.y
-
-        if abs(dx) > abs(dy):
-            if dx > 0:
-                target.x -= 1
-            else:
-                target.x += 1
-        elif abs(dx) < abs(dy):
-            if dy > 0:
-                target.y -= 1
-            else:
-                target.y += 1
+        if not target:
+            raise exceptions.Impossible("Nothing to Target.")
         else:
-            if dx > 0:
-                target.x -= 1
+            dx = self.parent.x - target.x
+            dy = self.parent.y - target.y
+
+            if abs(dx) > abs(dy):
+                if dx > 0:
+                    if self.engine.game_map.tiles[target.x - 1, target.y] == wall:
+                        self.engine.message_log.add_message(f"{target.name} hit the wall and was dealt 1 damage")
+                        target.fighter.take_damage(1)
+                        target.x -= 1
+                    else:
+                        target.x -= 2
+                else:
+                    if self.engine.game_map.tiles[target.x + 1, target.y] == wall:
+                        self.engine.message_log.add_message(f"{target.name} hit the wall and was dealt 1 damage")
+                        target.fighter.take_damage(1)
+                        target.x += 1
+                    else:
+                        target.x += 2
+            elif abs(dx) < abs(dy):
+                if dy > 0:
+                    if self.engine.game_map.tiles[target.x, target.y - 1] == wall:
+                        self.engine.message_log.add_message(f"{target.name} hit the wall and was dealt 1 damage")
+                        target.fighter.take_damage(1)
+                        target.y -= 1
+                    else:
+                        target.y -= 2
+                else:
+                    if self.engine.game_map.tiles[target.x, target.y + 1] == wall:
+                        self.engine.message_log.add_message(f"{target.name} hit the wall and was dealt 1 damage")
+                        target.fighter.take_damage(1)
+                        target.y += 1
+                    else:
+                        target.y += 2
             else:
-                target.x += 1
-            if dy > 0:
-                target.y -= 1
-            else:
-                target.y += 1
+                if dx > 0:
+                    if dy > 0:
+                        if self.engine.game_map.tiles[target.x - 1, target.y - 1] == wall:
+                            self.engine.message_log.add_message(f"{target.name} hit the wall and was dealt 1 damage")
+                            target.fighter.take_damage(1)
+                            target.x -= 1
+                            target.y -= 1
+                        else:
+                            target.x -= 2
+                            target.y -= 2
+                    else:
+                        if self.engine.game_map.tiles[target.x - 1, target.y + 1] == wall:
+                            self.engine.message_log.add_message(f"{target.name} hit the wall and was dealt 1 damage")
+                            target.fighter.take_damage(1)
+                            target.x -= 1
+                            target.y += 1
+                        else:
+                            target.x -= 2
+                            target.y += 2
 
-
-
+                else:
+                    if dy > 0:
+                        if self.engine.game_map.tiles[target.x + 1, target.y - 1] == wall:
+                            self.engine.message_log.add_message(f"{target.name} hit the wall and was dealt 1 damage")
+                            target.fighter.take_damage(1)
+                            target.x += 1
+                            target.y -= 1
+                        else:
+                            target.x += 2
+                            target.y -= 2
+                    else:
+                        if self.engine.game_map.tiles[target.x + 1, target.y + 1] == wall:
+                            self.engine.message_log.add_message(f"{target.name} hit the wall and was dealt 1 damage")
+                            target.fighter.take_damage(1)
+                            target.x += 1
+                            target.y += 1
+                        else:
+                            target.x += 2
+                            target.y += 2
 
 
 push_skill = PushSkill("Push", "Push target away", 0)
