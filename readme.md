@@ -27,7 +27,6 @@ TODO:
 -have monsters with different FOV/multi layer FOV\
 -random item descriptions? chat gipitty???\
 -colours change as you DescentTM\
--key rebinding\
 -onscreen controls\
 -BSP map generation
 
@@ -51,7 +50,6 @@ TODO:
 -corruption - items, scrolls and potions etc increase corruption\
 -traits tied to corruption and separate\
 -mutations\
--necromancer enemy and spell scroll\
 -more monsters\
 -more gruesome/twisted monsters\
 -MOAR items inc magic items, explosives, potions, scrolls, ranged weapons, GUN, traps, rooms --traps done\
@@ -70,3 +68,5 @@ TODO:
 -monsters sometimes have gear --done\
 -when monsters die they drop inventory --done\
 -mouse driven menus --done\
+-necromancer enemy and spell scroll --done\
+-key rebinding --done\

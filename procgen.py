@@ -2,6 +2,8 @@ from __future__ import annotations
 from itertools import repeat
 from typing import Dict, Iterator, Type, Union
 import tcod  # type: ignore
+
+import entity_factories
 from exceptions import RoomNotFound
 from rooms import *
 from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
@@ -280,10 +282,6 @@ def generate_dungeon(
     entity_factories.small_health_potion.spawn(dungeon, player.x, player.y + 1)
     entity_factories.small_health_potion.spawn(dungeon, player.x, player.y - 1)
     entity_factories.health_potion.spawn(dungeon, player.x, player.y - 2)
-    entity_factories.attack_debuff_scroll.spawn(dungeon, player.x + 1, player.y)
-    entity_factories.attack_debuff_scroll.spawn(dungeon, player.x + 2, player.y)
-    entity_factories.attack_debuff_scroll.spawn(dungeon, player.x + 2, player.y + 1)
-    entity_factories.fireball_scroll.spawn(dungeon, player.x + 2, player.y + 2)
     # dungeon.downstairs_location = (player.x - 1, player.y - 1)
 
     for entity in dungeon.entities:

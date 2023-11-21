@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict
 import random
 import numpy as np  # type: ignore
 import tcod  # type: ignore
@@ -45,18 +45,31 @@ class BaseAI(Action):
         # Convert from List[List[int]] to List[Tuple[int, int]].
         return [(index[0], index[1]) for index in path]
 
+    def find_target(self, radius: int = 8) -> Optional[Actor]:
+        """Iterate through all actors in a given square radius and return the nearest hostile actor, if one exists"""
+        target_list: Dict[Actor, int] = {}
+        target: Optional[Actor] = None
+        for actor in self.entity.gamemap.actors:
+            if self.entity.friendly and not actor.friendly or not self.entity.friendly and actor.friendly:
+                if self.entity.x - radius < actor.x < self.entity.x + radius \
+                        and self.entity.y - radius < actor.y < self.entity.y + radius:
+                    target_list[actor] = len(self.get_path_to(actor.x, actor.y))
+
+        target_list_sorted = dict(sorted(target_list.items(), key=lambda x: x[1]))
+        if len(target_list_sorted):
+            target = next(iter(target_list_sorted))
+        return target
+
 
 class ShopAI(BaseAI):
     def __init__(self, entity: Actor):
         super().__init__(entity)
         self.path: List[Tuple[int, int]] = []
-        self.hostile = False
 
     def perform(self) -> None:
         if self.entity.fighter.hp < self.entity.fighter.max_hp:
-            self.hostile = True
             self.entity.friendly = False
-        if not self.hostile:
+        if self.entity.friendly:
             return WaitAction(self.entity).perform()
         else:
             target = self.engine.player
@@ -133,23 +146,18 @@ class StationaryAllyAI(BaseAI):
 
         enemy_list: List[Actor] = []
         for actor in self.entity.gamemap.actors:
-            print(actor.x - self.entity.x)
-            print(actor.y - self.entity.y)
-            print(self.entity.fighter.range)
             if -attack_range < actor.x - self.entity.x < attack_range \
-                    and -attack_range < actor.y - self.entity.y < attack_range:
-                    # and actor.friendly is not True:
-                print("enemy in range")
+                    and -attack_range < actor.y - self.entity.y < attack_range \
+                    and actor.friendly is not True:
                 enemy_list.append(actor)
-
-        print(enemy_list)
 
         if enemy_list:
             random_enemy = random.choice(enemy_list)
             distance = abs(random_enemy.x - self.entity.x) + abs(random_enemy.y - self.entity.y)
             if distance <= attack_range:
                 return RangedAttackAction(self.entity,
-                                          (random_enemy.x, random_enemy.y)).perform()  # Will attack a random enemy when in range
+                                          (random_enemy.x,
+                                           random_enemy.y)).perform()  # Will attack a random enemy when in range
 
         return WaitAction(self.entity).perform()
 
@@ -160,22 +168,23 @@ class HostileEnemy(BaseAI):
         self.path: List[Tuple[int, int]] = []
 
     def perform(self) -> None:
-        target = self.engine.player
-        dx = target.x - self.entity.x
-        dy = target.y - self.entity.y
-        distance = max(abs(dx), abs(dy))  # distance to player
+        target = self.find_target()
+        if target:
+            dx = target.x - self.entity.x
+            dy = target.y - self.entity.y
+            distance = max(abs(dx), abs(dy))  # distance to target
 
-        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
-            if distance <= 1:
-                return MeleeAction(self.entity, dx, dy).perform()  # Will attack player when adjacent
+            if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+                if distance <= 1:
+                    return MeleeAction(self.entity, dx, dy).perform()  # Will attack target when adjacent
 
-            self.path = self.get_path_to(target.x, target.y)
+                self.path = self.get_path_to(target.x, target.y)
 
-        if self.path:
-            dest_x, dest_y = self.path.pop(0)
-            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+            if self.path:
+                dest_x, dest_y = self.path.pop(0)
+                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
 
-        return WaitAction(self.entity).perform()
+            return WaitAction(self.entity).perform()
 
 
 class HostileRangedEnemy(BaseAI):
@@ -184,23 +193,24 @@ class HostileRangedEnemy(BaseAI):
         self.path: List[Tuple[int, int]] = []
 
     def perform(self) -> None:
-        target = self.engine.player
-        dx = target.x - self.entity.x
-        dy = target.y - self.entity.y
-        distance = max(abs(dx), abs(dy))  # distance to player
+        target = self.find_target()
+        if target:
+            dx = target.x - self.entity.x
+            dy = target.y - self.entity.y
+            distance = max(abs(dx), abs(dy))  # distance to player
 
-        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
-            if distance <= self.entity.fighter.range:
-                return RangedAttackAction(self.entity,
-                                          (target.x, target.y)).perform()  # Will attack player when in range
+            if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+                if distance <= self.entity.fighter.range:
+                    return RangedAttackAction(self.entity,
+                                              (target.x, target.y)).perform()  # Will attack player when in range
 
-            self.path = self.get_path_to(target.x, target.y)
+                self.path = self.get_path_to(target.x, target.y)
 
-        if self.path:
-            dest_x, dest_y = self.path.pop(0)
-            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+            if self.path:
+                dest_x, dest_y = self.path.pop(0)
+                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
 
-        return WaitAction(self.entity).perform()
+            return WaitAction(self.entity).perform()
 
 
 class HostileAttackDebufferEnemy(BaseAI):
@@ -211,32 +221,33 @@ class HostileAttackDebufferEnemy(BaseAI):
     trait = traits.attack_down_wizard
 
     def perform(self) -> None:
-        target = self.engine.player
-        dx = target.x - self.entity.x
-        dy = target.y - self.entity.y
-        distance = max(abs(dx), abs(dy))  # distance to player
+        target = self.find_target()
+        if target:
+            dx = target.x - self.entity.x
+            dy = target.y - self.entity.y
+            distance = max(abs(dx), abs(dy))  # distance to player
 
-        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
-            if distance <= 4:
-                target_traits = []
-                for trait in target.attribute.traits:
-                    target_traits.append(trait.description)
-                if self.trait.description in target_traits:
-                    pass
-                else:
-                    return RangedBuffAction(self.entity, (target.x, target.y), self.trait).perform()
-                # Will be debuff when in range
+            if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+                if distance <= 4:
+                    target_traits = []
+                    for trait in target.attribute.traits:
+                        target_traits.append(trait.description)
+                    if self.trait.description in target_traits:
+                        pass
+                    else:
+                        return RangedBuffAction(self.entity, (target.x, target.y), self.trait).perform()
+                    # Will be debuff when in range
 
-            if distance <= 1:
-                return MeleeAction(self.entity, dx, dy).perform()  # Will attack player when adjacent
+                if distance <= 1:
+                    return MeleeAction(self.entity, dx, dy).perform()  # Will attack player when adjacent
 
-            self.path = self.get_path_to(target.x, target.y)
+                self.path = self.get_path_to(target.x, target.y)
 
-        if self.path:
-            dest_x, dest_y = self.path.pop(0)
-            return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+            if self.path:
+                dest_x, dest_y = self.path.pop(0)
+                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
 
-        return WaitAction(self.entity).perform()
+            return WaitAction(self.entity).perform()
 
 
 class NecromancerEnemy(BaseAI):
@@ -246,52 +257,53 @@ class NecromancerEnemy(BaseAI):
         self.path_to_corpse: List[Tuple[int, int]] = []
 
     def perform(self) -> None:
-        target = self.engine.player
-        dx_player = target.x - self.entity.x
-        dy_player = target.y - self.entity.y
-        distance_to_player = max(abs(dx_player), abs(dy_player))  # distance to player
-        corpse_search_range = 6  # how far the enemy will go to find corpses
+        target = self.find_target(12)
+        if target:
+            dx_player = target.x - self.entity.x
+            dy_player = target.y - self.entity.y
+            distance_to_player = max(abs(dx_player), abs(dy_player))  # distance to player
+            corpse_search_range = 6  # how far the enemy will go to find corpses
 
-        corpse_list: List[Actor] = []
-        for corpse in self.entity.gamemap.corpses:
-            if -corpse_search_range < corpse.x - self.entity.x < corpse_search_range \
-                    and -corpse_search_range < corpse.y - self.entity.y < corpse_search_range:
-                corpse_list.append(corpse)
+            corpse_list: List[Actor] = []
+            for corpse in self.entity.gamemap.corpses:
+                if -corpse_search_range < corpse.x - self.entity.x < corpse_search_range \
+                        and -corpse_search_range < corpse.y - self.entity.y < corpse_search_range:
+                    corpse_list.append(corpse)
 
-        if corpse_list:
-            nearest_corpse = corpse_list[0]
-            dx_corpse = nearest_corpse.x - self.entity.x
-            dy_corpse = nearest_corpse.y - self.entity.y
-            for corpse in corpse_list:
-                distance = abs(corpse.x - self.entity.x) + abs(corpse.y - self.entity.y)
-                if distance < abs(dx_corpse) + abs(dy_corpse):
-                    nearest_corpse = corpse
-            self.path_to_corpse = self.get_path_to(nearest_corpse.x, nearest_corpse.y)
-        else:
-            nearest_corpse = None
-
-        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
-            if distance_to_player <= 1:
-                return MeleeAction(self.entity, dx_player, dy_player).perform()  # Will attack player when adjacent
-
-            self.path_to_player = self.get_path_to(target.x, target.y)
-
-        if self.path_to_player:
-            if nearest_corpse:
+            if corpse_list:
+                nearest_corpse = corpse_list[0]
                 dx_corpse = nearest_corpse.x - self.entity.x
                 dy_corpse = nearest_corpse.y - self.entity.y
-                distance_to_corpse = max(abs(dx_corpse), abs(dy_corpse))  # distance to master
-                if distance_to_corpse <= 3:
-                    target_xy = (nearest_corpse.x, nearest_corpse.y)
-                    return ResurrectAction(self.entity, target_xy).perform()
-                else:
-                    dest_x, dest_y = self.path_to_corpse.pop(0)
-                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+                for corpse in corpse_list:
+                    distance = abs(corpse.x - self.entity.x) + abs(corpse.y - self.entity.y)
+                    if distance < abs(dx_corpse) + abs(dy_corpse):
+                        nearest_corpse = corpse
+                self.path_to_corpse = self.get_path_to(nearest_corpse.x, nearest_corpse.y)
             else:
-                dest_x, dest_y = self.path_to_player.pop(0)
-                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+                nearest_corpse = None
 
-        return WaitAction(self.entity).perform()
+            if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+                if distance_to_player <= 1:
+                    return MeleeAction(self.entity, dx_player, dy_player).perform()  # Will attack player when adjacent
+
+                self.path_to_player = self.get_path_to(target.x, target.y)
+
+            if self.path_to_player:
+                if nearest_corpse:
+                    dx_corpse = nearest_corpse.x - self.entity.x
+                    dy_corpse = nearest_corpse.y - self.entity.y
+                    distance_to_corpse = max(abs(dx_corpse), abs(dy_corpse))  # distance to master
+                    if distance_to_corpse <= 3:
+                        target_xy = (nearest_corpse.x, nearest_corpse.y)
+                        return ResurrectAction(self.entity, target_xy).perform()
+                    else:
+                        dest_x, dest_y = self.path_to_corpse.pop(0)
+                        return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+                else:
+                    dest_x, dest_y = self.path_to_player.pop(0)
+                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+
+            return WaitAction(self.entity).perform()
 
 
 class MinionEnemy(BaseAI):
@@ -397,82 +409,83 @@ class EvasiveEnemy(BaseAI):
         self.path: List[Tuple[int, int]] = []
 
     def perform(self) -> None:
-        target = self.engine.player
-        dx = target.x - self.entity.x
-        dy = target.y - self.entity.y
-        distance = max(abs(dx), abs(dy))  # distance to player
+        target = self.find_target()
+        if target:
+            dx = target.x - self.entity.x
+            dy = target.y - self.entity.y
+            distance = max(abs(dx), abs(dy))  # distance to player
 
-        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
-            if distance <= 1:
-                return MeleeAction(self.entity, dx, dy).perform()  # Will attack player when adjacent
+            if self.engine.game_map.visible[self.entity.x, self.entity.y]:
+                if distance <= 1:
+                    return MeleeAction(self.entity, dx, dy).perform()  # Will attack player when adjacent
 
-            self.path = self.get_path_to(target.x, target.y)
+                self.path = self.get_path_to(target.x, target.y)
 
-        if self.path:
-            if bool(random.getrandbits(1)):
-                dest_x, dest_y = self.path.pop(0)
-                return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
-            else:
-                direction_x, direction_y = (0, 0)
-                if abs(dx) > abs(dy):
-                    if dx < 0:
-                        direction_x, direction_y = random.choice(  # Pick a random direction
-                            [
-                                (-1, -1),  # Northwest
-                                (-1, 1),  # Southwest
-                            ]
-                        )
-                    elif dx > 0:
-                        direction_x, direction_y = random.choice(  # Pick a random direction
-                            [
-                                (1, -1),  # Northeast
-                                (1, 1),  # Southeast
-                            ]
-                        )
-                elif abs(dx) < abs(dy):
-                    if dy < 0:
-                        direction_x, direction_y = random.choice(  # Pick a random direction
-                            [
-                                (-1, -1),  # Northwest
-                                (1, -1),  # Northeast
-                            ]
-                        )
-                    elif dy > 0:
-                        direction_x, direction_y = random.choice(  # Pick a random direction
-                            [
-                                (-1, 1),  # Southwest
-                                (1, 1),  # Southeast
-                            ]
-                        )
-                elif abs(dx) == abs(dy):
-                    if dx < 0 and dy < 0:
-                        direction_x, direction_y = random.choice(  # Pick a random direction
-                            [
-                                (-1, 0),  # West
-                                (0, 1),  # South
-                            ]
-                        )
-                    if dx < 0 < dy:
-                        direction_x, direction_y = random.choice(  # Pick a random direction
-                            [
-                                (1, 0),  # East
-                                (0, 1),  # South
-                            ]
-                        )
-                    if dx > 0 > dy:
-                        direction_x, direction_y = random.choice(  # Pick a random direction
-                            [
-                                (0, -1),  # North
-                                (-1, 0),  # West
-                            ]
-                        )
-                    if dx > 0 and dy > 0:
-                        direction_x, direction_y = random.choice(  # Pick a random direction
-                            [
-                                (0, -1),  # North
-                                (1, 0),  # East
-                            ]
-                        )
-                return BumpAction(self.entity, direction_x, direction_y).perform()
+            if self.path:
+                if bool(random.getrandbits(1)):
+                    dest_x, dest_y = self.path.pop(0)
+                    return MovementAction(self.entity, dest_x - self.entity.x, dest_y - self.entity.y).perform()
+                else:
+                    direction_x, direction_y = (0, 0)
+                    if abs(dx) > abs(dy):
+                        if dx < 0:
+                            direction_x, direction_y = random.choice(  # Pick a random direction
+                                [
+                                    (-1, -1),  # Northwest
+                                    (-1, 1),  # Southwest
+                                ]
+                            )
+                        elif dx > 0:
+                            direction_x, direction_y = random.choice(  # Pick a random direction
+                                [
+                                    (1, -1),  # Northeast
+                                    (1, 1),  # Southeast
+                                ]
+                            )
+                    elif abs(dx) < abs(dy):
+                        if dy < 0:
+                            direction_x, direction_y = random.choice(  # Pick a random direction
+                                [
+                                    (-1, -1),  # Northwest
+                                    (1, -1),  # Northeast
+                                ]
+                            )
+                        elif dy > 0:
+                            direction_x, direction_y = random.choice(  # Pick a random direction
+                                [
+                                    (-1, 1),  # Southwest
+                                    (1, 1),  # Southeast
+                                ]
+                            )
+                    elif abs(dx) == abs(dy):
+                        if dx < 0 and dy < 0:
+                            direction_x, direction_y = random.choice(  # Pick a random direction
+                                [
+                                    (-1, 0),  # West
+                                    (0, 1),  # South
+                                ]
+                            )
+                        if dx < 0 < dy:
+                            direction_x, direction_y = random.choice(  # Pick a random direction
+                                [
+                                    (1, 0),  # East
+                                    (0, 1),  # South
+                                ]
+                            )
+                        if dx > 0 > dy:
+                            direction_x, direction_y = random.choice(  # Pick a random direction
+                                [
+                                    (0, -1),  # North
+                                    (-1, 0),  # West
+                                ]
+                            )
+                        if dx > 0 and dy > 0:
+                            direction_x, direction_y = random.choice(  # Pick a random direction
+                                [
+                                    (0, -1),  # North
+                                    (1, 0),  # East
+                                ]
+                            )
+                    return BumpAction(self.entity, direction_x, direction_y).perform()
 
-        return WaitAction(self.entity).perform()
+            return WaitAction(self.entity).perform()

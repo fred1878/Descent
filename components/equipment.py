@@ -21,7 +21,7 @@ class Equipment(BaseComponent):
 
     @property
     def equipped_items(self) -> List[Item]:
-        items = []
+        items: List[Item] = []
         if self.melee_weapon is not None and self.melee_weapon.equippable is not None:
             items.append(self.melee_weapon)
         if self.ranged_weapon is not None and self.ranged_weapon.equippable is not None:
