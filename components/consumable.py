@@ -190,7 +190,6 @@ class AttackDebuffConsumable(Consumable):
         tile_list = tiles_in_circle(x + 0.5, y + 0.5, self.radius)
         for actor in self.engine.game_map.actors:
             if actor is not consumer and (actor.x, actor.y) in tile_list:
-                print([actor.x, actor.y])
                 self.engine.message_log.add_message(
                     f"The {actor.name} has it's attack debuffed"
                 )

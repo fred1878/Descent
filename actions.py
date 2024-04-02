@@ -4,15 +4,15 @@ import exceptions
 
 from typing import Optional, Tuple, TYPE_CHECKING
 
-import traits
-from components.attribute import Trait
 from render_order import RenderOrder
 from tile_types import trap
 
 if TYPE_CHECKING:
+    from components.attribute import Trait
     from engine import Engine
     from entity import Actor, Entity, Item, Chest
     from components.ability import Skill
+    import traits
 
 
 class Action:
@@ -37,6 +37,7 @@ class Action:
 
 class WaitAction(Action):
     def perform(self) -> None:
+        """Take no action"""
         pass
 
 
@@ -341,7 +342,6 @@ class MovementAction(ActionWithDirection):
 
 class BumpAction(ActionWithDirection):
     def perform(self) -> None:
-        print(self.engine.player.equipment.equip_defence_bonus)
         if self.target_actor:
             if self.target_actor.name == 'Shopkeeper' and self.target_actor.friendly \
                     and self.entity is self.engine.player:

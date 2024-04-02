@@ -103,9 +103,3 @@ class ChestRoom(RectangularRoom):
         for tile in random_chest_tiles:
             chest_x, chest_y = tile
             chest = entity_factories.chest.spawn(self.dungeon, chest_x, chest_y)
-            small_health_potion = copy.deepcopy(entity_factories.small_health_potion)
-            health_potion = copy.deepcopy(entity_factories.health_potion)
-            bronze_sword = copy.deepcopy(entity_factories.bronze_sword)
-            chest.inventory.items.append(small_health_potion)
-            chest.inventory.items.append(health_potion)
-            chest.inventory.items.append(bronze_sword)

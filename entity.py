@@ -2,10 +2,15 @@ from __future__ import annotations
 
 import copy
 import math
-from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
+import random
+from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union, List, Dict
+
+
 from components.level import Level
 from components.equipment import Equipment
+from gen_util import get_items_at_random
 from render_order import RenderOrder
+from util import get_max_value_for_floor
 
 if TYPE_CHECKING:
     from components.ai import BaseAI
@@ -202,6 +207,21 @@ class Chest(Entity):
         self.inventory.parent = self
         self.opened = opened
         self.opened_colour = opened_colour
+
+    def spawn(self: T, gamemap: GameMap, x: int, y: int) -> T:
+        """Spawn a copy of chest at the given location, fill it with items based on dungeon level"""
+        from spawn_chances import max_chest_items_by_floor, chest_item_chances
+        clone = copy.deepcopy(self)
+        clone.x = x
+        clone.y = y
+        clone.parent = gamemap
+        number_of_items = random.randint(
+            1, get_max_value_for_floor(max_chest_items_by_floor, clone.parent.engine.game_world.current_floor)
+        )
+        items: List[Item] = get_items_at_random(chest_item_chances, number_of_items, clone.parent.engine.game_world.current_floor)
+        self.inventory.items.append(items)
+        gamemap.entities.add(clone)
+        return clone
 
     def open_chest(self):
         self.opened = True

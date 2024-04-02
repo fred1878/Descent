@@ -1,12 +1,9 @@
 import copy
 from typing import Optional, Union
 
-import actions
 from components.base_component import *
+import actions
 from entity import Actor
-
-if TYPE_CHECKING:
-    from actions import SkillAction
 
 ActionOrHandler = Union[actions.Action, "BaseEventHandler"]
 

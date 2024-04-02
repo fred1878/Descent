@@ -142,7 +142,7 @@ class StationaryAllyAI(BaseAI):
         super().__init__(entity)
 
     def perform(self) -> None:
-        attack_range = self.entity.fighter.range  # how far the enemy will go to find enemies
+        attack_range = self.entity.fighter.range  # As this AI is stationary only look for enemies in range
 
         enemy_list: List[Actor] = []
         for actor in self.entity.gamemap.actors:

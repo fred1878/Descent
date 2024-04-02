@@ -4,6 +4,18 @@ from typing import Tuple, List
 import numpy
 
 
+def get_max_value_for_floor(max_value_by_floor: List[Tuple[int, int]], floor: int) -> int:
+    current_value = 0
+
+    for floor_minimum, value in max_value_by_floor:
+        if floor_minimum > floor:
+            break
+        else:
+            current_value = value
+
+    return current_value
+
+
 def number_of_digits(n: int) -> int:
     if n > 0:
         digits = int(math.log10(n)) + 1

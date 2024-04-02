@@ -3,21 +3,21 @@ from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union
 import os
 import tcod.event  # type: ignore
 from tcod import libtcodpy
-import actions
-from actions import Action, BumpAction, WaitAction, PickupAction
 import colour
 import exceptions
-import setup_game
 import traceback
+from actions import Action, BumpAction, WaitAction, PickupAction
+import actions
 
-from components.ability import Skill
 from difficulty_settings import DifficultySettings
 from util import number_of_digits, tiles_in_circle
 from configparser import ConfigParser
 
+import setup_game
 if TYPE_CHECKING:
     from engine import Engine
     from entity import Item, Actor
+    from components.ability import Skill
 
 MOVE_KEYS = {}
 

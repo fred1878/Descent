@@ -3,72 +3,17 @@ from itertools import repeat
 from typing import Dict, Iterator, Type, Union
 import tcod  # type: ignore
 
-import entity_factories
 from exceptions import RoomNotFound
+from gen_util import get_entities_at_random, add_random_items_to_entities
 from rooms import *
-from spawn_chances import max_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
-    shop_params, trap_params, item_equip_chances, chest_params
+from spawn_chances import max_room_items_by_floor, max_monsters_by_floor, item_chances, enemy_chances, room_count, \
+    shop_params, trap_params, item_equip_chances, chest_room_params
 from engine import Engine
-from entity import Entity, Actor, Item
+from entity import Actor, Item
 import tile_types
-
-
-def get_max_value_for_floor(max_value_by_floor: List[Tuple[int, int]], floor: int) -> int:
-    current_value = 0
-
-    for floor_minimum, value in max_value_by_floor:
-        if floor_minimum > floor:
-            break
-        else:
-            current_value = value
-
-    return current_value
-
+from util import get_max_value_for_floor
 
 ActorOrItem = Union[Actor, Item]
-
-
-def get_entities_at_random(
-        weighted_chances_by_floor: Dict[int, List[Tuple[Entity, int]]],
-        number_of_entities: int,
-        floor: int,
-) -> List[ActorOrItem]:
-    entity_weighted_chances = {}
-
-    for key, values in weighted_chances_by_floor.items():
-        if key > floor:
-            break
-        else:
-            for value in values:
-                entity = value[0]
-                weighted_chance = value[1]
-                entity_weighted_chances[entity] = weighted_chance
-
-    entities = list(entity_weighted_chances.keys())
-    entity_weighted_chance_values = list(entity_weighted_chances.values())
-
-    chosen_entities = random.choices(
-        entities, weights=entity_weighted_chance_values, k=number_of_entities
-    )
-
-    return chosen_entities
-
-
-def add_random_items_to_entities(
-        equip_chances: Dict[int, List[Tuple[Entity, int]]],
-        entity: Actor,
-        floor: int):
-    for key, values in equip_chances.items():
-        if key > floor:
-            break
-        else:
-            for value in values:
-                item = value[0]
-                weight = value[1]
-                if random.randint(0, 99) < weight:
-                    entity.inventory.items.append(item)
-                    if item.equippable:
-                        entity.equipment.toggle_equip(item, entity, add_message=False)
 
 
 def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_number: int) -> None:
@@ -76,7 +21,7 @@ def place_entities(room: RectangularRoom, dungeon: game_map.GameMap, floor_numbe
         0, get_max_value_for_floor(max_monsters_by_floor, floor_number)
     )
     number_of_items = random.randint(
-        0, get_max_value_for_floor(max_items_by_floor, floor_number)
+        0, get_max_value_for_floor(max_room_items_by_floor, floor_number)
     )
 
     monsters: List[ActorOrItem] = get_entities_at_random(
@@ -204,7 +149,7 @@ def generate_custom_rooms(
                             dungeon.tiles[x, y] = tile_types.floor
                     rooms.append(new_room)
         elif room.__name__ == "ChestRoom":
-            for key, values in chest_params.items():
+            for key, values in chest_room_params.items():
                 if key == floor:
                     room_width = values[0]
                     room_height = values[1]

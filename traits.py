@@ -69,7 +69,7 @@ attack_down_wizard = StatModifyingTrait(
 
 defence_down = StatModifyingTrait(
     duration=10,
-    ranged_bonus=-1,
+    defence_bonus=-1,
     has_duration=True,
     name="Defence Down",
     description="Defence Down"

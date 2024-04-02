@@ -13,9 +13,9 @@ from tcod.context import Context  # type: ignore
 from tcod.console import Console  # type: ignore
 from tcod.map import compute_fov  # type: ignore
 import tcod  # type: ignore
-from entity import Actor
 
 if TYPE_CHECKING:
+    from entity import Actor
     from game_map import GameMap, GameWorld
 
 

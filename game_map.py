@@ -2,14 +2,12 @@ from __future__ import annotations
 
 from typing import Iterable, Iterator, Optional, TYPE_CHECKING
 
-import render_order
-from entity import Actor, Item, Chest
-
 import numpy as np  # type: ignore
 from tcod.console import Console  # type: ignore
 
 import tile_types
 
+from entity import Actor, Item, Chest
 if TYPE_CHECKING:
     from entity import Entity
     from engine import Engine

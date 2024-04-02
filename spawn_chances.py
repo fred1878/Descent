@@ -1,12 +1,20 @@
-from typing import Dict, Type
+from typing import Dict, Type, TYPE_CHECKING, List, Tuple
 import tcod  # type: ignore
 
-import entity_factories
 from rooms import *
-from entity import Entity, Actor, Item
+import entity_factories
+from entity import Entity, Item
+if TYPE_CHECKING:
+    pass
 
+max_chest_items_by_floor = [
+    (1, 2),
+    (2, 3),
+    (4, 4),
+    (6, 5)
+]
 
-max_items_by_floor = [
+max_room_items_by_floor = [
     (1, 1),
     (3, 2),
     (6, 3)
@@ -93,7 +101,7 @@ trap_params: Dict[int, List[int]] = {
 }
 
 # params [x, y]
-chest_params: Dict[int, List[int]] = {
+chest_room_params: Dict[int, List[int]] = {
     1: [5, 5],
     2: [9, 9],
     3: [9, 9],
@@ -104,4 +112,16 @@ chest_params: Dict[int, List[int]] = {
     8: [9, 9],
     9: [9, 9],
     10: [9, 9],
+}
+
+
+chest_item_chances: Dict[int, List[Tuple[Item, int]]] = {
+    1: [(entity_factories.small_health_potion, 50), (entity_factories.lightning_scroll, 50)],
+    2: [(entity_factories.small_health_potion, 30), (entity_factories.lightning_scroll, 40),
+        (entity_factories.confusion_scroll, 30)],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+    7: [],
 }

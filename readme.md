@@ -12,7 +12,6 @@ TODO:
 ## The functionality
 
 -tidy history\
--friendly NPCs\
 -reusable/learnable spells, spells affect san, corruption\
 -spellbook/abilities\
 -ability trees, random choices?, random corruptions\
@@ -70,3 +69,4 @@ TODO:
 -mouse driven menus --done\
 -necromancer enemy and spell scroll --done\
 -key rebinding --done\
+-friendly NPCs --done\
