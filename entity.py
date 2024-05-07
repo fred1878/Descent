@@ -189,7 +189,7 @@ class Chest(Entity):
             y: int = 0,
             char: str = "(",
             colour: Tuple[int, int, int] = (255, 255, 255),
-            name: str = 'unknown chest',
+            name: str = 'closed chest',
             opened: bool = False,
             opened_colour: Tuple[int, int, int] = (30, 30, 30),
             inventory: Inventory
@@ -227,5 +227,6 @@ class Chest(Entity):
         self.opened = True
         self.blocks_movement = False
         self.colour = self.opened_colour
+        self.name = 'opened chest'
         for item in self.inventory.items:
             self.inventory.scatter(item)

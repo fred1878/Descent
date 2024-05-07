@@ -64,6 +64,8 @@ class Fighter(BaseComponent):
             bonus += self.parent.equipment.equip_range_bonus
         if self.parent.attribute:
             bonus += self.parent.attribute.trait_range_bonus
+        if self.parent.ability:
+            bonus += self.parent.ability.buff_range_bonus
         return bonus
 
     @property
@@ -73,6 +75,8 @@ class Fighter(BaseComponent):
             bonus += self.parent.equipment.equip_defence_bonus
         if self.parent.attribute:
             bonus += self.parent.attribute.trait_defence_bonus
+        if self.parent.ability:
+            bonus += self.parent.ability.buff_defence_bonus
         return bonus
 
     @property
@@ -82,6 +86,8 @@ class Fighter(BaseComponent):
             bonus += self.parent.equipment.equip_melee_bonus
         if self.parent.attribute:
             bonus += self.parent.attribute.trait_melee_bonus
+        if self.parent.ability:
+            bonus += self.parent.ability.buff_melee_bonus
         return bonus
 
     @property
@@ -91,6 +97,8 @@ class Fighter(BaseComponent):
             bonus += self.parent.equipment.equip_ranged_bonus
         if self.parent.attribute:
             bonus += self.parent.attribute.trait_ranged_bonus
+        if self.parent.ability:
+            bonus += self.parent.ability.buff_ranged_bonus
         return bonus
 
     @property
@@ -100,6 +108,8 @@ class Fighter(BaseComponent):
             bonus += self.parent.equipment.equip_magic_bonus
         if self.parent.attribute:
             bonus += self.parent.attribute.trait_magic_bonus
+        if self.parent.ability:
+            bonus += self.parent.ability.buff_magic_bonus
         return bonus
 
     def heal(self, amount: int) -> int:

@@ -313,6 +313,10 @@ class MeleeAction(ActionWithDirection):
         else:
             self.engine.message_log.add_message(f"{attack_desc} but does no damage.", colour.player_atk_no_damage)
 
+        for buff in self.entity.ability.buffs:
+            if not buff.decrease_hit_duration():
+                buff.remove_buff()
+
 
 class MovementAction(ActionWithDirection):
 

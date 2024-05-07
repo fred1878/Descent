@@ -171,3 +171,19 @@ class SummonTentacleSkill(Skill):
 
 
 spawn_tentacle = SummonTentacleSkill("Summon Tentacle", "Summon an allies tentacle that will fight for you", 0)
+
+
+class SureStrikeSkill(Skill):
+
+    def __init__(self, name, description, cost):
+        super().__init__(name, description, cost)
+
+    def use(self, action: SkillAction) -> None:
+        from components.ability import Buff, StatModifyingBuff
+        sure_strike_buff = StatModifyingBuff("Sure Strike", "Double Attack Damage", False,
+                                             1, True, 1, self.parent.fighter.melee_power)
+
+        Buff.add_buff(sure_strike_buff, self.parent)
+
+
+sure_strike_skill = SureStrikeSkill("Sure Strike", "Double Attack Damage", 0)

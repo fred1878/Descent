@@ -67,6 +67,7 @@ def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettin
     skills.add_text_skill.add_skill(player)
     skills.push_skill.add_skill(player)
     skills.spawn_tentacle.add_skill(player)
+    skills.sure_strike_skill.add_skill(player)
 
     player.inventory.items.append(small_health_potion)
     if difficulty == DifficultySettings.EASY:
