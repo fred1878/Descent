@@ -14,6 +14,7 @@ from util import number_of_digits, tiles_in_circle
 from configparser import ConfigParser
 
 import setup_game
+
 if TYPE_CHECKING:
     from engine import Engine
     from entity import Item, Actor
@@ -645,6 +646,85 @@ class SkillScreenEventHandler(AskUserEventHandler):
     def on_item_selected(self, skill: Skill) -> Optional[ActionOrHandler]:
         """Called when the user selects a valid item."""
         return skill.get_skill(self.player)
+
+
+class BuffScreenEventHandler(AskUserEventHandler):
+    from components.ability import Buff
+
+    def __init__(self, engine: Engine):
+        super().__init__(engine)
+        self.player = self.engine.player
+        if self.player.x <= 30:
+            self.x = 40
+        else:
+            self.x = 0
+        self.y = 0
+
+        self.width = len(self.TITLE) + 4
+        self.buffs = self.player.ability.buffs
+        self.number_of_buffs = len(self.buffs)
+        if len(self.buffs) > 0:
+            for i, buff in enumerate(self.buffs):
+                buff_length = len(buff.name) + len(buff.description) + 10
+                if buff_length > self.width:
+                    self.width = buff_length
+
+        self.height = self.number_of_buffs + 2
+
+        if self.height <= 3:
+            self.height = 3
+
+    TITLE = "Buffs"
+
+    def on_render(self, console: tcod.Console) -> None:
+        super().on_render(console)
+
+        console.draw_frame(
+            x=self.x,
+            y=self.y,
+            width=self.width,
+            height=self.height,
+            title=self.TITLE,
+            clear=True,
+            fg=(255, 255, 255),
+            bg=(0, 0, 0),
+        )
+
+        if len(self.buffs) > 0:
+            for i, buff in enumerate(self.buffs):
+                buff_key = chr(ord("a") + i)
+                buff_string = f"{buff_key}) ({buff.name}) - {buff.description}"
+                console.print(self.x + 1, self.y + i + 1, buff_string)
+        else:
+            console.print(self.x + 1, self.y + 1, "No Buffs")
+
+    def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
+        key = event.sym
+        index = key - tcod.event.KeySym.a
+
+        if 0 <= index <= 26:
+            try:
+                selected_buff = self.player.ability.buffs[index]
+            except IndexError:
+                self.engine.message_log.add_message("Invalid entry.", colour.invalid)
+                return None
+            return self.on_item_selected(selected_buff)
+        return super().ev_keydown(event)
+
+    def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> Optional[ActionOrHandler]:
+        if self.x < event.tile.x < self.x + self.width - 1 and self.y < event.tile.y < self.y + self.height - 1:
+            try:
+                selected_buff = self.player.ability.buffs[event.tile.y - 1]
+            except IndexError:
+                self.engine.message_log.add_message("Invalid entry.", colour.invalid)
+                return None
+            return self.on_item_selected(selected_buff)
+        else:
+            return self.on_exit()
+
+    def on_item_selected(self, buff: Buff) -> Optional[ActionOrHandler]:
+        """Called when the user selects a valid item."""
+        return self.on_exit()
 
 
 class LevelUpEventHandler(AskUserEventHandler):
@@ -1300,6 +1380,8 @@ class MainGameEventHandler(EventHandler):
             return TraitScreenEventHandler(self.engine)
         elif key == ACTION_KEYS['skill_screen']:
             return SkillScreenEventHandler(self.engine)
+        elif key == ACTION_KEYS['buff_screen']:
+            return BuffScreenEventHandler(self.engine)
         elif key == tcod.event.KeySym.q:
             action = actions.DebugAction(self.engine.player)
         elif key == tcod.event.KeySym.w:

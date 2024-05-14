@@ -1,5 +1,6 @@
 import copy
 
+import colour
 import entity_factories
 import exceptions
 import input_handlers
@@ -182,7 +183,10 @@ class SureStrikeSkill(Skill):
         from components.ability import Buff, StatModifyingBuff
         sure_strike_buff = StatModifyingBuff("Sure Strike", "Double Attack Damage", False,
                                              1, True, 1, self.parent.fighter.melee_power)
-
+        for buff in self.engine.player.ability.buffs:
+            if buff.name == "Sure Strike":
+                self.engine.message_log.add_message("Sure Strike already applied", colour.red)
+                return
         Buff.add_buff(sure_strike_buff, self.parent)
 
 

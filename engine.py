@@ -44,7 +44,6 @@ class Engine:
                 if not buff.decrease_turn_duration():
                     buff.remove_buff()
             for trait in entity.attribute.traits:
-                print(trait)
                 if not trait.decrease_duration():
                     trait.remove_trait()
 
