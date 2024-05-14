@@ -113,10 +113,12 @@ class Equipment(BaseComponent):
 
             if getattr(self, slot) == equippable_item:
                 self.unequip_from_slot(slot, add_message)
-                equippable_item.equippable.on_unequip()
+                equippable_item.equippable.on_unequip(equipping_actor)
             else:
                 self.equip_to_slot(slot, equippable_item, add_message)
-                equippable_item.equippable.on_equip()
+                equippable_item.equippable.on_equip(equipping_actor)
         else:
             if equipping_actor is self.engine.player:
                 self.engine.message_log.add_message("You do not have the stats to equip this item", colour.invalid)
+            else:
+                self.engine.message_log.add_message(f'{equipping_actor} does not have te stats to equip this item', colour.invalid)

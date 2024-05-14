@@ -73,7 +73,7 @@ class PickupAction(Action):
                 item.parent = self.entity.inventory
                 inventory.items.append(item)
                 if item.equippable:
-                    item.equippable.on_pickup()
+                    item.equippable.on_pickup(self.entity)
 
                 self.engine.message_log.add_message(f"You picked up the {item.name}!")
                 return
@@ -316,6 +316,10 @@ class MeleeAction(ActionWithDirection):
         for buff in self.entity.ability.buffs:
             if not buff.decrease_hit_duration():
                 buff.remove_buff()
+
+        for equipment in self.entity.equipment.equipped_items:
+            equipment.equippable.on_attack(self.entity, self.target_actor)
+
 
 
 class MovementAction(ActionWithDirection):

@@ -325,6 +325,14 @@ composite_wooden_bow = Item(
     price=120
 )
 
+unstable_pistol = Item(
+    char="P",
+    colour=colour.light_blue,
+    name="Unstable Pistol",
+    equippable=equippable.UnstablePistol(),
+    price=200
+)
+
 
 wooden_wand = Item(
     char="\\",
@@ -349,7 +357,7 @@ cursed_orb = Item(
     equippable=equippable.CursedOrb(),
     price=450
 )
-
+# Armor
 leather_armor = Item(
     char="[",
     colour=colour.leather,

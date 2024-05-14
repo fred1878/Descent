@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import random
 from typing import TYPE_CHECKING
 
 import colour
+import components.ai
 from components.base_component import BaseComponent
 from components.equipment_types import EquipmentType
 
 if TYPE_CHECKING:
-    from entity import Item
+    from entity import Item, Actor
 
 
 class Equippable(BaseComponent):
@@ -39,16 +41,19 @@ class Equippable(BaseComponent):
         self.required_defence = required_defence
         self.required_magic = required_magic
 
-    def on_equip(self) -> None:
+    def on_equip(self, user: Actor) -> None:
         pass
 
-    def on_unequip(self) -> None:
+    def on_unequip(self, user: Actor) -> None:
         pass
 
-    def on_pickup(self) -> None:
+    def on_pickup(self, user: Actor) -> None:
         pass
 
-    def on_equipped_kill(self) -> None:
+    def on_equipped_kill(self, user: Actor) -> None:
+        pass
+
+    def on_attack(self, user: Actor, target: Actor) -> None:
         pass
 
 
@@ -74,24 +79,25 @@ class SteelSword(Equippable):
 
 class DarkSword(Equippable):
     def __init__(self):
-        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8)
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8, required_melee=6)
 
-    def on_equip(self) -> None:
-        self.engine.player.level.change_gold(100)
+    def on_equip(self, user) -> None:
+        user.attribute.change_corruption(10)
 
-    def on_unequip(self) -> None:
-        self.engine.player.level.change_gold(-100)
+    def on_unequip(self, user) -> None:
+        user.attribute.change_corruption(-10)
 
 
 class VampiricBlade(Equippable):
     def __init__(self):
-        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8)
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=8, required_melee=7)
 
-    def on_equipped_kill(self) -> None:
-        self.engine.message_log.add_message("Your blade twists your mind and body", colour.red)
-        self.engine.player.attribute.change_corruption(3, add_message=False)
-        self.engine.player.attribute.change_insanity(2, add_message=False)
-        self.engine.player.fighter.heal(2)
+    def on_equipped_kill(self, user) -> None:
+        user.fighter.heal(2)
+        if user is self.engine.player:
+            self.engine.message_log.add_message("Your blade twists your mind and body", colour.red)
+            self.engine.player.attribute.change_corruption(3, add_message=False)
+            self.engine.player.attribute.change_insanity(2, add_message=False)
 
 
 class Bloodthirster(Equippable):
@@ -99,11 +105,13 @@ class Bloodthirster(Equippable):
         super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=5)
         self.kill_count = 0
 
-    def on_equipped_kill(self) -> None:
+    def on_equipped_kill(self, user) -> None:
         self.kill_count += 1
         if self.kill_count % 5 == 0:
-            self.engine.player.level.increase_max_hp(1)
-            self.engine.player.attribute.change_insanity(1)
+            user.level.increase_max_hp(1)
+            user.attribute.change_insanity(1)
+        if self.kill_count % 15 == 0:
+            self.melee_bonus += 1
 
 
 class WoodenBow(Equippable):
@@ -113,7 +121,18 @@ class WoodenBow(Equippable):
 
 class CompositeWoodenBow(Equippable):
     def __init__(self) -> None:
-        super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=2, weapon_range=5)
+        super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=2, weapon_range=5, required_ranged=2)
+
+
+class UnstablePistol(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=7, weapon_range=3, required_ranged=3)
+
+    def on_attack(self, user: Actor, target: Actor) -> None:
+        user.fighter.take_damage(random.randint(0, 3))
+        stun_chance = random.randint(0, 9)
+        if stun_chance > 5:
+            target.ai = components.ai.StunnedEnemy(target, target.ai, turns_remaining=random.randint(1,3))
 
 
 class WoodenWand(Equippable):
@@ -130,9 +149,9 @@ class CursedOrb(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, ranged_bonus=3, magic_bonus=12, weapon_range=2)
 
-    def on_pickup(self) -> None:
-        self.engine.player.attribute.change_corruption(20, add_message=True)
-        self.engine.player.attribute.change_insanity(10, add_message=True)
+    def on_pickup(self, user) -> None:
+        user.attribute.change_corruption(20, add_message=True)
+        user.attribute.change_insanity(10, add_message=True)
 
 
 class LeatherArmor(Equippable):
@@ -154,5 +173,5 @@ class CursedLeatherArmor(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=1)
 
-    def on_pickup(self) -> None:
-        self.engine.player.level.change_gold(-69)
+    def on_pickup(self, user) -> None:
+        user.level.change_gold(-69)
