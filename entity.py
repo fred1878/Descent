@@ -219,7 +219,9 @@ class Chest(Entity):
             1, get_max_value_for_floor(max_chest_items_by_floor, clone.parent.engine.game_world.current_floor)
         )
         items: List[Item] = get_items_at_random(chest_item_chances, number_of_items, clone.parent.engine.game_world.current_floor)
-        self.inventory.items.append(items)
+        for item in items:
+            self.inventory.items.append(item)
+
         gamemap.entities.add(clone)
         return clone
 

@@ -47,11 +47,13 @@ def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettin
     leather_armor = copy.deepcopy(entity_factories.leather_armor)
     wooden_bow = copy.deepcopy(entity_factories.wooden_bow)
     small_health_potion = copy.deepcopy(entity_factories.small_health_potion)
+    unstable_pistol = copy.deepcopy(entity_factories.unstable_pistol)
 
     dagger.parent = player.inventory
     leather_armor.parent = player.inventory
     wooden_bow.parent = player.inventory
     small_health_potion.parent = player.inventory
+    unstable_pistol.parent = player.inventory
 
     player.inventory.items.append(dagger)
     player.equipment.toggle_equip(dagger, player, add_message=False)
@@ -69,9 +71,11 @@ def new_game(screen_width: int, screen_height: int, difficulty: DifficultySettin
     skills.spawn_tentacle.add_skill(player)
     skills.sure_strike_skill.add_skill(player)
 
+    player.inventory.items.append(unstable_pistol)
     player.inventory.items.append(small_health_potion)
     if difficulty == DifficultySettings.EASY:
         player.attribute.traits.append(god_mode)
+        player.level.increase_ranged(30)
         player.level.change_gold(1000)
 
     return engine

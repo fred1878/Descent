@@ -233,6 +233,8 @@ class RangedAttackAction(TargetAction):
         else:
             self.engine.message_log.add_message(f"{attack_desc} but does no damage.", colour.player_atk_no_damage)
 
+        for equipment in self.entity.equipment.equipped_items:
+            equipment.equippable.on_attack(self.entity, self.target_actor)
 
 class RangedBuffAction(TargetAction):
     def __init__(self, entity: Actor, target_xy: Tuple[int, int], trait: Trait):
