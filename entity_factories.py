@@ -269,6 +269,14 @@ bronze_sword = Item(
     price=60
 )
 
+bronze_mace = Item(
+    char="|",
+    colour=colour.bronze,
+    name="Bronze Mace",
+    equippable=equippable.BronzeMace(),
+    price=50
+)
+
 iron_sword = Item(
     char="/",
     colour=colour.iron,
@@ -363,6 +371,14 @@ leather_armor = Item(
     colour=colour.leather,
     name="Leather Armor",
     equippable=equippable.LeatherArmor(),
+    price=20
+)
+
+spiked_leather_armor = Item(
+    char="[",
+    colour=colour.dark_leather,
+    name="Spiked Leather Armor",
+    equippable=equippable.SpikedLeatherArmor(),
     price=20
 )
 

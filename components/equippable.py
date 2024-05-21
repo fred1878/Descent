@@ -56,6 +56,9 @@ class Equippable(BaseComponent):
     def on_attack(self, user: Actor, target: Actor) -> None:
         pass
 
+    def on_melee_hit(self, wearer: Actor, attacker: Actor) -> None:
+        pass
+
 
 class Dagger(Equippable):
     def __init__(self) -> None:
@@ -65,6 +68,16 @@ class Dagger(Equippable):
 class BronzeSword(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=4)
+
+
+class BronzeMace(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=3)
+
+    def on_attack(self, user: Actor, target: Actor) -> None:
+        stun_chance = random.randint(0, 9)
+        if stun_chance > 7:  # 20%
+            target.ai = components.ai.StunnedEnemy(target, target.ai, turns_remaining=random.randint(1, 3))
 
 
 class IronSword(Equippable):
@@ -131,8 +144,8 @@ class UnstablePistol(Equippable):
     def on_attack(self, user: Actor, target: Actor) -> None:
         user.fighter.take_damage(random.randint(0, 3))
         stun_chance = random.randint(0, 9)
-        if stun_chance > 5:
-            target.ai = components.ai.StunnedEnemy(target, target.ai, turns_remaining=random.randint(1,3))
+        if stun_chance > 5:  # 40%
+            target.ai = components.ai.StunnedEnemy(target, target.ai, turns_remaining=random.randint(1, 3))
 
 
 class WoodenWand(Equippable):
@@ -157,6 +170,15 @@ class CursedOrb(Equippable):
 class LeatherArmor(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=1)
+
+
+class SpikedLeatherArmor(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=1)
+
+    def on_melee_hit(self, wearer: Actor, attacker: Actor) -> None:
+        if bool(random.getrandbits(1)):  # 50%
+            attacker.fighter.take_damage(2)
 
 
 class ChainMail(Equippable):

@@ -1,8 +1,8 @@
-from typing import Dict, Type, TYPE_CHECKING, List, Tuple
+from typing import Type, TYPE_CHECKING
 import tcod  # type: ignore
 
 from rooms import *
-import entity_factories
+from entity_factories import *
 from entity import Entity, Item
 if TYPE_CHECKING:
     pass
@@ -30,38 +30,38 @@ max_monsters_by_floor = [
 
 # entity chances override previous floors
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
-    1: [(entity_factories.lightning_scroll, 10),(entity_factories.small_health_potion, 35),
-        (entity_factories.cursed_leather_armor, 10)],
-    2: [(entity_factories.confusion_scroll, 10), (entity_factories.health_potion, 10),
-        (entity_factories.bronze_sword, 5)],
-    3: [(entity_factories.lightning_scroll, 25), (entity_factories.health_potion, 20)],
-    4: [(entity_factories.wooden_wand, 5), (entity_factories.bronze_sword, 10)],
-    5: [(entity_factories.fireball_scroll, 25), (entity_factories.chain_mail, 15), (entity_factories.iron_sword, 15),
-        (entity_factories.bronze_sword, 0)],
-    6: [(entity_factories.bloodthirster, 10), (entity_factories.golden_wand, 5),
-        (entity_factories.iron_sword, 0), (entity_factories.unstable_pistol, 10)],
-    7: [(entity_factories.fireball_scroll, 35), (entity_factories.plate_mail, 15),
-        (entity_factories.vampiric_blade, 10)],
+    1: [(lightning_scroll, 10), (small_health_potion, 35),
+        (cursed_leather_armor, 10), (bronze_mace, 5)],
+    2: [(confusion_scroll, 10), (health_potion, 10),
+        (bronze_sword, 5), (spiked_leather_armor, 5)],
+    3: [(lightning_scroll, 25), (health_potion, 20)],
+    4: [(wooden_wand, 5), (bronze_sword, 10)],
+    5: [(fireball_scroll, 25), (chain_mail, 15), (iron_sword, 15),
+        (bronze_sword, 0)],
+    6: [(bloodthirster, 10), (golden_wand, 5),
+        (iron_sword, 0), (unstable_pistol, 10)],
+    7: [(fireball_scroll, 35), (plate_mail, 15),
+        (vampiric_blade, 10)],
 }
 
 enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
-    1: [(entity_factories.master, 30), (entity_factories.orc, 50),
-        (entity_factories.necromancer, 15), (entity_factories.hobbit, 30),
-        (entity_factories.kobold, 30), (entity_factories.wizard, 20)],
-    2: [(entity_factories.master, 40), (entity_factories.troll, 5)],
-    3: [(entity_factories.troll, 15), (entity_factories.skeleton_archer, 15),
-        (entity_factories.skeleton, 15), (entity_factories.kobold, 0)],
-    4: [(entity_factories.hobbit, 20), (entity_factories.troll, 40),
-        (entity_factories.orc, 30), (entity_factories.wizard, 30),
-        (entity_factories.necromancer, 30)],
-    5: [(entity_factories.orc, 10), (entity_factories.troll, 40)],
-    6: [(entity_factories.hobbit, 0), (entity_factories.troll, 70)],
-    7: [(entity_factories.troll, 60), (entity_factories.reaper, 30),
-        (entity_factories.skeleton, 25), (entity_factories.orc, 0)],
+    1: [(master, 30), (orc, 50),
+        (necromancer, 15), (hobbit, 30),
+        (kobold, 30), (wizard, 20)],
+    2: [(master, 40), (troll, 5)],
+    3: [(troll, 15), (skeleton_archer, 15),
+        (skeleton, 15), (kobold, 0)],
+    4: [(hobbit, 20), (troll, 40),
+        (orc, 30), (wizard, 30),
+        (necromancer, 30)],
+    5: [(orc, 10), (troll, 40)],
+    6: [(hobbit, 0), (troll, 70)],
+    7: [(troll, 60), (reaper, 30),
+        (skeleton, 25), (orc, 0)],
 }
 
 item_equip_chances: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.small_health_potion, 50), (entity_factories.leather_armor, 50)],
+    0: [(small_health_potion, 50), (leather_armor, 50)],
 }
 
 # room counts are set per floor
@@ -116,9 +116,9 @@ chest_room_params: Dict[int, List[int]] = {
 
 
 chest_item_chances: Dict[int, List[Tuple[Item, int]]] = {
-    1: [(entity_factories.small_health_potion, 50), (entity_factories.lightning_scroll, 50)],
-    2: [(entity_factories.small_health_potion, 30), (entity_factories.lightning_scroll, 40),
-        (entity_factories.confusion_scroll, 30)],
+    1: [(small_health_potion, 50), (lightning_scroll, 50)],
+    2: [(small_health_potion, 30), (lightning_scroll, 40),
+        (confusion_scroll, 30)],
     3: [],
     4: [],
     5: [],

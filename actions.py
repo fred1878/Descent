@@ -321,6 +321,7 @@ class MeleeAction(ActionWithDirection):
 
         for equipment in self.entity.equipment.equipped_items:
             equipment.equippable.on_attack(self.entity, self.target_actor)
+            equipment.equippable.on_melee_hit(self.entity, self.target_actor)
 
 
 
