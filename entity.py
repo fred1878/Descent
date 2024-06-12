@@ -3,7 +3,7 @@ from __future__ import annotations
 import copy
 import math
 import random
-from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union, List, Dict
+from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union, List
 
 
 from components.level import Level

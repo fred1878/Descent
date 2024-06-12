@@ -236,6 +236,7 @@ class RangedAttackAction(TargetAction):
         for equipment in self.entity.equipment.equipped_items:
             equipment.equippable.on_attack(self.entity, self.target_actor)
 
+
 class RangedBuffAction(TargetAction):
     def __init__(self, entity: Actor, target_xy: Tuple[int, int], trait: Trait):
         super().__init__(entity, target_xy)
@@ -322,7 +323,6 @@ class MeleeAction(ActionWithDirection):
         for equipment in self.entity.equipment.equipped_items:
             equipment.equippable.on_attack(self.entity, self.target_actor)
             equipment.equippable.on_melee_hit(self.entity, self.target_actor)
-
 
 
 class MovementAction(ActionWithDirection):

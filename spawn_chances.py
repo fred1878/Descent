@@ -31,14 +31,14 @@ max_monsters_by_floor = [
 # entity chances override previous floors
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
     1: [(lightning_scroll, 10), (small_health_potion, 35),
-        (cursed_leather_armor, 10), (bronze_mace, 5)],
-    2: [(confusion_scroll, 10), (health_potion, 10),
+        (cursed_leather_armor, 10), (bronze_mace, 5), (berserker_armor, 5)],
+    2: [(confusion_scroll, 10), (health_potion, 10), (frenzy_blade, 5),
         (bronze_sword, 5), (spiked_leather_armor, 5)],
     3: [(lightning_scroll, 25), (health_potion, 20)],
     4: [(wooden_wand, 5), (bronze_sword, 10)],
     5: [(fireball_scroll, 25), (chain_mail, 15), (iron_sword, 15),
         (bronze_sword, 0)],
-    6: [(bloodthirster, 10), (golden_wand, 5),
+    6: [(bloodthirster, 10), (golden_wand, 5), (flame_mail, 10),
         (iron_sword, 0), (unstable_pistol, 10)],
     7: [(fireball_scroll, 35), (plate_mail, 15),
         (vampiric_blade, 10)],
@@ -60,7 +60,7 @@ enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
         (skeleton, 25), (orc, 0)],
 }
 
-item_equip_chances: Dict[int, List[Tuple[Entity, int]]] = {
+item_equip_chances: Dict[int, List[Tuple[Item, int]]] = {
     0: [(small_health_potion, 50), (leather_armor, 50)],
 }
 

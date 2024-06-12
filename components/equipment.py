@@ -5,6 +5,7 @@ from typing import Optional, TYPE_CHECKING, List
 import colour
 from components.base_component import BaseComponent
 from components.equipment_types import EquipmentType
+from exceptions import Impossible
 
 if TYPE_CHECKING:
     from entity import Actor, Item
@@ -110,6 +111,8 @@ class Equipment(BaseComponent):
                     slot = "armor"
                 else:
                     raise NotImplementedError("Equipment class not implemented")
+            else:
+                raise Impossible("Item not equippable")
 
             if getattr(self, slot) == equippable_item:
                 self.unequip_from_slot(slot, add_message)

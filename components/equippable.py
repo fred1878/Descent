@@ -65,6 +65,17 @@ class Dagger(Equippable):
         super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=2, required_melee=1)
 
 
+class FrenzyBlade(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=2, required_melee=2)
+
+    def on_attack(self, user: Actor, target: Actor) -> None:
+        from components.ability import StatModifyingBuff
+        frenzy = StatModifyingBuff("Frenzy", "Temporarily increases melee attack",
+                                   has_turn_duration=True, turn_duration=5, melee_bonus=1)
+        frenzy.add_buff(user)
+
+
 class BronzeSword(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.MELEE_WEAPON, melee_bonus=4)
@@ -137,6 +148,17 @@ class CompositeWoodenBow(Equippable):
         super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=2, weapon_range=5, required_ranged=2)
 
 
+class PiercingBow(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=3, weapon_range=5, required_ranged=3)
+
+    def on_attack(self, user: Actor, target: Actor) -> None:
+        from components.ability import StatModifyingBuff
+        armor_piercing = StatModifyingBuff("Armor down", "Temporarily decreases defence",
+                                           has_turn_duration=True, turn_duration=10, defence_bonus=-1)
+        armor_piercing.add_buff(user)
+
+
 class UnstablePistol(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.RANGED_WEAPON, ranged_bonus=7, weapon_range=3, required_ranged=3)
@@ -172,18 +194,39 @@ class LeatherArmor(Equippable):
         super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=1)
 
 
+class BerserkerArmor(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=2)
+
+    def on_melee_hit(self, wearer: Actor, attacker: Actor) -> None:
+        from components.ability import StatModifyingBuff
+        berserker_rage = StatModifyingBuff("Berserker Rage", "Increase melee attack at the cost of defence",
+                                           has_turn_duration=True, turn_duration=5, melee_bonus=1, defence_bonus=-1)
+        berserker_rage.add_buff(wearer)
+
+
 class SpikedLeatherArmor(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=1)
 
     def on_melee_hit(self, wearer: Actor, attacker: Actor) -> None:
         if bool(random.getrandbits(1)):  # 50%
+            self.engine.message_log.add_message(f"{attacker.name} was spiked for 2 damage", colour.red)
             attacker.fighter.take_damage(2)
 
 
 class ChainMail(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=3)
+
+
+class FlameMail(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.ARMOR, defense_bonus=3)
+
+    def on_melee_hit(self, wearer: Actor, attacker: Actor) -> None:
+        self.engine.message_log.add_message(f"{attacker.name} was flamed for 3 damage", colour.red)
+        attacker.fighter.take_damage(3)
 
 
 class PlateMail(Equippable):

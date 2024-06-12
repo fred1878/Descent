@@ -61,7 +61,7 @@ def get_entities_at_random(
 
 
 def add_random_items_to_entities(
-        equip_chances: Dict[int, List[Tuple[Entity, int]]],
+        equip_chances: Dict[int, List[Tuple[Item, int]]],
         entity: Actor,
         floor: int):
     for key, values in equip_chances.items():

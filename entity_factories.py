@@ -261,6 +261,14 @@ dagger = Item(
     price=20
 )
 
+frenzy_blade = Item(
+    char="/",
+    colour=colour.blood,
+    name="Dagger",
+    equippable=equippable.FrenzyBlade(),
+    price=20
+)
+
 bronze_sword = Item(
     char="/",
     colour=colour.bronze,
@@ -374,12 +382,21 @@ leather_armor = Item(
     price=20
 )
 
+# Armor
+berserker_armor = Item(
+    char="[",
+    colour=colour.black,
+    name="Berserker Armor",
+    equippable=equippable.BerserkerArmor(),
+    price=50
+)
+
 spiked_leather_armor = Item(
     char="[",
     colour=colour.dark_leather,
     name="Spiked Leather Armor",
     equippable=equippable.SpikedLeatherArmor(),
-    price=20
+    price=30
 )
 
 chain_mail = Item(
@@ -388,6 +405,14 @@ chain_mail = Item(
     name="Chain Mail",
     equippable=equippable.ChainMail(),
     price=100
+)
+
+flame_mail = Item(
+    char="[",
+    colour=colour.red,
+    name="Flame Mail",
+    equippable=equippable.FlameMail(),
+    price=150
 )
 
 plate_mail = Item(

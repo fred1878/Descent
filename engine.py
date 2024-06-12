@@ -3,7 +3,6 @@ import lzma
 import pickle
 from typing import TYPE_CHECKING
 
-import colour
 import exceptions
 import render_functions
 from message_log import MessageLog

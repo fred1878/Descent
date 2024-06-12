@@ -1,8 +1,6 @@
 import math
 from typing import Tuple, List
 
-import numpy
-
 
 def get_max_value_for_floor(max_value_by_floor: List[Tuple[int, int]], floor: int) -> int:
     current_value = 0

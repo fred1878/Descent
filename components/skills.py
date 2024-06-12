@@ -1,6 +1,5 @@
 import copy
 
-import colour
 import entity_factories
 import exceptions
 import input_handlers
